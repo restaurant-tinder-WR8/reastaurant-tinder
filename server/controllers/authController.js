@@ -44,7 +44,7 @@ module.exports = {
     },
     getUser: async (req, res) => {
         if (!req.session.user) {
-            return res.status(404).send('No user is logged in!')
+            return res.status(404).send('No user is logged in')
         }
         res.status(200).send(req.session.user)
     }
