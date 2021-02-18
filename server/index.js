@@ -4,6 +4,7 @@ const express = require('express'),
     massive = require('massive'),
     authCtrl = require('./controllers/authController'),
     lobbyCtrl = require('./controllers/lobbyController'),
+    friendCtrl = require('./controllers/friendController'),
     { SERVER_PORT, SESSION_SECRET, CONNECTION_STRING } = process.env,
     app = express()
 
@@ -23,6 +24,7 @@ massive({
     console.log('DB ONLINE!!!!')
 });
 
+//AUTH ENDPOINTS
 app.post('/auth/register', authCtrl.register)
 app.post('/auth/login', authCtrl.login)
 app.get('/auth/logout', authCtrl.logout)
@@ -34,5 +36,8 @@ app.post('/api/lobby', lobbyCtrl.createLobby)
 app.put('/api/lobby', lobbyCtrl.recreateLobby)
 app.delete('/api/lobby', lobbyCtrl.deleteLobby)
 app.get('/api/lobby/:id', lobbyCtrl.getLobby)
+
+//FRIENDS ENDPOINTS
+app.get('/api/friend/:id', friendCtrl.getFriends);
 
 app.listen(SERVER_PORT, () => console.log(`APP listening on port: ${SERVER_PORT}`))

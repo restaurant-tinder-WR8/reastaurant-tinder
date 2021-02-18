@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import axios from 'axios';
 import AppContext from "../../context/app-context";
+import Friends from './Friends';
 
 const Dash = (props) => {
     const { decidee } = useContext(AppContext)
@@ -86,8 +87,12 @@ const Dash = (props) => {
                     </>
 
                 )}
-
+            <div>
+                <p>this is dash</p>
+                <Friends />
+            </div>
         </main>
+
     )
 
 
