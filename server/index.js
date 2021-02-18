@@ -3,6 +3,7 @@ const express = require('express'),
     session = require('express-session'),
     massive = require('massive'),
     authCtrl = require('./controllers/authController'),
+    lobbyCtrl = require('./controllers/lobbyController'),
     { SERVER_PORT, SESSION_SECRET, CONNECTION_STRING } = process.env,
     app = express()
 
@@ -27,5 +28,10 @@ app.post('/auth/login', authCtrl.login)
 app.get('/auth/logout', authCtrl.logout)
 app.get('/auth/user', authCtrl.getUser)
 
+//LOBBY ENDPOINTS (GRAND MASTER ARCHITECT EXTRAORDINAIRE: SDE )
+app.post('/api/lobby', lobbyCtrl.createLobby)
+app.put('/api/lobby', lobbyCtrl.recreateLobby)
+app.delete('/api/lobby', lobbyCtrl.deleteLobby)
+app.get('/api/lobby/:id', lobbyCtrl.getLobby)
 
 app.listen(SERVER_PORT, () => console.log(`APP listening on port: ${SERVER_PORT}`))
