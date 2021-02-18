@@ -1,6 +1,7 @@
 import { render } from "@testing-library/react"
 import { useState, useEffect, useContext } from "react";
 import AppContext from "../../context/app-context";
+import Friends from './Friends';
 
 const Dash = (props) => {
 
@@ -21,6 +22,7 @@ const Dash = (props) => {
     return (
         <div>
             <p>this is dash</p>
+            <Friends />
         </div>
     )
 
