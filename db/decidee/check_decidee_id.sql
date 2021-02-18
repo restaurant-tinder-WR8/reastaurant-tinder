@@ -1,0 +1,1 @@
+SELECT * FROM decidee WHERE decidee_id = $1;
