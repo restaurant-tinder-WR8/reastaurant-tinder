@@ -47,5 +47,38 @@ module.exports = {
             return res.status(404).send('No user is logged in')
         }
         res.status(200).send(req.session.user)
+    },
+    editUser: async (req, res) => {
+        console.log(req.body)
+        const { username, email } = req.body
+        const db = req.app.get('db')
+        let newUser = {}
+        if (req.session.user.email === email) {
+            const [foundUser] = await db.decidee.check_decidee({ username, email: null })
+            if (foundUser) {
+                return res.status(409).send('Username already taken')
+            }
+            newUser = db.decidee.edit_decidee_username(+req.params.id, username)
+
+        }
+        else if (req.session.user.username === username) {
+            const [foundUser] = await db.decidee.check_decidee({ email, username: null })
+            if (foundUser) {
+                return res.status(409).send('Email already taken')
+            }
+            newUser = db.decidee.edit_decidee_email(+req.params.id, email)
+        }
+        else {
+            await db.decidee.edit_decidee_username(+req.params.id, username)
+            await db.decidee.edit_decidee_email(+req.params.id, email)
+
+        }
+        [newUser] = await db.decidee.check_decidee_id(+req.params.id)
+        delete newUser.password
+        console.log(newUser)
+        req.session.user = newUser
+        res.status(201).send(req.session.user)
+
+
     }
 }
