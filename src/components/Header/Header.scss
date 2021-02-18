@@ -1,0 +1,22 @@
+.header-container {
+    height: 100px;
+    background-color: white;
+    color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0 30px;
+}
+
+.header-container nav {
+    width: 225px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.nav-links {
+    text-decoration: none;
+    color: black;
+    font-size: 24px;
+}
