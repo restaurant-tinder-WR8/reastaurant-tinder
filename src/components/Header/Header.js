@@ -4,8 +4,11 @@ import './Header.scss'
 const Header = (props) => {
 
     return(
+        <div>
+            {props.location.pathname === '/dash' || props.location.pathname === '/profile'
+            ? (
         <header className='header-container'>
-            <h1>Hungree</h1>
+                <h1>Hungree</h1>
             {props.location.pathname !== '/dash'
             ? (
                 <nav>
@@ -13,10 +16,12 @@ const Header = (props) => {
                 </nav>
             ):  
                 <nav>
-                    <Link to='/profile' className='nav-links'>Profile</Link>
+                <Link to='/profile' className='nav-links'>Profile</Link>
                 </nav>
             }
         </header>
+            ): null}
+        </div>
     )
 }
 
