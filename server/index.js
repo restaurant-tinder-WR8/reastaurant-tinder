@@ -3,6 +3,7 @@ const express = require('express'),
     session = require('express-session'),
     massive = require('massive'),
     authCtrl = require('./controllers/authController'),
+    friendCtrl = require('./controllers/friendController'),
     { SERVER_PORT, SESSION_SECRET, CONNECTION_STRING } = process.env,
     app = express()
 
@@ -28,5 +29,6 @@ app.get('/auth/logout', authCtrl.logout)
 app.get('/auth/user', authCtrl.getUser)
 app.put('/auth/user/:id', authCtrl.editUser)
 
+app.get('/api/friend/:id', friendCtrl.getFriends);
 
 app.listen(SERVER_PORT, () => console.log(`APP listening on port: ${SERVER_PORT}`))
