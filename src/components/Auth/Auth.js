@@ -71,6 +71,9 @@ const Auth = (props) => {
 
     return (
         <div>
+            <h1>Welcome to Hungree!</h1>
+            <h3>When you are Hungry but need to Agree</h3>
+            <h3>Login</h3>
             {!registerView
                 ?
                 (
