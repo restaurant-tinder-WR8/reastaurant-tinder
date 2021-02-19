@@ -38,6 +38,11 @@ app.delete('/api/lobby', lobbyCtrl.deleteLobby)
 app.get('/api/lobby/:id', lobbyCtrl.getLobby)
 
 //FRIENDS ENDPOINTS
-app.get('/api/friend/:id', friendCtrl.getFriends);
+app.get('/api/friends/:id', friendCtrl.getFriends);
+app.get('/api/friend/:id', friendCtrl.getPotentialFriend);
+app.get('/api/pending/:id', friendCtrl.getPending);
+app.post('/api/friend/:id', friendCtrl.sendFriendInvite);
+app.post('/api/pending/:id', friendCtrl.acceptInvite);
+app.delete('/api/pending/:id', friendCtrl.rejectInvite);
 
 app.listen(SERVER_PORT, () => console.log(`APP listening on port: ${SERVER_PORT}`))
