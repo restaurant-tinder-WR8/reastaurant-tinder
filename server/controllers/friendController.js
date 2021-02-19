@@ -50,29 +50,26 @@ module.exports = {
                 .catch(err => res.status(500).send(err));
         }
     },
-    acceptInvite: (req, res) => {
+    acceptInvite: async (req, res) => {
         const {id} = req.params;
         const {friendId, pendingId} = req.body;
         const db = req.app.get('db');
 
-        db.friend.add_friend(id, friendId)
-            .then(() => {
-                res.status(200).send('Friend Added!');
-                db.friend.remove_pending(pendingId)
-                    .then(() => {
-                        res.sendStatus(200);
-                    })
-                    .catch(err => res.status(500).send(err));
-            })
-            .catch(err => res.status(500).send(err));
+        const friends = await db.friend.add_friend(id, friendId);
+        const pending = await db.friend.remove_pending(pendingId, id);
+
+        const acceptArr = [friends, pending];
+
+        res.status(200).send(acceptArr);
     },
     rejectInvite: (req, res) => {
         const {id} = req.params;
+        const {pendingId} = req.body;
         const db = req.app.get('db');
 
-        db.friend.remove_pending(id)
-            .then(() => {
-                res.status(200).send('Declined Invitation');
+        db.friend.remove_pending(pendingId, id)
+            .then(pending => {
+                res.status(200).send(pending);
             })
             .catch(err => res.status(500).send(err));
     }
