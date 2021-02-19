@@ -1,0 +1,18 @@
+.restaurant-container{
+    box-sizing: border-box;
+    height: 55vh;
+    width: 25vw;
+    display: flex;
+    border: solid;
+    border-color: black;
+    margin: auto;
+    margin-top: 100px;
+    justify-content: center;
+}
+
+
+.info{
+    margin:auto;
+    margin-bottom:5px;
+    align-content: flex-end;
+}
