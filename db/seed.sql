@@ -16,3 +16,11 @@ CREATE TABLE pending_friend (
     sender_id INT REFERENCES decidee(decidee_id),
     receiver_id INT REFERENCES decidee(decidee_id)
 );
+
+CREATE TABLE chat_message (
+    message_id serial primary key,
+    lobby_id INT REFERENCES lobby(lobby_id),
+    decidee_id INT REFERENCES decidee(decidee_id),
+    post_time TIMESTAMP,
+    message_text text
+);

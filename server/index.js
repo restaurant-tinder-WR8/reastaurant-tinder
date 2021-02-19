@@ -5,8 +5,30 @@ const express = require('express'),
     authCtrl = require('./controllers/authController'),
     lobbyCtrl = require('./controllers/lobbyController'),
     friendCtrl = require('./controllers/friendController'),
+    chatCtrl = require('./controllers/chatController'),
     { SERVER_PORT, SESSION_SECRET, CONNECTION_STRING } = process.env,
-    app = express()
+    app = express(),
+    http = require('http'),
+    socketio = require('socket.io'),
+    server = http.createServer(app),
+    io = socketio(server)
+
+io.on('connection', (socket) => {
+    console.log(`Connected: ${socket.id}`)
+
+    socket.on('join', (lobbyId) => {
+        socket.join(lobbyId)
+    })
+
+    socket.on('chat', (lobbyId) => {
+        io.to(lobbyId).emit('newMessage')
+    })
+
+    socket.on('disconnect', () => {
+        console.log(`Disconnected`)
+    })
+
+});
 
 app.use(express.json())
 app.use(session({
@@ -45,4 +67,8 @@ app.post('/api/friend/:id', friendCtrl.sendFriendInvite);
 app.post('/api/pending/:id', friendCtrl.acceptInvite);
 app.delete('/api/pending/:id', friendCtrl.rejectInvite);
 
-app.listen(SERVER_PORT, () => console.log(`APP listening on port: ${SERVER_PORT}`))
+//CHAT ENDPOINTS
+app.get('/api/lobby-chat/:lobbyId', chatCtrl.getLobbyChat)
+app.post('/api/lobby-chat', chatCtrl.addMessageToLobby)
+
+server.listen(SERVER_PORT, () => console.log(`APP listening on port: ${SERVER_PORT}`))
