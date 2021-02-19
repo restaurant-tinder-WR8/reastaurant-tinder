@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext, useCallback } from "react";
+import { Switch, Route, useRouteMatch, Link } from 'react-router-dom';
 import axios from 'axios';
 import AppContext from "../../context/app-context";
 import { initSocket, disconnectSocket, subscribeToChat, sendMessage } from '../../Sockets/ChatSocket'
@@ -6,6 +7,8 @@ import Friends from './Friends';
 
 const Dash = (props) => {
     const { decidee } = useContext(AppContext)
+    //Path and url used for nested Switch/Routes
+    const { path, url } = useRouteMatch();
     const [joinLobbyView, setJoinLobbyView] = useState(false)
     const [lobbyView, setLobbyView] = useState(false)
     const [lobbyId, setLobbyId] = useState(null)
@@ -44,7 +47,7 @@ const Dash = (props) => {
         setLobbyView(false);
     }
 
-    const handleCreateLobby = () => {
+    const handleHostLobby = () => {
         axios.post('/api/lobby')
             .then(res => {
                 console.log('SDE', res.data)
@@ -82,17 +85,29 @@ const Dash = (props) => {
         }
     }, [decidee])
 
+
     return (
         <main>
             <h2>Welcome to HUNGREE, {decidee?.username}!</h2>
 
             {!joinLobbyView && !lobbyView && (
                 <>
-                    <button onClick={handleCreateLobby}>CREATE LOBBY</button>
+                    <button onClick={handleHostLobby}>HOST LOBBY</button>
                     <button onClick={() => setJoinLobbyView(true)}>JOIN LOBBY</button>
                 </>
             )}
-
+            <div>
+                <Link to={`${url}/lobby/${lobbyId}`} ><h1>SWITCH TO LOBBY</h1></Link>
+            </div>
+            <Switch>
+                <Route exact path={`${path}`}>
+                    <h1>TEST1</h1>
+                </Route>
+                <Route path={`${path}/lobby/:id`}>
+                    <h1>THIS IS THE LOBBY</h1>
+                </Route>
+            </Switch>
+            <button onClick={() => props.history.push(`${path}`)}>SWITCH</button>
             {lobbyView
                 && (
                     <>
