@@ -51,15 +51,16 @@ const Friends = (props) => {
     const acceptInvite = (friendId, pendingId) => {
         axios.post(`/api/pending/${decidee.decidee_id}`, {friendId, pendingId})
             .then(res => {
-                alert(res.data);
+                setFriends(res.data[0]);
+                setPending(res.data[1]);
             })
             .catch(err => console.log(err));
     }
 
     const rejectInvite = (pendingId) => {
-        axios.delete(`/api/pending/${pendingId}`)
+        axios.put(`/api/pending/${decidee.decidee_id}`, {pendingId})
             .then(res => {
-                alert(res.data);
+                setPending(res.data);
             })
             .catch(err => console.log(err));
     }
