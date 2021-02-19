@@ -65,7 +65,7 @@ app.get('/api/friend/:id', friendCtrl.getPotentialFriend);
 app.get('/api/pending/:id', friendCtrl.getPending);
 app.post('/api/friend/:id', friendCtrl.sendFriendInvite);
 app.post('/api/pending/:id', friendCtrl.acceptInvite);
-app.delete('/api/pending/:id', friendCtrl.rejectInvite);
+app.put('/api/pending/:id', friendCtrl.rejectInvite);
 
 //CHAT ENDPOINTS
 app.get('/api/lobby-chat/:lobbyId', chatCtrl.getLobbyChat)
