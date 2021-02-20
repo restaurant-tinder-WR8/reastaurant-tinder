@@ -10,7 +10,7 @@ module.exports = {
             .catch(err => res.status(500).send(err));
     },
     getPotentialFriend: (req, res) => {
-        const {id} = req.params;
+        const { id } = req.params;
         const db = req.app.get('db');
 
         db.friend.get_potential_friend(id)
@@ -20,7 +20,7 @@ module.exports = {
             .catch(err => res.status(500).send(err));
     },
     getPending: (req, res) => {
-        const {id} = req.params;
+        const { id } = req.params;
         const db = req.app.get('db');
 
         db.friend.get_pending(id)
@@ -30,17 +30,17 @@ module.exports = {
             .catch(err => res.status(500).send(err));
     },
     sendFriendInvite: async (req, res) => {
-        const {id} = req.params;
-        const {friendId} = req.body;
+        const { id } = req.params;
+        const { friendId } = req.body;
         const db = req.app.get('db');
 
         const [foundFriendship] = await db.friend.check_friendship(id, friendId);
-        if (foundFriendship){
+        if (foundFriendship) {
             return res.status(400).send('You are already friends');
         }
 
         const [foundPending] = await db.friend.check_pending(id, friendId);
-        if (foundPending){
+        if (foundPending) {
             return res.status(200).send('Invitation Sent!');
         } else {
             db.friend.add_invitation(id, friendId)
@@ -51,8 +51,8 @@ module.exports = {
         }
     },
     acceptInvite: async (req, res) => {
-        const {id} = req.params;
-        const {friendId, pendingId} = req.body;
+        const { id } = req.params;
+        const { friendId, pendingId } = req.body;
         const db = req.app.get('db');
 
         const friends = await db.friend.add_friend(id, friendId);
@@ -63,8 +63,8 @@ module.exports = {
         res.status(200).send(acceptArr);
     },
     rejectInvite: (req, res) => {
-        const {id} = req.params;
-        const {pendingId} = req.body;
+        const { id } = req.params;
+        const { pendingId } = req.body;
         const db = req.app.get('db');
 
         db.friend.remove_pending(pendingId, id)

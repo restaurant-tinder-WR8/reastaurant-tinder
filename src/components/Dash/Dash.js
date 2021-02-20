@@ -1,9 +1,11 @@
 import { useState, useEffect, useContext, useCallback } from "react";
-import { Switch, Route, useRouteMatch, Link } from 'react-router-dom';
+import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import { initSocket, disconnectSocket, subscribeToChat, sendMessage } from '../../Sockets/ChatSocket';
 import axios from 'axios';
 import AppContext from "../../context/app-context";
-import { initSocket, disconnectSocket, subscribeToChat, sendMessage } from '../../Sockets/ChatSocket'
-import Friends from './Friends';
+import Friends from './Friends/Friends';
+import Lobby from './Lobby/Lobby';
+import './Dash.scss';
 
 const Dash = (props) => {
     const { decidee } = useContext(AppContext)
@@ -14,8 +16,44 @@ const Dash = (props) => {
     const [lobbyId, setLobbyId] = useState(null)
     const [lobbyIdInput, setLobbyIdInput] = useState('')
 
-    const [messageInput, setMessage] = useState('')
+    const handleBackBtn = () => {
+        setJoinLobbyView(false);
+        setLobbyView(false);
+        props.history.goBack();
+    }
+
     const [chatArr, setChatArr] = useState([])
+    const [messageInput, setMessage] = useState('');
+
+    const handleHostLobby = () => {
+        axios.post('/api/lobby')
+            .then(res => {
+                console.log('SDE', res.data)
+                setLobbyId(res.data.lobby_id)
+                props.history.push(`${url}/lobby/${res.data.lobby_id}`)
+                setLobbyView(true)
+            })
+            .catch(err => {
+                console.log(err.response)
+                if (err.response.status === 302) {
+                    setLobbyId(err.response.data.lobby_id)
+                    props.history.push(`${url}/lobby/${err.response.data.lobby_id}`)
+                    setLobbyView(true)
+                }
+            })
+    }
+
+    const handleJoinLobby = () => {
+        axios.get(`/api/lobby/${lobbyIdInput}`)
+            .then(res => {
+                console.log(res.data)
+                setLobbyId(res.data.lobby_id)
+                props.history.push(`${url}/lobby/${lobbyId}`)
+                setJoinLobbyView(false)
+                setLobbyView(true)
+            })
+            .catch(err => console.log(err))
+    }
 
     const getLobbyChat = useCallback(() => {
         axios.get(`/api/lobby-chat/${lobbyId}`)
@@ -26,7 +64,7 @@ const Dash = (props) => {
             })
             .catch(err => console.log(err))
     })
-    console.log(chatArr)
+
     useEffect(() => {
         if (lobbyId) {
             initSocket(lobbyId)
@@ -42,40 +80,8 @@ const Dash = (props) => {
 
     }, [lobbyId])
 
-    const handleBackBtn = () => {
-        setJoinLobbyView(false);
-        setLobbyView(false);
-    }
-
-    const handleHostLobby = () => {
-        axios.post('/api/lobby')
-            .then(res => {
-                console.log('SDE', res.data)
-                setLobbyId(res.data.lobby_id)
-                setLobbyView(true)
-            })
-            .catch(err => {
-                console.log(err.response)
-                if (err.response.status === 302) {
-                    setLobbyId(err.response.data.lobby_id)
-                    setLobbyView(true)
-                }
-            })
-    }
-
-    const handleJoinLobby = () => {
-        axios.get(`/api/lobby/${lobbyIdInput}`)
-            .then(res => {
-                console.log(res.data)
-                setLobbyId(res.data.lobby_id)
-                setJoinLobbyView(false)
-                setLobbyView(true)
-            })
-            .catch(err => console.log(err))
-    }
-
     useEffect(() => {
-        if (decidee !== null) {
+        if (decidee) {
             console.log('TAS', decidee)
             props.history.push('/dash')
         }
@@ -84,58 +90,30 @@ const Dash = (props) => {
             props.history.push('/')
         }
     }, [decidee])
-
+    console.log(props)
 
     return (
         <main>
-            <h2>Welcome to HUNGREE, {decidee?.username}!</h2>
+            {props.history.location.pathname === '/dash' &&
+                <h2>Welcome to HUNGREE, {decidee?.username}!</h2>
+            }
 
-            {!joinLobbyView && !lobbyView && (
-                <>
-                    <button onClick={handleHostLobby}>HOST LOBBY</button>
-                    <button onClick={() => setJoinLobbyView(true)}>JOIN LOBBY</button>
-                </>
-            )}
-            <div>
-                <Link to={`${url}/lobby/${lobbyId}`} ><h1>SWITCH TO LOBBY</h1></Link>
-            </div>
             <Switch>
                 <Route exact path={`${path}`}>
-                    <h1>TEST1</h1>
+                    <button onClick={handleHostLobby}>HOST LOBBY</button>
+                    <button onClick={() => setJoinLobbyView(true)}>JOIN LOBBY</button>
                 </Route>
-                <Route path={`${path}/lobby/:id`}>
-                    <h1>THIS IS THE LOBBY</h1>
-                </Route>
+                <Route
+                    path={`${path}/lobby/:id`}
+                    render={props => (
+                        <Lobby {...props} lobbyId={lobbyId} handleBackBtn={handleBackBtn} />
+                    )}
+                />
             </Switch>
-            <button onClick={() => props.history.push(`${path}`)}>SWITCH</button>
-            {lobbyView
-                && (
-                    <>
-                        <button onClick={handleBackBtn}>BACK</button>
-                        <div>
-                            <h3>LOBBY-ID: {lobbyId}</h3>
-                            <button>INVITE FRIENDS</button>
-                        </div>
-                        <div>
-                            <h1>lobbyId: {lobbyId}</h1>
-                            <h1>Live Chat:</h1>
-                            <input
-                                type="text"
-                                name="name"
-                                value={messageInput}
-                                onChange={e => setMessage(e.target.value)}
-                            />
-                            <button onClick={() => sendMessage(lobbyId, messageInput)}>Send</button>
-                            {chatArr?.map(message => <p key={message.message_id}>{message.message_text}</p>)}
-                        </div>
-                    </>
-
-                )}
-
             {joinLobbyView
                 && (
                     <>
-                        <button onClick={handleBackBtn}>BACK</button>
+                        <button onClick={handleBackBtn}>CLOSE FORM</button>
                         <div>
                             <input value={lobbyIdInput} onChange={(e) => setLobbyIdInput(e.target.value)} placeholder="ENTER LOBBY ID"></input>
                             <button onClick={handleJoinLobby}>JOIN</button>
@@ -143,10 +121,27 @@ const Dash = (props) => {
                     </>
 
                 )}
-            <div>
-                <p>this is dash</p>
-                <Friends />
-            </div>
+            {lobbyView &&
+                <>
+                    <section id='chat-container'>
+                        <h2>LOBBY CHAT: {lobbyId}</h2>
+                        <div>
+                            <h3>Live Chat:</h3>
+
+                            {chatArr?.map(message => <p key={message.message_id}>{message.message_text}</p>)}
+                            <input
+                                type="text"
+                                name="name"
+                                value={messageInput}
+                                onChange={e => setMessage(e.target.value)}
+                            />
+                            <button onClick={() => sendMessage(lobbyId, messageInput)}>Send</button>
+                        </div>
+                    </section>
+                </>
+            }
+
+            <Friends />
         </main>
 
     )
