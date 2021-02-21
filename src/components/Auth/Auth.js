@@ -31,6 +31,12 @@ const Auth = (props) => {
         })
     }
 
+    useEffect(() => {
+        axios.get('/auth/user')
+            .then(res => setDecidee(res.data))
+            .catch(err => console.log(err))
+    }, [])
+
 
 
     const handleRegister = () => {
@@ -58,13 +64,10 @@ const Auth = (props) => {
     }
 
     useEffect(() => {
-
         if (decidee !== null) {
-            console.log('TAS', decidee)
             props.history.push('/dash')
         }
         else {
-            console.log('TAS', decidee)
             props.history.push('/')
         }
     }, [decidee])

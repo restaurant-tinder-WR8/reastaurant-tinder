@@ -2,15 +2,13 @@ import io from 'socket.io-client';
 import axios from 'axios';
 let socket;
 
-export const initSocket = (lobbyId) => {
+export const initSocket = () => {
     socket = io();
-    if (socket && lobbyId) {
-        socket.emit('join', lobbyId)
-    }
 }
 
-export const subscribeToChat = (cb) => {
+export const subscribeToChat = (lobbyId, cb) => {
     if (!socket) return (true);
+    socket.emit('join', lobbyId)
     socket.on('newMessage', () => {
         return cb(null);
     });

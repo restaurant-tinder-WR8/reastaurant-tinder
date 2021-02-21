@@ -4,7 +4,6 @@ module.exports = {
         const db = req.app.get('db')
 
         const chatArr = await db.chat.get_lobby_chat({ lobbyId })
-        // console.log('SDE: chatCtrl:8', chatArr)
         res.status(200).send(chatArr)
     },
     addMessageToLobby: async (req, res) => {
