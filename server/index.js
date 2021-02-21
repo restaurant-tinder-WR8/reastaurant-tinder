@@ -16,8 +16,18 @@ const express = require('express'),
 io.on('connection', (socket) => {
     console.log(`Connected: ${socket.id}`)
 
-    socket.on('join', (lobbyId) => {
+    socket.on('newNotification', ({ receiverId, notificationList }) => {
+        console.log(receiverId, notificationList)
+        socket.broadcast.emit('notify', { receiverId, notificationList })
+    })
+
+    socket.on('join', ({ lobbyId, memberList }) => {
         socket.join(lobbyId)
+        socket.to(lobbyId).emit('newLobbyMemberList', memberList)
+    })
+
+    socket.on('leave', ({ lobbyId, memberList }) => {
+        socket.to(lobbyId).emit('newLobbyMemberList', memberList)
     })
 
     socket.on('chat', (lobbyId) => {

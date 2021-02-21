@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useCallback } from "react";
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { initSocket, disconnectSocket, subscribeToChat, sendMessage } from '../../Sockets/ChatSocket';
+import { initSocket, disconnectSocket, subscribeToChat, sendMessage, sendNotification } from '../../Sockets/ChatSocket';
 import axios from 'axios';
 import AppContext from "../../context/app-context";
 import Friends from './Friends/Friends';
@@ -9,25 +9,28 @@ import './Dash.scss';
 
 const Dash = (props) => {
     const { decidee } = useContext(AppContext)
+
+    useEffect(() => {
+        if (decidee) {
+            props.history.push('/dash')
+        }
+        else {
+            props.history.push('/')
+        }
+    }, [decidee])
+
     //Path and url used for nested Switch/Routes
     const { path, url } = useRouteMatch();
     const [lobbyId, setLobbyId] = useState(null)
     const [lobbyMemberList, setLobbyMemberList] = useState(null)
-    const [pendingList, setPendingList] = useState(null)
+    const [receiverPendingList, setReceiverPendingList] = useState(null)
+    const [lobbyPendingList, setLobbyPendingList] = useState(null)
     const [joinLobbyView, setJoinLobbyView] = useState(false)
     const [chatView, setChatView] = useState(false)
     const [lobbyIdInput, setLobbyIdInput] = useState('')
 
     const [chatArr, setChatArr] = useState([])
     const [messageInput, setMessage] = useState('');
-
-    const handleBackBtn = () => {
-        setJoinLobbyView(false);
-        setChatView(false);
-        removeLobbyMember(decidee.decidee_id)
-        props.history.goBack();
-    }
-
 
     const handleHostLobby = () => {
         axios.post('/api/lobby')
@@ -56,10 +59,28 @@ const Dash = (props) => {
             .catch(err => console.log(err))
     }
 
+    const handleLeaveLobby = () => {
+        const { decidee_id } = decidee
+        axios.put(`/api/lobby-members`, { decidee_id, lobbyId })
+            .then(res => {
+                disconnectSocket(lobbyId, res.data)
+                setLobbyId(null)
+                setJoinLobbyView(false);
+                setChatView(false);
+                props.history.goBack();
+            })
+            .catch(err => console.log(err))
+    }
+
     const handleInviteTolobby = (friend_id) => {
         if (lobbyId) {
             axios.post('/api/pending-lobby', { lobbyId, friend_id })
-                .then(res => console.log(res.data))
+                .then(res => {
+                    console.log(res.data)
+                    const { newLobbyPendingList, newReceiverPendingList } = res.data;
+                    setLobbyPendingList(newLobbyPendingList)
+                    sendNotification(friend_id, newReceiverPendingList)
+                })
                 .catch(err => console.log(err))
         }
     }
@@ -94,8 +115,20 @@ const Dash = (props) => {
 
     useEffect(() => {
         if (!lobbyId) {
-            initSocket(lobbyId)
-        } else {
+            disconnectSocket();
+        }
+        if (!lobbyId && decidee) {
+            //This has a cb functions that are not ran by this invocation but only on socket event that it is being passed to in ChatSocket.js
+            initSocket(
+                decidee.decidee_id,
+                (notificationList) => {
+                    setReceiverPendingList(notificationList)
+                },
+                (memberList => {
+                    setLobbyMemberList(memberList)
+                }))
+        } else if (lobbyId && decidee) {
+            //This has a cb function that is not ran by this invocation but only on socket event that it is being passed to in ChatSocket.js
             subscribeToChat(lobbyId, err => {
                 if (err) return;
                 getLobbyChat();
@@ -110,7 +143,7 @@ const Dash = (props) => {
     useEffect(() => {
         if (decidee) {
             axios.get(`/api/lobby-invites/${decidee.decidee_id}`)
-                .then(res => setPendingList(res.data))
+                .then(res => setReceiverPendingList(res.data))
                 .catch(err => console.log(err))
         }
         return () => {
@@ -118,14 +151,7 @@ const Dash = (props) => {
         }
     }, [])
 
-    useEffect(() => {
-        if (decidee) {
-            props.history.push('/dash')
-        }
-        else {
-            props.history.push('/')
-        }
-    }, [decidee])
+
 
     return (
         <main>
@@ -144,7 +170,7 @@ const Dash = (props) => {
                         <Lobby {...props}
                             lobbyId={lobbyId}
                             lobbyMemberList={lobbyMemberList}
-                            handleBackBtn={handleBackBtn}
+                            handleLeaveLobby={handleLeaveLobby}
                         />
                     )}
                 />
@@ -181,11 +207,11 @@ const Dash = (props) => {
                     </section>
                 </>
             }
-            <div>
-                PENDING INVITES:
-                {pendingList
+            <div id='notification-container'>
+                RECENT LOBBY INVITES:
+                {receiverPendingList
                     &&
-                    pendingList.map(el => <p>{el.username} has invited you to their lobby!</p>)
+                    receiverPendingList.map(el => <p>{el.username} has invited you to their lobby!</p>)
                 }
             </div>
             <Friends handleInviteTolobby={handleInviteTolobby} />

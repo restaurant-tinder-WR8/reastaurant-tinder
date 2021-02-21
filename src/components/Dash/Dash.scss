@@ -4,6 +4,14 @@
     top: 120px;
     border: 1px solid white;
     height: 60vh;
-    margin: auto 0;
+    background-color: rgb(138, 138, 138);
+}
+
+#notification-container {
+    position: fixed;
+    left: 0px;
+    bottom: 0px;
+    border: 1px solid white;
+    height: auto;
     background-color: rgb(138, 138, 138);
 }

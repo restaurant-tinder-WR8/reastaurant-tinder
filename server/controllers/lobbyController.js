@@ -1,6 +1,7 @@
 
 module.exports = {
     createLobby: async (req, res) => {
+        console.log(req.session.user)
         const { decidee_id } = req.session.user
         const db = req.app.get('db')
 
@@ -57,8 +58,9 @@ module.exports = {
         const { friend_id, lobbyId } = req.body
         const { decidee_id } = req.session.user
         const db = req.app.get('db')
-        const pendingList = await db.lobby.add_pending_invite({ friend_id, decidee_id, lobbyId })
-        res.status(200).send(pendingList)
+        const newLobbyPendingList = await db.lobby.add_pending_invite({ friend_id, decidee_id, lobbyId })
+        const newReceiverPendingList = await db.lobby.get_pending_invites({ id: friend_id })
+        res.status(200).send({ newLobbyPendingList, newReceiverPendingList })
     },
     getLobbyInvites: async (req, res) => {
         const { id } = req.params;

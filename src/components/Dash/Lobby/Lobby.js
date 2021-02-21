@@ -2,12 +2,12 @@
 
 const Lobby = props => {
 
-    const { lobbyId, handleBackBtn, lobbyMemberList } = props;
+    const { lobbyId, handleLeaveLobby, lobbyMemberList } = props;
 
     console.log(lobbyMemberList)
     return (
         <div>
-            <button onClick={handleBackBtn}>BACK</button>
+            <button onClick={handleLeaveLobby}>BACK</button>
             <h3>LOBBY-ID: {lobbyId}</h3>
             <div className='member-list-container'>
                 LOBBY MEMBERS:
