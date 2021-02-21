@@ -53,11 +53,16 @@ app.get('/auth/logout', authCtrl.logout)
 app.get('/auth/user', authCtrl.getUser)
 app.put('/auth/user/:id', authCtrl.editUser)
 
-//LOBBY ENDPOINTS (GRAND MASTER ARCHITECT EXTRAORDINAIRE: SDE )
+//LOBBY ENDPOINTS (GRAND MASTER ARCHITECT EXTRAORDINAIRE: SDE, who is very very very handsome... Like WOW! )
 app.post('/api/lobby', lobbyCtrl.createLobby)
 app.put('/api/lobby', lobbyCtrl.recreateLobby)
 app.delete('/api/lobby', lobbyCtrl.deleteLobby)
-app.get('/api/lobby/:id', lobbyCtrl.getLobby)
+app.put('/api/lobby/:id', lobbyCtrl.joinLobby)
+app.get('/api/lobby-members/:id', lobbyCtrl.getLobbyMembers)
+app.post('/api/lobby-members', lobbyCtrl.addLobbyMember)
+app.put('/api/lobby-members', lobbyCtrl.removeLobbyMember)
+app.post('/api/pending-lobby', lobbyCtrl.addPendingInvite)
+app.get('/api/lobby-invites/:id', lobbyCtrl.getLobbyInvites)
 
 //FRIENDS ENDPOINTS
 app.get('/api/friends/:id', friendCtrl.getFriends);

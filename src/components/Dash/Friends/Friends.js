@@ -5,6 +5,7 @@ import './Friends.scss';
 
 const Friends = (props) => {
     const { decidee } = useContext(AppContext);
+    const { handleInviteTolobby } = props;
     const [friends, setFriends] = useState([]);
     const [pending, setPending] = useState([]);
     const [input, setInput] = useState('');
@@ -68,6 +69,8 @@ const Friends = (props) => {
             .catch(err => console.log(err));
     }
 
+
+
     const mappedPending = pending.map((el, i) => {
         return <section key={i}>
             <p>{el.username}</p>
@@ -78,7 +81,7 @@ const Friends = (props) => {
 
     const mappedFriends = friends.map((el, i) => {
         return <section key={i}>
-            <p>{el.username}</p>
+            <p onClick={() => handleInviteTolobby(el.friend_decidee_id)}>{el.username}</p>
         </section>
     })
 
