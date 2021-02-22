@@ -4,6 +4,10 @@ const Lobby = props => {
 
     const { lobbyId, handleLeaveLobby, lobbyMemberList } = props;
 
+    const startLobby = () => {
+        props.history.push(`/dash/lobbyactive/${lobbyId}`)
+    }
+
     console.log(lobbyMemberList)
     return (
         <div>
@@ -19,7 +23,8 @@ const Lobby = props => {
                     )
                 }
             </div>
-            <button>INVITE FRIENDS</button>
+            <button onClick={startLobby}>Start Lobby</button>
+
         </div>
     )
 }
