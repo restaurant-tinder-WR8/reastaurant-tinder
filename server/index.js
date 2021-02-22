@@ -35,6 +35,11 @@ io.on('connection', (socket) => {
         io.to(lobbyId).emit('newMessage')
     })
 
+    socket.on('lobbyStart', (obj) => {
+        const {lobbyId, restaurantList} = obj
+        io.to(lobbyId).emit('lobbyStart', restaurantList )
+    })
+
     socket.on('disconnect', () => {
         console.log(`Disconnected`)
     })

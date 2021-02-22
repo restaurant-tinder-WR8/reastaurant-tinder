@@ -1,28 +1,11 @@
-import axios from "axios";
-import { useState, useEffect, useContext } from "react";
-import AppContext from "../../../context/app-context";
 import "./LobbyActive.scss"
-import useGeolocation from 'react-hook-geolocation'
 
-
-
-
-const LobbyActive = () => {
-    const [restaurantList, setRestaurants] = useState([])
-    const geoLocation = useGeolocation()
-    const searchRestaurants = () => {
-        axios.post(`/api/getRestaurants`, geoLocation)
-            .then(res => {
-                setRestaurants(
-                    res.data
-                )
-            })
-
-    }
+const LobbyActive = props => {
+    const { restaurantList } = props
 
     return (
         <section className="session">
-            <button onClick={searchRestaurants}>Get Restaurants</button>
+            {/* <button onClick={searchRestaurants}>Get Restaurants</button> */}
             <div className="restaurant-container">
                 <img className="photo-container" src={restaurantList[0]?.image_url} />
                 <div className="info">
