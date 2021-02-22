@@ -39,7 +39,7 @@ const Dash = (props) => {
                 setLobbyId(lobby_id)
                 console.log(memberList)
                 setLobbyMemberList(memberList)
-                props.history.push(`${url}/lobby/${res.data.lobby_id}`)
+                props.history.push(`${url}/lobby/${lobby_id}`)
                 setChatView(true)
             })
             .catch(err => console.log(err))
@@ -52,7 +52,7 @@ const Dash = (props) => {
                 const { lobby_id, memberList } = res.data;
                 setLobbyId(lobby_id)
                 setLobbyMemberList(memberList)
-                props.history.push(`${url}/lobby/${lobbyId}`)
+                props.history.push(`${url}/lobby/${lobby_id}`)
                 setJoinLobbyView(false)
                 setChatView(true)
             })
@@ -85,23 +85,23 @@ const Dash = (props) => {
         }
     }
 
-    const addLobbyMember = useCallback((decidee_id) => {
-        axios.post(`/api/lobby-members`, { lobbyId, decidee_id })
-            .then(res => setLobbyMemberList(res.data))
-            .catch(err => console.log(err.data))
-    })
+    // const addLobbyMember = useCallback((decidee_id) => {
+    //     axios.post(`/api/lobby-members`, { lobbyId, decidee_id })
+    //         .then(res => setLobbyMemberList(res.data))
+    //         .catch(err => console.log(err.data))
+    // })
 
-    const removeLobbyMember = useCallback((decidee_id) => {
-        axios.put(`/api/lobby-members`, { lobbyId, decidee_id })
-            .then(res => setLobbyMemberList(res.data))
-            .catch(err => console.log(err))
-    })
+    // const removeLobbyMember = useCallback((decidee_id) => {
+    //     axios.put(`/api/lobby-members`, { lobbyId, decidee_id })
+    //         .then(res => setLobbyMemberList(res.data))
+    //         .catch(err => console.log(err))
+    // })
 
-    const getLobbyMembers = useCallback(() => {
-        axios.get(`/api/lobby-members/${lobbyId}`)
-            .then(res => console.log('SDE: ', res.data))
-            .catch(err => console.log(err))
-    })
+    // const getLobbyMembers = useCallback(() => {
+    //     axios.get(`/api/lobby-members/${lobbyId}`)
+    //         .then(res => console.log('SDE: ', res.data))
+    //         .catch(err => console.log(err))
+    // })
 
     const getLobbyChat = useCallback(() => {
         axios.get(`/api/lobby-chat/${lobbyId}`)
@@ -146,8 +146,11 @@ const Dash = (props) => {
                 .then(res => setReceiverPendingList(res.data))
                 .catch(err => console.log(err))
         }
+        if (lobbyId) {
+            props.history.push(`${url}/lobby/${lobbyId}`)
+        }
         return () => {
-            disconnectSocket()
+            disconnectSocket();
         }
     }, [])
 
@@ -167,6 +170,7 @@ const Dash = (props) => {
                 <Route
                     path={`${path}/lobby/:id`}
                     render={props => (
+                        //Using render props in order to pass lobby info and functions with props
                         <Lobby {...props}
                             lobbyId={lobbyId}
                             lobbyMemberList={lobbyMemberList}

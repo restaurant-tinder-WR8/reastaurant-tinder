@@ -7,7 +7,7 @@ const Lobby = props => {
     console.log(lobbyMemberList)
     return (
         <div>
-            <button onClick={handleLeaveLobby}>BACK</button>
+            <button onClick={handleLeaveLobby}>LEAVE LOBBY</button>
             <h3>LOBBY-ID: {lobbyId}</h3>
             <div className='member-list-container'>
                 LOBBY MEMBERS:
