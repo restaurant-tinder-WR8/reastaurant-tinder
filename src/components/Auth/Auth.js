@@ -31,11 +31,11 @@ const Auth = (props) => {
         })
     }
 
-    // useEffect(() => {
-    //     axios.get('/auth/user')
-    //         .then(res => setDecidee(res.data))
-    //         .catch(err => console.log(err))
-    // }, [])
+    useEffect(() => {
+        axios.get('/auth/user')
+            .then(res => setDecidee(res.data))
+            .catch(err => console.log(err))
+    }, [])
 
 
 

@@ -9,16 +9,6 @@ import './Dash.scss';
 
 const Dash = (props) => {
     const { decidee } = useContext(AppContext)
-
-    useEffect(() => {
-        if (decidee) {
-            props.history.push('/dash')
-        }
-        else {
-            props.history.push('/')
-        }
-    }, [decidee])
-
     //Path and url used for nested Switch/Routes
     const { path, url } = useRouteMatch();
     const [lobbyId, setLobbyId] = useState(null)
@@ -106,17 +96,26 @@ const Dash = (props) => {
     const getLobbyChat = useCallback(() => {
         axios.get(`/api/lobby-chat/${lobbyId}`)
             .then(res => {
-                console.log(res.data)
                 setChatArr(res.data)
 
             })
             .catch(err => console.log(err))
     })
+    //Redundancy to push user back to auth if not logged in
+    useEffect(() => {
+        if (decidee) {
+            props.history.push('/dash')
+        }
+        else {
+            props.history.push('/')
+        }
+    }, [decidee])
 
     useEffect(() => {
         if (!lobbyId) {
             disconnectSocket();
         }
+        //Create socket on component mount as well as socket listeners for notifications and lobby member changes
         if (!lobbyId && decidee) {
             //This has a cb functions that are not ran by this invocation but only on socket event that it is being passed to in ChatSocket.js
             initSocket(
@@ -140,7 +139,9 @@ const Dash = (props) => {
 
     }, [lobbyId])
 
+
     useEffect(() => {
+        window.addEventListener('beforeunload', handleLeaveLobby);
         if (decidee) {
             axios.get(`/api/lobby-invites/${decidee.decidee_id}`)
                 .then(res => setReceiverPendingList(res.data))
@@ -150,7 +151,8 @@ const Dash = (props) => {
             props.history.push(`${url}/lobby/${lobbyId}`)
         }
         return () => {
-            disconnectSocket();
+            window.removeEventListener('beforeunload', handleLeaveLobby);
+            // disconnectSocket();
         }
     }, [])
 
