@@ -5,7 +5,7 @@ const axios = require('axios')
 
 module.exports = {
     getRestaurants: async (req, res) => {
-        console.log(req.body)
+        // console.log(req.body)
         const { latitude, longitude } = req.body
         var config = {
             headers: {

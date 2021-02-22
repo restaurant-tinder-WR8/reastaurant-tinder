@@ -1,7 +1,8 @@
+import { lobbyVote } from '../../../Sockets/ChatSocket';
 import "./LobbyActive.scss"
 
 const LobbyActive = props => {
-    const { restaurantList } = props
+    const { restaurantList, lobbyId, lobbyVotes } = props
 
     return (
         <section className="session">
@@ -13,11 +14,11 @@ const LobbyActive = props => {
                     <h3>Rating</h3><h3>Cost($$)</h3>
                 </div>
             </div>
-            <button className="stomp">Stomp</button>
-            <button>Chomp</button>
+            <button className="stomp" onClick={() => lobbyVote(lobbyId, false, lobbyVotes)}>Stomp</button>
+            <button onClick={() => lobbyVote(lobbyId, true, lobbyVotes)}>Chomp</button>
             <button>End Session</button>
 
-        </section>
+        </section >
     )
 }
 export default LobbyActive;

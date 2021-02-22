@@ -35,7 +35,6 @@ const Lobby = props => {
             .catch(err => console.log(err))
     }
 
-    console.log(lobbyMemberList)
     return (
         <div>
             <button onClick={handleLeaveLobby}>LEAVE LOBBY</button>
