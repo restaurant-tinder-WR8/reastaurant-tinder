@@ -5,6 +5,7 @@ import axios from 'axios';
 import AppContext from "../../context/app-context";
 import Friends from './Friends/Friends';
 import Lobby from './Lobby/Lobby';
+import LobbyActive from './LobbyActive/LobbyActive'
 import Chat from './Chat/Chat';
 import './Dash.scss';
 
@@ -175,6 +176,18 @@ const Dash = (props) => {
                             lobbyId={lobbyId}
                             lobbyMemberList={lobbyMemberList}
                             handleLeaveLobby={handleLeaveLobby}
+                        />
+                    )}
+                />
+                <Route
+                    path={`${path}/lobbyactive/:id`}
+                    render={props => (
+                        //Using render props in order to pass lobby info and functions with props
+                        <LobbyActive {...props}
+                            lobbyId={lobbyId}
+                            lobbyMemberList={lobbyMemberList}
+                            handleLeaveLobby={handleLeaveLobby}
+                            path={path}
                         />
                     )}
                 />
