@@ -33,16 +33,17 @@ module.exports = {
         const { decidee_id } = req.session.user;
         const db = req.app.get('db')
 
-        const [foundLobby] = await db.lobby.get_lobby({ lobby_id: +id })
+        const [foundLobby] = await db.lobby.get_lobby({ lobby_id: id })
         if (!foundLobby) {
             return res.status(404).send('Lobby ID does not exist')
         }
         const { lobby_id } = foundLobby
+        const newInviteList = await db.lobby.remove_lobby_invites({ id, decidee_id });
         let memberList = await db.lobby.get_lobby_members({ lobbyId: lobby_id })
         if (!memberList.some(member => member.decidee_id === decidee_id)) {
             memberList = await db.lobby.add_lobby_member({ lobbyId: lobby_id, decidee_id })
         }
-        res.status(200).send({ lobby_id, memberList })
+        res.status(200).send({ lobby_id, memberList, newInviteList })
     },
     addLobbyMember: async (req, res) => {
         const { decidee_id, lobbyId } = req.body
@@ -76,5 +77,13 @@ module.exports = {
         const db = req.app.get('db')
         const lobbyMemberList = await db.lobby.get_lobby_members({ lobbyId: id })
         res.status(200).send(lobbyMemberList)
+    },
+    removeLobbyInvites: async (req, res) => {
+        const { id } = req.params
+        const { decidee_id } = req.session.user
+        const db = req.app.get('db')
+
+        await db.lobby.remove_lobby_invites({ id, decidee_id })
+        //FINISH THIS!
     }
 }

@@ -1,11 +1,38 @@
-
+import { useState, useEffect, useContext } from "react";
+import { lobbyStart } from '../../../Sockets/ChatSocket';
+import axios from "axios";
 
 const Lobby = props => {
+    const { lobbyId, handleLeaveLobby, lobbyMemberList, geoLocation } = props;
 
-    const { lobbyId, handleLeaveLobby, lobbyMemberList } = props;
+    const shuffle = (array) => {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    }
 
     const startLobby = () => {
-        props.history.push(`/dash/lobbyactive/${lobbyId}`)
+        axios.post(`/api/getRestaurants`, geoLocation)
+            .then(res => {
+                console.log(res.data)
+                let newArr = shuffle(res.data)
+                console.log(newArr)
+                lobbyStart(lobbyId, newArr);
+            })
+            .catch(err => console.log(err))
     }
 
     console.log(lobbyMemberList)

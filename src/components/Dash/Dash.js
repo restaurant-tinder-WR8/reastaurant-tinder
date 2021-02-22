@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext, useCallback } from "react";
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { initSocket, disconnectSocket, subscribeToChat, sendMessage, sendNotification } from '../../Sockets/ChatSocket';
+import { initSocket, disconnectSocket, subscribeToChat, sendNotification } from '../../Sockets/ChatSocket';
+import useGeolocation from 'react-hook-geolocation'
 import axios from 'axios';
 import AppContext from "../../context/app-context";
 import Friends from './Friends/Friends';
@@ -20,6 +21,8 @@ const Dash = (props) => {
     const [joinLobbyView, setJoinLobbyView] = useState(false)
     const [chatView, setChatView] = useState(false)
     const [lobbyIdInput, setLobbyIdInput] = useState('')
+    const [restaurantList, setRestaurants] = useState([])
+    const geoLocation = useGeolocation()
 
     const [chatArr, setChatArr] = useState([])
 
@@ -36,13 +39,15 @@ const Dash = (props) => {
             .catch(err => console.log(err))
     }
 
-    const handleJoinLobby = () => {
-        axios.put(`/api/lobby/${lobbyIdInput}`)
+    const handleJoinLobby = (targetLobbyId) => {
+        console.log(targetLobbyId)
+        axios.put(`/api/lobby/${targetLobbyId}`)
             .then(res => {
                 console.log(res.data)
-                const { lobby_id, memberList } = res.data;
+                const { lobby_id, memberList, newInviteList } = res.data;
                 setLobbyId(lobby_id)
                 setLobbyMemberList(memberList)
+                setReceiverPendingList(newInviteList)
                 props.history.push(`${url}/lobby/${lobby_id}`)
                 setJoinLobbyView(false)
                 setChatView(true)
@@ -58,7 +63,7 @@ const Dash = (props) => {
                 setLobbyId(null)
                 setJoinLobbyView(false);
                 setChatView(false);
-                props.history.goBack();
+                props.history.push(`/dash`)
             })
             .catch(err => console.log(err))
     }
@@ -129,10 +134,16 @@ const Dash = (props) => {
                 }))
         } else if (lobbyId && decidee) {
             //This has a cb function that is not ran by this invocation but only on socket event that it is being passed to in ChatSocket.js
-            subscribeToChat(lobbyId, err => {
-                if (err) return;
-                getLobbyChat();
-            });
+            subscribeToChat(
+                lobbyId,
+                err => {
+                    if (err) return;
+                    getLobbyChat();
+                },
+                (newRestaurantList) => {
+                    setRestaurants(newRestaurantList)
+                    props.history.push(`/dash/lobbyactive/${lobbyId}`)
+                });
 
             getLobbyChat();
         };
@@ -176,6 +187,7 @@ const Dash = (props) => {
                             lobbyId={lobbyId}
                             lobbyMemberList={lobbyMemberList}
                             handleLeaveLobby={handleLeaveLobby}
+                            geoLocation={geoLocation}
                         />
                     )}
                 />
@@ -187,7 +199,7 @@ const Dash = (props) => {
                             lobbyId={lobbyId}
                             lobbyMemberList={lobbyMemberList}
                             handleLeaveLobby={handleLeaveLobby}
-                            path={path}
+                            restaurantList={restaurantList}
                         />
                     )}
                 />
@@ -198,7 +210,7 @@ const Dash = (props) => {
                         <button onClick={() => setJoinLobbyView(false)}>CLOSE FORM</button>
                         <div>
                             <input value={lobbyIdInput} onChange={(e) => setLobbyIdInput(e.target.value)} placeholder="ENTER LOBBY ID"></input>
-                            <button onClick={handleJoinLobby}>JOIN</button>
+                            <button onClick={() => handleJoinLobby(lobbyIdInput)}>JOIN</button>
                         </div>
                     </>
 
@@ -211,7 +223,7 @@ const Dash = (props) => {
                 RECENT LOBBY INVITES:
                 {receiverPendingList
                     &&
-                    receiverPendingList.map(el => <p>{el.username} has invited you to their lobby!</p>)
+                    receiverPendingList.map(el => <p key={el.row_id} onClick={() => handleJoinLobby(el.lobby_id)}>{el.username} has invited you to their lobby!</p>)
                 }
             </div>
             <Friends handleInviteTolobby={handleInviteTolobby} />
