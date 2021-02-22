@@ -27,11 +27,15 @@ const Friends = (props) => {
 
     const getPotentialFriend = () => {
         if (input !== '') {
-            axios.get(`/api/friend/${input}`)
-                .then(res => {
-                    setPotentialFriend(res.data);
-                })
-                .catch(err => console.log(err));
+            if (input === `${decidee.decidee_id}`) {
+                return alert('You cannot add yourself as a friend.')
+            } else {
+                axios.get(`/api/friend/${input}`)
+                    .then(res => {
+                        setPotentialFriend(res.data);
+                    })
+                    .catch(err => console.log(err));
+            }
         } else {
             return alert('Please enter a friend code')
         }
@@ -111,7 +115,7 @@ const Friends = (props) => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)} />
             <button onClick={getPotentialFriend}>Search For Friend</button>
-            {potentialFriend
+            {potentialFriend && potentialFriend[0]
                 ?
                 (
                     <>
