@@ -2,16 +2,34 @@ import io from 'socket.io-client';
 import axios from 'axios';
 let socket;
 
-export const initSocket = () => {
+export const initSocket = (myId, cb1, cb2) => {
     socket = io();
+    socket.on('notify', ({ receiverId, notificationList }) => {
+        console.log("hit", receiverId, notificationList)
+        if (myId === receiverId) {
+            return cb1(notificationList)
+        }
+    })
+    socket.on('newLobbyMemberList', (memberList) => {
+        return cb2(memberList)
+    })
+}
+
+export const sendNotification = (receiverId, notificationList) => {
+    socket.emit('newNotification', { receiverId, notificationList })
 }
 
 export const subscribeToChat = (lobbyId, cb) => {
     if (!socket) return (true);
-    socket.emit('join', lobbyId)
-    socket.on('newMessage', () => {
-        return cb(null);
-    });
+    axios.get(`/api/lobby-members/${lobbyId}`)
+        .then(res => {
+            socket.emit('join', { lobbyId, memberList: res.data })
+            socket.on('newMessage', () => {
+                return cb(null);
+            });
+        })
+        .catch(err => console.log(err))
+
 }
 
 export const sendMessage = (lobbyId, message) => {
@@ -26,7 +44,14 @@ export const sendMessage = (lobbyId, message) => {
     }
 }
 
-export const disconnectSocket = () => {
-    console.log('A USER DISCONNECTED!')
-    if (socket) socket.disconnect();
+export const disconnectSocket = (lobbyId, memberList) => {
+    if (lobbyId && socket) {
+        socket.emit('leave', { lobbyId, memberList })
+        socket.disconnect()
+    } else if (socket) {
+        socket.disconnect();
+    }
+
+    // console.log('A USER DISCONNECTED!')
+    // if (socket) socket.disconnect();
 }

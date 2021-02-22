@@ -5,11 +5,13 @@ module.exports = {
         const db = req.app.get('db')
 
         const foundLobby = await db.lobby.check_for_lobby_host_id({ decidee_id })
-
         const [newLobby] = foundLobby[0] ? foundLobby : await db.lobby.create_lobby({ decidee_id })
         const { lobby_id } = newLobby
-        await db.lobby.add_lobby_member({ lobbyId: lobby_id, decidee_id })
-        const memberList = await db.lobby.get_lobby_members({ lobbyId: lobby_id })
+
+        let memberList = await db.lobby.get_lobby_members({ lobbyId: lobby_id })
+        if (!memberList.some(member => member.decidee_id === decidee_id)) {
+            memberList = await db.lobby.add_lobby_member({ lobbyId: lobby_id, decidee_id })
+        }
         res.status(201).send({ lobby_id, memberList })
     },
     deleteLobby: async (req, res) => {
@@ -36,8 +38,10 @@ module.exports = {
             return res.status(404).send('Lobby ID does not exist')
         }
         const { lobby_id } = foundLobby
-        await db.lobby.add_lobby_member({ lobbyId: lobby_id, decidee_id })
-        const memberList = await db.lobby.get_lobby_members({ lobbyId: lobby_id })
+        let memberList = await db.lobby.get_lobby_members({ lobbyId: lobby_id })
+        if (!memberList.some(member => member.decidee_id === decidee_id)) {
+            memberList = await db.lobby.add_lobby_member({ lobbyId: lobby_id, decidee_id })
+        }
         res.status(200).send({ lobby_id, memberList })
     },
     addLobbyMember: async (req, res) => {
@@ -57,8 +61,9 @@ module.exports = {
         const { friend_id, lobbyId } = req.body
         const { decidee_id } = req.session.user
         const db = req.app.get('db')
-        const pendingList = await db.lobby.add_pending_invite({ friend_id, decidee_id, lobbyId })
-        res.status(200).send(pendingList)
+        const newLobbyPendingList = await db.lobby.add_pending_invite({ friend_id, decidee_id, lobbyId })
+        const newReceiverPendingList = await db.lobby.get_pending_invites({ id: friend_id })
+        res.status(200).send({ newLobbyPendingList, newReceiverPendingList })
     },
     getLobbyInvites: async (req, res) => {
         const { id } = req.params;

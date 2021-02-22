@@ -1,2 +1,2 @@
 select * from decidee 
-where ${email} = email or ${username} = username;
+where lower(username) = lower(${username}) or lower(email) = lower(${email});
