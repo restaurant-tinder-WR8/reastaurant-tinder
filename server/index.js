@@ -36,8 +36,18 @@ io.on('connection', (socket) => {
     })
 
     socket.on('lobbyStart', (obj) => {
-        const {lobbyId, restaurantList} = obj
-        io.to(lobbyId).emit('lobbyStart', restaurantList )
+        const { lobbyId, restaurantList } = obj
+        io.to(lobbyId).emit('lobbyStart', restaurantList)
+    })
+
+    socket.on('lobbyVote', (obj) => {
+        const { lobbyId, vote, lobbyVotes } = obj
+        io.to(lobbyId).emit('lobbyVote', { vote, lobbyVotes })
+    })
+
+    socket.on('lobbyResult', (obj) => {
+        const { lobbyId, restaurant } = obj
+        io.to(lobbyId).emit('lobbyResult', restaurant)
     })
 
     socket.on('disconnect', () => {

@@ -19,7 +19,7 @@ export const sendNotification = (receiverId, notificationList) => {
     socket.emit('newNotification', { receiverId, notificationList })
 }
 
-export const subscribeToChat = (lobbyId, cb, cb2) => {
+export const subscribeToChat = (lobbyId, cb, cb2, cb3, cb4) => {
     if (!socket) return (true);
     axios.get(`/api/lobby-members/${lobbyId}`)
         .then(res => {
@@ -30,6 +30,12 @@ export const subscribeToChat = (lobbyId, cb, cb2) => {
             socket.on('lobbyStart', (restaurantList) => {
                 return cb2(restaurantList)
             })
+            socket.on('lobbyVote', ({ vote, lobbyVotes }) => {
+                return cb3(vote, lobbyVotes)
+            })
+            socket.on('lobbyResult', (restaurant) => {
+                return cb4(restaurant)
+            })
         })
         .catch(err => console.log(err))
 
@@ -37,6 +43,15 @@ export const subscribeToChat = (lobbyId, cb, cb2) => {
 
 export const lobbyStart = (lobbyId, restaurantList) => {
     socket.emit('lobbyStart', { lobbyId, restaurantList })
+}
+
+export const lobbyVote = (lobbyId, vote, lobbyVotes) => {
+    console.log('SOCKET VOTE:', lobbyVotes)
+    socket.emit('lobbyVote', { lobbyId, vote, lobbyVotes })
+}
+
+export const lobbyResult = (lobbyId, restaurant) => {
+    socket.emit('lobbyResult', { lobbyId, restaurant })
 }
 
 export const sendMessage = (lobbyId, message) => {
