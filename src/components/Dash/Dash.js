@@ -5,6 +5,7 @@ import axios from 'axios';
 import AppContext from "../../context/app-context";
 import Friends from './Friends/Friends';
 import Lobby from './Lobby/Lobby';
+import Chat from './Chat/Chat';
 import './Dash.scss';
 
 const Dash = (props) => {
@@ -20,7 +21,6 @@ const Dash = (props) => {
     const [lobbyIdInput, setLobbyIdInput] = useState('')
 
     const [chatArr, setChatArr] = useState([])
-    const [messageInput, setMessage] = useState('');
 
     const handleHostLobby = () => {
         axios.post('/api/lobby')
@@ -141,7 +141,6 @@ const Dash = (props) => {
 
 
     useEffect(() => {
-        window.addEventListener('beforeunload', handleLeaveLobby);
         if (decidee) {
             axios.get(`/api/lobby-invites/${decidee.decidee_id}`)
                 .then(res => setReceiverPendingList(res.data))
@@ -151,8 +150,7 @@ const Dash = (props) => {
             props.history.push(`${url}/lobby/${lobbyId}`)
         }
         return () => {
-            window.removeEventListener('beforeunload', handleLeaveLobby);
-            // disconnectSocket();
+            disconnectSocket();
         }
     }, [])
 
@@ -193,25 +191,8 @@ const Dash = (props) => {
 
                 )
             }
-            {
-                chatView &&
-                <>
-                    <section id='chat-container'>
-                        <h2>LOBBY CHAT: {lobbyId}</h2>
-                        <div>
-                            <h3>Live Chat:</h3>
-
-                            {chatArr?.map(message => <p key={message.message_id}>{message.message_text}</p>)}
-                            <input
-                                type="text"
-                                name="name"
-                                value={messageInput}
-                                onChange={e => setMessage(e.target.value)}
-                            />
-                            <button onClick={() => sendMessage(lobbyId, messageInput)}>Send</button>
-                        </div>
-                    </section>
-                </>
+            {chatView
+                && <Chat lobbyId={lobbyId} chatArr={chatArr} />
             }
             <div id='notification-container'>
                 RECENT LOBBY INVITES:
