@@ -35,13 +35,15 @@ const Dash = (props) => {
             .catch(err => console.log(err))
     }
 
-    const handleJoinLobby = () => {
-        axios.put(`/api/lobby/${lobbyIdInput}`)
+    const handleJoinLobby = (targetLobbyId) => {
+        console.log(targetLobbyId)
+        axios.put(`/api/lobby/${targetLobbyId}`)
             .then(res => {
                 console.log(res.data)
-                const { lobby_id, memberList } = res.data;
+                const { lobby_id, memberList, newInviteList } = res.data;
                 setLobbyId(lobby_id)
                 setLobbyMemberList(memberList)
+                setReceiverPendingList(newInviteList)
                 props.history.push(`${url}/lobby/${lobby_id}`)
                 setJoinLobbyView(false)
                 setChatView(true)
@@ -57,7 +59,7 @@ const Dash = (props) => {
                 setLobbyId(null)
                 setJoinLobbyView(false);
                 setChatView(false);
-                props.history.goBack();
+                props.history.push(`/dash`)
             })
             .catch(err => console.log(err))
     }
@@ -185,7 +187,7 @@ const Dash = (props) => {
                         <button onClick={() => setJoinLobbyView(false)}>CLOSE FORM</button>
                         <div>
                             <input value={lobbyIdInput} onChange={(e) => setLobbyIdInput(e.target.value)} placeholder="ENTER LOBBY ID"></input>
-                            <button onClick={handleJoinLobby}>JOIN</button>
+                            <button onClick={() => handleJoinLobby(lobbyIdInput)}>JOIN</button>
                         </div>
                     </>
 
@@ -198,7 +200,7 @@ const Dash = (props) => {
                 RECENT LOBBY INVITES:
                 {receiverPendingList
                     &&
-                    receiverPendingList.map(el => <p>{el.username} has invited you to their lobby!</p>)
+                    receiverPendingList.map(el => <p key={el.row_id} onClick={() => handleJoinLobby(el.lobby_id)}>{el.username} has invited you to their lobby!</p>)
                 }
             </div>
             <Friends handleInviteTolobby={handleInviteTolobby} />

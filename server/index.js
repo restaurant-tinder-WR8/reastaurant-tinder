@@ -73,6 +73,7 @@ app.post('/api/lobby-members', lobbyCtrl.addLobbyMember)
 app.put('/api/lobby-members', lobbyCtrl.removeLobbyMember)
 app.post('/api/pending-lobby', lobbyCtrl.addPendingInvite)
 app.get('/api/lobby-invites/:id', lobbyCtrl.getLobbyInvites)
+app.delete('/api/lobby-invites/:id', lobbyCtrl.removeLobbyInvites)
 
 //FRIENDS ENDPOINTS
 app.get('/api/friends/:id', friendCtrl.getFriends);
