@@ -6,6 +6,7 @@ const express = require('express'),
     lobbyCtrl = require('./controllers/lobbyController'),
     friendCtrl = require('./controllers/friendController'),
     chatCtrl = require('./controllers/chatController'),
+    yelpCtrl = require('./controllers/yelpCtrl'),
     { SERVER_PORT, SESSION_SECRET, CONNECTION_STRING } = process.env,
     app = express(),
     http = require('http'),
@@ -86,5 +87,9 @@ app.put('/api/pending/:id', friendCtrl.rejectInvite);
 //CHAT ENDPOINTS
 app.get('/api/lobby-chat/:lobbyId', chatCtrl.getLobbyChat)
 app.post('/api/lobby-chat', chatCtrl.addMessageToLobby)
+
+
+//YELP ENDPOINTS
+app.post(`/api/getRestaurants`, yelpCtrl.getRestaurants)
 
 server.listen(SERVER_PORT, () => console.log(`APP listening on port: ${SERVER_PORT}`))
