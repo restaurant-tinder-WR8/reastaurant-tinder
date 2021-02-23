@@ -29,9 +29,7 @@ const Lobby = props => {
     const startLobby = () => {
         axios.post(`/api/getRestaurants`, geoLocation)
             .then(res => {
-                console.log(res.data)
                 let newArr = shuffle(res.data)
-                console.log(newArr)
                 lobbyStart(lobbyId, newArr);
             })
             .catch(err => console.log(err))

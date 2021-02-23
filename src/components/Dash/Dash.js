@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useCallback } from "react";
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { initSocket, disconnectSocket, subscribeToChat, sendNotification, lobbyResult } from '../../Sockets/ChatSocket';
+import { initSocket, disconnectSocket, subscribeToChat, sendNotification, lobbyResult, nextRestaurant } from '../../Sockets/ChatSocket';
 import useGeolocation from 'react-hook-geolocation'
 import axios from 'axios';
 import AppContext from "../../context/app-context";
@@ -152,12 +152,17 @@ const Dash = (props) => {
                     props.history.push(`/dash/lobbyactive/${lobbyId}`)
                 },
                 (vote, oldLobbyVotes) => {
+                    console.log(vote, oldLobbyVotes)
                     setLobbyVotes([...oldLobbyVotes, vote])
                 },
                 (restaurant) => {
                     setResult(restaurant)
                     console.log(restaurant)
                     props.history.push(`/dash/lobby-result/${lobbyId}`)
+                },
+                (newIndex) => {
+                    setLobbyVotes([])
+                    setCurrentRestaurantIndex(newIndex)
                 }
             )
 
@@ -168,11 +173,21 @@ const Dash = (props) => {
     }, [lobbyId])
 
     useEffect(() => {
-        if (lobbyVotes.length === lobbyMemberList?.length && !lobbyVotes.some(vote => vote === false)) {
-            console.log('EVERYONE MATCHED!')
-            lobbyResult(lobbyId, restaurantList[currentRestaurantsIndex])
-        } else if (lobbyVotes.length === lobbyMemberList?.length && lobbyVotes.some(vote => vote === false)) {
-            console.log('NO MATCH VOTING DONE!')
+        console.log('REST LENGTH: ', restaurantList)
+
+        if (lobbyVotes.length > 0) {
+            if (lobbyVotes.length === lobbyMemberList?.length && !lobbyVotes.some(vote => vote === false)) {
+                console.log('EVERYONE MATCHED!')
+                lobbyResult(lobbyId, restaurantList[currentRestaurantsIndex])
+            } else if (lobbyVotes.length === lobbyMemberList?.length && lobbyVotes.some(vote => vote === false)) {
+                console.log('NO MATCH VOTING DONE!')
+                if (currentRestaurantsIndex === restaurantList.length - 1) {
+                    lobbyResult(lobbyId, null)
+                    console.log('NOOOOOOOOOO MMMMMMMAAAAAAAAAATCHES EEEEEVERERRRRRR')
+                } else {
+                    nextRestaurant(lobbyId, currentRestaurantsIndex + 1)
+                }
+            }
         }
     }, [lobbyVotes])
 
@@ -226,6 +241,7 @@ const Dash = (props) => {
                             lobbyMemberList={lobbyMemberList}
                             handleLeaveLobby={handleLeaveLobby}
                             restaurantList={restaurantList}
+                            currentRestaurantsIndex={currentRestaurantsIndex}
                             lobbyVotes={lobbyVotes}
                         />
                     )}
