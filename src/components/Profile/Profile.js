@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useEffect, useContext } from "react";
 import AppContext from "../../context/app-context";
+import Upload from './Upload/Upload';
 
 const Profile = (props) => {
     const { decidee, setDecidee } = useContext(AppContext)
@@ -64,14 +65,16 @@ const Profile = (props) => {
 
     return (
         <div>
-            {!editView
+            {editView
                 ?
                 (
                     <>
                         <h1>{decidee?.username}</h1>
                         <label>Username</label>
                         <input type="text" name="username" value={input.username} onChange={handleChange}></input>
-                        <img src="https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" />
+                        <Upload 
+                            decideeId={decidee?.decidee_id}
+                            setDecidee={setDecidee}/>
                         <h1>Email: {decidee?.email}</h1>
                         <label>New Email</label>
                         <input type="email" name="email" value={input.email} onChange={handleChange}></input>
@@ -84,7 +87,7 @@ const Profile = (props) => {
                 (
                     <>
                         <h1>{decidee?.username}</h1>
-                        <img src="https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" />
+                        <img src={decidee?.profile_pic} />
                         <h1>Email: {decidee?.email}</h1>
                         <h1>Friend Code: {decidee?.decidee_id}</h1>
                         <button onClick={handleLogout}>Logout</button>

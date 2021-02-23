@@ -7,6 +7,7 @@ const express = require('express'),
     friendCtrl = require('./controllers/friendController'),
     chatCtrl = require('./controllers/chatController'),
     yelpCtrl = require('./controllers/yelpCtrl'),
+    upCtrl = require('./controllers/uploadController'),
     { SERVER_PORT, SESSION_SECRET, CONNECTION_STRING } = process.env,
     app = express(),
     http = require('http'),
@@ -83,6 +84,7 @@ app.post('/auth/login', authCtrl.login)
 app.get('/auth/logout', authCtrl.logout)
 app.get('/auth/user', authCtrl.getUser)
 app.put('/auth/user/:id', authCtrl.editUser)
+app.put('/auth/picture/:decideeId', authCtrl.editProfilePic);
 
 //LOBBY ENDPOINTS (GRAND MASTER ARCHITECT EXTRAORDINAIRE: SDE, who is very very very handsome... Like WOW! )
 app.post('/api/lobby', lobbyCtrl.createLobby)
@@ -108,8 +110,10 @@ app.put('/api/pending/:id', friendCtrl.rejectInvite);
 app.get('/api/lobby-chat/:lobbyId', chatCtrl.getLobbyChat)
 app.post('/api/lobby-chat', chatCtrl.addMessageToLobby)
 
-
 //YELP ENDPOINTS
 app.post(`/api/getRestaurants`, yelpCtrl.getRestaurants)
+
+//UPLOAD ENDPOINTS (S3)
+app.get('/api/signs3', upCtrl.upload);
 
 server.listen(SERVER_PORT, () => console.log(`APP listening on port: ${SERVER_PORT}`))

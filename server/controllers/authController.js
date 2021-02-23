@@ -1,4 +1,5 @@
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
+const { S_S3_BUCKET } = process.env;
 
 module.exports = {
     register: async (req, res) => {
@@ -14,7 +15,7 @@ module.exports = {
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(password, salt);
 
-        const [newUser] = await db.decidee.register_decidee({ email, hash, username })
+        const [newUser] = await db.decidee.register_decidee({ email, hash, username, profilePic: `https://${S_S3_BUCKET}.s3-us-west-1.amazonaws.com/hungree.svg` })
 
         req.session.user = newUser;
         res.status(201).send(req.session.user)
@@ -78,7 +79,16 @@ module.exports = {
         console.log(newUser)
         req.session.user = newUser
         res.status(201).send(req.session.user)
+    },
+    editProfilePic: (req, res) => {
+        const {decideeId} = req.params;
+        console.log(decideeId)
+        const {newProfilePic} = req.body;
+        console.log(newProfilePic)
+        const db = req.app.get('db');
 
-
+        db.decidee.edit_profile_pic([newProfilePic, decideeId])
+            .then(user => res.status(200).send(user))
+            .catch(err => res.status(500).send(err));
     }
 }

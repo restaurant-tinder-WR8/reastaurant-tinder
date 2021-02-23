@@ -9,4 +9,4 @@ insert into decidee (
     ${hash},
     ${profilePic}
 )
-returning decidee_id, email, username;
+returning decidee_id, email, username, profile_pic;
