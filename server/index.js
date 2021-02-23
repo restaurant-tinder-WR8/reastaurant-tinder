@@ -50,7 +50,12 @@ io.on('connection', (socket) => {
         io.to(lobbyId).emit('lobbyResult', restaurant)
     })
 
-    socket.on('disconnect', () => {
+    socket.on('nextRestaurant', (obj) => {
+        const { lobbyId, newIndex } = obj
+        io.to(lobbyId).emit('nextRestaurant', newIndex)
+    })
+
+    socket.on('disconnect', (obj) => {
         console.log(`Disconnected`)
     })
 
