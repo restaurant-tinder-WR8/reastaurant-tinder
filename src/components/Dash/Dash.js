@@ -26,6 +26,7 @@ const Dash = (props) => {
     const [currentRestaurantsIndex, setCurrentRestaurantIndex] = useState(0)
     const [lobbyVotes, setLobbyVotes] = useState([])
     const [result, setResult] = useState(null)
+    const [hostId, setHostID] = useState(null)
     const geoLocation = useGeolocation()
 
     const [chatArr, setChatArr] = useState([])
@@ -33,7 +34,9 @@ const Dash = (props) => {
     const handleHostLobby = () => {
         axios.post('/api/lobby')
             .then(res => {
-                const { lobby_id, memberList } = res.data
+                console.log(res.data)
+                const { lobby_id, memberList, host_id } = res.data
+                setHostID(host_id)
                 setLobbyId(lobby_id)
                 console.log(memberList)
                 setLobbyMemberList(memberList)
@@ -222,6 +225,7 @@ const Dash = (props) => {
                     render={props => (
                         //Using render props in order to pass lobby info and functions with props
                         <Lobby {...props}
+                            hostId={hostId}
                             lobbyId={lobbyId}
                             lobbyMemberList={lobbyMemberList}
                             handleLeaveLobby={handleLeaveLobby}
@@ -246,6 +250,7 @@ const Dash = (props) => {
                     path={`${path}/lobby-result/:id`}
                     render={props => (
                         <LobbyResult {...props}
+                            handleLeaveLobby={handleLeaveLobby}
                             lobbyId={lobbyId}
                             result={result}
                         />

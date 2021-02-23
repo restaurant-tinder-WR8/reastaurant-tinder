@@ -1,9 +1,11 @@
 import { useState, useEffect, useContext } from "react";
 import { lobbyStart } from '../../../Sockets/ChatSocket';
+import AppContext from "../../../context/app-context";
 import axios from "axios";
 
 const Lobby = props => {
-    const { lobbyId, handleLeaveLobby, lobbyMemberList, geoLocation } = props;
+    const { decidee_id } = AppContext
+    const { lobbyId, handleLeaveLobby, lobbyMemberList, geoLocation, hostId } = props;
 
     const shuffle = (array) => {
         var currentIndex = array.length, temporaryValue, randomIndex;
@@ -47,9 +49,10 @@ const Lobby = props => {
                     )
                 }
             </div>
-            <button onClick={startLobby}>Start Lobby</button>
+            {(hostId === decidee_id) && <>< button onClick={startLobby}>Start Lobby</button></>}
 
-        </div>
+
+        </div >
     )
 }
 
