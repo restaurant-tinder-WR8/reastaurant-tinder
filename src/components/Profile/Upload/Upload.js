@@ -51,7 +51,7 @@ class Upload extends Component {
         axios.put(`/auth/picture/${this.props.decideeId}`, {newProfilePic: this.state.url})
             .then(res => {
                 this.props.setDecidee(res.data[0]);
-                console.log(res.data[0])
+                this.props.toggleFn();
             })
             .catch(err => console.log(err));
       })
@@ -76,7 +76,6 @@ class Upload extends Component {
     return (
       <div className="Upload">
         <h1>Upload</h1>
-        <h1>{url}</h1>
         <img src={url} alt="" width="450px" />
 
         <Dropzone

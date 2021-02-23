@@ -4,9 +4,10 @@ import AppContext from "../../context/app-context";
 import Upload from './Upload/Upload';
 
 const Profile = (props) => {
-    const { decidee, setDecidee } = useContext(AppContext)
+    const { decidee, setDecidee } = useContext(AppContext);
 
-    const [editView, setEditView] = useState(false)
+    const [editInfoView, setEditInfoView] = useState(false);
+    const [editPicView, setEditPicView] = useState(false);
 
 
 
@@ -52,6 +53,10 @@ const Profile = (props) => {
             })
     }
 
+    const togglePicView = () => {
+        setEditPicView(!editPicView);
+    }
+
     useEffect(() => {
 
         if (decidee === null) {
@@ -65,16 +70,31 @@ const Profile = (props) => {
 
     return (
         <div>
-            {editView
+            {editPicView 
+                ? 
+                (
+                    <>
+                        <Upload 
+                            decideeId={decidee?.decidee_id}
+                            setDecidee={setDecidee}
+                            toggleFn={togglePicView}/>
+                        <button onClick={togglePicView}>Cancel</button>
+                    </>
+                ) 
+                : 
+                (
+                    <>
+                        <img src={decidee?.profile_pic} />
+                        <button onClick={togglePicView}>Edit Picture</button>
+                    </>
+                )}
+            {editInfoView
                 ?
                 (
                     <>
                         <h1>{decidee?.username}</h1>
                         <label>Username</label>
                         <input type="text" name="username" value={input.username} onChange={handleChange}></input>
-                        <Upload 
-                            decideeId={decidee?.decidee_id}
-                            setDecidee={setDecidee}/>
                         <h1>Email: {decidee?.email}</h1>
                         <label>New Email</label>
                         <input type="email" name="email" value={input.email} onChange={handleChange}></input>
@@ -87,13 +107,12 @@ const Profile = (props) => {
                 (
                     <>
                         <h1>{decidee?.username}</h1>
-                        <img src={decidee?.profile_pic} />
                         <h1>Email: {decidee?.email}</h1>
                         <h1>Friend Code: {decidee?.decidee_id}</h1>
                         <button onClick={handleLogout}>Logout</button>
                     </>
                 )}
-            <button onClick={() => setEditView(!editView)}>Toggle</button>
+            <button onClick={() => setEditInfoView(!editInfoView)}>Toggle</button>
         </div>
 
     )
