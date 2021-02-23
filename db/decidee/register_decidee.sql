@@ -1,10 +1,12 @@
 insert into decidee (
     email,
     username,
-    password
+    password,
+    profile_pic
 ) values (
     ${email},
     ${username},
-    ${hash}
+    ${hash},
+    ${profilePic}
 )
-returning decidee_id, email, username;
+returning decidee_id, email, username, profile_pic;
