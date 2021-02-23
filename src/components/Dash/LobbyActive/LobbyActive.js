@@ -6,6 +6,38 @@ const LobbyActive = props => {
     const { restaurantList, lobbyId, lobbyVotes, currentRestaurantsIndex } = props
     const [voted, setVoted] = useState(false)
 
+    const [time, setTime] = useState(5000);
+    const [timerOn, setTimerOn] = useState(false);
+
+
+    useEffect(() => {
+        let interval = null;
+
+        if (timerOn) {
+            interval = setInterval(() => {
+                setTime((prevTime) => prevTime - 10);
+            }, 10);
+        } else if (!timerOn) {
+            clearInterval(interval);
+        }
+
+
+        return () => clearInterval(interval);
+    }, [timerOn]);
+
+    useEffect(() => {
+        if (time <= 0) {
+            console.log('5 seconds done')
+            setTimerOn(false)
+            setTime(5000)
+            if (voted === false) {
+                handleVoteBtn(false)
+            }
+
+        }
+
+    }, [time])
+
     const handleVoteBtn = (vote) => {
         if (!voted) {
             setVoted(true)
@@ -32,6 +64,25 @@ const LobbyActive = props => {
                 <button className="stomp" onClick={() => handleVoteBtn(false)}>Stomp</button>
                 <button onClick={() => handleVoteBtn(true)}>Chomp</button>
             </>
+
+            <div className="Timers">
+                <h2>CountDown</h2>
+                <div id="display">
+                    <span>{("0" + Math.floor((time / 60000) % 60)).slice(-2)}:</span>
+                    <span>{("0" + Math.floor((time / 1000) % 60)).slice(-2)}:</span>
+                    <span>{("0" + ((time / 10) % 100)).slice(-2)}</span>
+                </div>
+
+                <div id="buttons">
+
+                    <button onClick={() => setTimerOn(true)}>Start</button>
+                    <button onClick={() => setTimerOn(false)}>Stop</button>
+                    <button onClick={() => setTime(5000, time)}>Reset</button>
+                    <button onClick={() => setTimerOn(true)}>Resume</button>
+
+
+                </div>
+            </div>
 
 
             <button>End Session</button>
