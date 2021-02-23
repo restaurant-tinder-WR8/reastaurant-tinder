@@ -19,7 +19,7 @@ export const sendNotification = (receiverId, notificationList) => {
     socket.emit('newNotification', { receiverId, notificationList })
 }
 
-export const subscribeToChat = (lobbyId, cb, cb2, cb3, cb4) => {
+export const subscribeToChat = (lobbyId, cb, cb2, cb3, cb4, cb5) => {
     if (!socket) return (true);
     axios.get(`/api/lobby-members/${lobbyId}`)
         .then(res => {
@@ -36,6 +36,9 @@ export const subscribeToChat = (lobbyId, cb, cb2, cb3, cb4) => {
             socket.on('lobbyResult', (restaurant) => {
                 return cb4(restaurant)
             })
+            socket.on('nextRestaurant', (newIndex) => {
+                return cb5(newIndex)
+            })
         })
         .catch(err => console.log(err))
 
@@ -46,12 +49,17 @@ export const lobbyStart = (lobbyId, restaurantList) => {
 }
 
 export const lobbyVote = (lobbyId, vote, lobbyVotes) => {
-    console.log('SOCKET VOTE:', lobbyVotes)
     socket.emit('lobbyVote', { lobbyId, vote, lobbyVotes })
 }
 
 export const lobbyResult = (lobbyId, restaurant) => {
     socket.emit('lobbyResult', { lobbyId, restaurant })
+}
+
+export const nextRestaurant = (lobbyId, newIndex) => {
+    console.log('NEXT REST:', newIndex)
+
+    socket.emit('nextRestaurant', { lobbyId, newIndex })
 }
 
 export const sendMessage = (lobbyId, message) => {
