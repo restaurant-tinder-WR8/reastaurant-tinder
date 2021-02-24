@@ -2,11 +2,13 @@ require('dotenv').config()
 const express = require('express'),
     session = require('express-session'),
     massive = require('massive'),
+    axios = require('axios'),
     authCtrl = require('./controllers/authController'),
     lobbyCtrl = require('./controllers/lobbyController'),
     friendCtrl = require('./controllers/friendController'),
     chatCtrl = require('./controllers/chatController'),
     yelpCtrl = require('./controllers/yelpCtrl'),
+    socketCtrl = require('./controllers/socketController'),
     upCtrl = require('./controllers/uploadController'),
     { SERVER_PORT, SESSION_SECRET, CONNECTION_STRING } = process.env,
     app = express(),
@@ -15,8 +17,18 @@ const express = require('express'),
     server = http.createServer(app),
     io = socketio(server)
 
+
 io.on('connection', (socket) => {
     console.log(`Connected: ${socket.id}`)
+
+    // socketFunctions.addSocket(socket.id)
+
+
+    socket.on('addSocket', (decidee_id) => {
+        axios.put(`http://localhost:${SERVER_PORT}/api/socket/${socket.id}`, { decidee_id })
+            .then(res => console.log(res.data))
+            .catch(err => console.log(err))
+    })
 
     socket.on('newNotification', ({ receiverId, notificationList }) => {
         console.log(receiverId, notificationList)
@@ -56,8 +68,17 @@ io.on('connection', (socket) => {
         io.to(lobbyId).emit('nextRestaurant', newIndex)
     })
 
-    socket.on('disconnect', (obj) => {
-        console.log(`Disconnected`)
+    socket.on('disconnect', () => {
+        console.log(`Disconnected: ${socket.id}`)
+        axios.delete(`http://localhost:${SERVER_PORT}/api/socket/${socket.id}`)
+            .then(res => {
+                const { lobby_id } = res.data
+                console.log('DISCONNECT AXIOS: ', res.data)
+                if (res.data != 'OK') {
+                    io.to(lobby_id).emit('updateLobby', lobby_id)
+                }
+            })
+            .catch(err => console.log(err))
     })
 
 });
@@ -97,6 +118,10 @@ app.put('/api/lobby-members', lobbyCtrl.removeLobbyMember)
 app.post('/api/pending-lobby', lobbyCtrl.addPendingInvite)
 app.get('/api/lobby-invites/:id', lobbyCtrl.getLobbyInvites)
 app.delete('/api/lobby-invites/:id', lobbyCtrl.removeLobbyInvites)
+
+//SOCKET ENDPOINTS
+app.put('/api/socket/:socket_id', socketCtrl.addSocket)
+app.delete('/api/socket/:socket_id', socketCtrl.removeSocket)
 
 //FRIENDS ENDPOINTS
 app.get('/api/friends/:id', friendCtrl.getFriends);

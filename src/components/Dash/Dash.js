@@ -10,6 +10,8 @@ import LobbyActive from './LobbyActive/LobbyActive';
 import LobbyResult from './LobbyResult/LobbyResult';
 import Chat from './Chat/Chat';
 import './Dash.scss';
+let cleanUp;
+
 
 const Dash = (props) => {
     const { decidee } = useContext(AppContext)
@@ -100,11 +102,14 @@ const Dash = (props) => {
     //         .catch(err => console.log(err))
     // })
 
-    // const getLobbyMembers = useCallback(() => {
-    //     axios.get(`/api/lobby-members/${lobbyId}`)
-    //         .then(res => console.log('SDE: ', res.data))
-    //         .catch(err => console.log(err))
-    // })
+    const getLobbyMembers = useCallback(() => {
+        axios.get(`/api/lobby-members/${lobbyId}`)
+            .then(res => {
+                console.log('SDE: ', res.data)
+                setLobbyMemberList(res.data)
+            })
+            .catch(err => console.log(err))
+    })
 
     const getLobbyChat = useCallback(() => {
         axios.get(`/api/lobby-chat/${lobbyId}`)
@@ -163,13 +168,14 @@ const Dash = (props) => {
                 (newIndex) => {
                     setLobbyVotes([])
                     setCurrentRestaurantIndex(newIndex)
+                },
+                () => {
+                    getLobbyMembers()
                 }
             )
 
             getLobbyChat();
         };
-
-
     }, [lobbyId])
 
     useEffect(() => {
@@ -206,6 +212,13 @@ const Dash = (props) => {
         }
     }, [])
 
+
+    useEffect(() => {
+
+        return () => {
+            window.removeEventListener("beforeunload", () => console.log('RAN'));
+        }
+    }, [])
 
 
 

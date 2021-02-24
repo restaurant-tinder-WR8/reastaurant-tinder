@@ -5,6 +5,8 @@ import "./LobbyActive.scss"
 const LobbyActive = props => {
     const { restaurantList, lobbyId, lobbyVotes, currentRestaurantsIndex } = props
     const [voted, setVoted] = useState(false)
+<<<<<<< HEAD
+=======
 
     const [time, setTime] = useState(5000);
     const [timerOn, setTimerOn] = useState(false);
@@ -38,7 +40,10 @@ const LobbyActive = props => {
 
     }, [time])
 
+>>>>>>> main
     const handleVoteBtn = (vote) => {
+        console.log('hit')
+        console.log('vote: ', vote)
         if (!voted) {
             setVoted(true)
             lobbyVote(lobbyId, vote, lobbyVotes)
