@@ -17,6 +17,7 @@ const express = require('express'),
     server = http.createServer(app),
     io = socketio(server)
 
+let lobbyVoteArr = []
 
 io.on('connection', (socket) => {
     console.log(`Connected: ${socket.id}`)
@@ -54,13 +55,24 @@ io.on('connection', (socket) => {
     })
 
     socket.on('lobbyVote', (obj) => {
-        const { lobbyId, vote, lobbyVotes } = obj
-        io.to(lobbyId).emit('lobbyVote', { vote, lobbyVotes })
+        const { lobbyId, vote, memberLength } = obj
+        lobbyVoteArr = [...lobbyVoteArr, vote]
+        console.log(lobbyId, vote, memberLength)
+        console.log(lobbyVoteArr)
+        if (lobbyVoteArr.length === memberLength) {
+            io.to(lobbyId).emit('lobbyVote', { lobbyVoteArr })
+            lobbyVoteArr = []
+        }
     })
 
     socket.on('lobbyResult', (obj) => {
         const { lobbyId, restaurant } = obj
-        io.to(lobbyId).emit('lobbyResult', restaurant)
+        axios.get(`http://localhost:${SERVER_PORT}/api/getRestaurant/${restaurant.id}`)
+            .then(res => {
+                io.to(lobbyId).emit('lobbyResult', res.data)
+            })
+            .catch(err => console.log(err))
+
     })
 
     socket.on('nextRestaurant', (obj) => {
@@ -137,8 +149,10 @@ app.post('/api/lobby-chat', chatCtrl.addMessageToLobby)
 
 //YELP ENDPOINTS
 app.post(`/api/getRestaurants`, yelpCtrl.getRestaurants)
+app.get(`/api/getRestaurant/:id`, yelpCtrl.getRestaurant)
 
 //UPLOAD ENDPOINTS (S3)
 app.get('/api/signs3', upCtrl.upload);
 
 server.listen(SERVER_PORT, () => console.log(`APP listening on port: ${SERVER_PORT}`))
+

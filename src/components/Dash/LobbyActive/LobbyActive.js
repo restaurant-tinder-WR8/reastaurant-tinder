@@ -3,12 +3,11 @@ import { lobbyVote } from '../../../Sockets/ChatSocket';
 import "./LobbyActive.scss"
 
 const LobbyActive = props => {
-    const { restaurantList, lobbyId, lobbyVotes, currentRestaurantsIndex, decidee_id } = props
+    const { restaurantList, lobbyId, memberLength, currentRestaurantsIndex } = props
     const [voted, setVoted] = useState(false)
 
-    const [time, setTime] = useState(decidee_id === 27 ? 3000 : 3000);
+    const [time, setTime] = useState(3000);
     const [timerOn, setTimerOn] = useState(false);
-
 
     useEffect(() => {
         let interval = null;
@@ -29,12 +28,7 @@ const LobbyActive = props => {
         if (time <= 0) {
             console.log('5 seconds done')
             setTimerOn(false)
-            if (decidee_id === 27) {
-                setTime(3000)
-            } else {
-                setTime(3000)
-            }
-
+            setTime(3000)
             if (voted === false) {
                 handleVoteBtn(false)
             }
@@ -45,10 +39,11 @@ const LobbyActive = props => {
 
     const handleVoteBtn = (vote) => {
         console.log('hit')
-        console.log('vote: ', vote)
+        console.log('voted: ', voted)
+        console.log(memberLength)
         if (!voted) {
             setVoted(true)
-            lobbyVote(lobbyId, vote, lobbyVotes)
+            lobbyVote(lobbyId, vote, memberLength)
         }
     }
 
@@ -63,8 +58,8 @@ const LobbyActive = props => {
             <div className="restaurant-container">
                 <img className="photo-container" src={restaurantList[currentRestaurantsIndex]?.image_url} />
                 <div className="info">
-                    <h2>Title of Restaurant</h2>
-                    <h3>Rating</h3><h3>Cost($$)</h3>
+                    <h2>{restaurantList[currentRestaurantsIndex]?.name}</h2>
+                    <h3>Rating: {restaurantList[currentRestaurantsIndex]?.rating}</h3><h3>Cost({restaurantList[currentRestaurantsIndex]?.price}) </h3>
                 </div>
             </div>
 
