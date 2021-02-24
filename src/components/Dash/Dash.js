@@ -130,9 +130,9 @@ const Dash = (props) => {
     }, [decidee])
 
     useEffect(() => {
-        if (!lobbyId) {
-            disconnectSocket();
-        }
+        // if (!lobbyId) {
+        //     disconnectSocket();
+        // }
         //Create socket on component mount as well as socket listeners for notifications and lobby member changes
         if (!lobbyId && decidee) {
             //This has a cb functions that are not ran by this invocation but only on socket event that it is being passed to in ChatSocket.js
@@ -156,9 +156,9 @@ const Dash = (props) => {
                     setRestaurants(newRestaurantList)
                     props.history.push(`/dash/lobbyactive/${lobbyId}`)
                 },
-                (vote, oldLobbyVotes) => {
-                    console.log(vote, oldLobbyVotes)
-                    setLobbyVotes([...oldLobbyVotes, vote])
+                (lobbyVoteArr) => {
+                    console.log(lobbyVoteArr)
+                    setLobbyVotes(lobbyVoteArr)
                 },
                 (restaurant) => {
                     setResult(restaurant)
@@ -197,7 +197,6 @@ const Dash = (props) => {
         }
     }, [lobbyVotes])
 
-
     useEffect(() => {
         if (decidee) {
             axios.get(`/api/lobby-invites/${decidee.decidee_id}`)
@@ -207,20 +206,11 @@ const Dash = (props) => {
         if (lobbyId) {
             props.history.push(`${url}/lobby/${lobbyId}`)
         }
-        return () => {
-            disconnectSocket();
-        }
+        // return () => {
+        //     console.log('HITHITHITHITHITHIHTIHT')
+        //     disconnectSocket();
+        // }
     }, [])
-
-
-    useEffect(() => {
-
-        return () => {
-            window.removeEventListener("beforeunload", () => console.log('RAN'));
-        }
-    }, [])
-
-
 
     return (
         <main>
@@ -251,7 +241,7 @@ const Dash = (props) => {
                     render={props => (
                         <LobbyActive {...props}
                             lobbyId={lobbyId}
-                            lobbyMemberList={lobbyMemberList}
+                            memberLength={lobbyMemberList?.length}
                             handleLeaveLobby={handleLeaveLobby}
                             restaurantList={restaurantList}
                             currentRestaurantsIndex={currentRestaurantsIndex}
