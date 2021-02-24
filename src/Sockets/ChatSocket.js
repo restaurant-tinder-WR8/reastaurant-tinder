@@ -37,8 +37,9 @@ export const subscribeToChat = (lobbyId, cb, cb2, cb3, cb4, cb5, cb6) => {
             socket.on('lobbyStart', (restaurantList) => {
                 return cb2(restaurantList)
             })
-            socket.on('lobbyVote', ({ vote, lobbyVotes }) => {
-                return cb3(vote, lobbyVotes)
+            socket.on('lobbyVote', ({ lobbyVoteArr }) => {
+                console.log(lobbyVoteArr)
+                return cb3(lobbyVoteArr)
             })
             socket.on('lobbyResult', (restaurant) => {
                 return cb4(restaurant)
@@ -58,8 +59,9 @@ export const lobbyStart = (lobbyId, restaurantList) => {
     socket.emit('lobbyStart', { lobbyId, restaurantList })
 }
 
-export const lobbyVote = (lobbyId, vote, lobbyVotes) => {
-    socket.emit('lobbyVote', { lobbyId, vote, lobbyVotes })
+export const lobbyVote = (lobbyId, vote, memberLength) => {
+    console.log(memberLength)
+    socket.emit('lobbyVote', { lobbyId, vote, memberLength })
 }
 
 export const lobbyResult = (lobbyId, restaurant) => {
