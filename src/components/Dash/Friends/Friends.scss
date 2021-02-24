@@ -6,4 +6,17 @@
     height: 60vh;
     margin: auto 0;
     background-color: rgb(138, 138, 138);
+    display: flex;
+    flex-direction: column;
+}
+
+.friend-list {
+    display: flex;
+    flex-direction: row;
+}
+
+.fl-pics {
+    height: 50px;
+    width: 50px;
+    object-fit: cover;
 }
