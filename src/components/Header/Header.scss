@@ -9,12 +9,17 @@
     padding: 0 30px;
 }
 
+.logo {
+    width:100px;
+}
+
 
 
 .header-container nav {
     width: 225px;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
+    margin-left: 750px;
 }
 
 .nav-links {
