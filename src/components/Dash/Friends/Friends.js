@@ -76,7 +76,8 @@ const Friends = (props) => {
 
 
     const mappedPending = pending.map((el, i) => {
-        return <section key={i}>
+        return <section className='friend-list' key={i}>
+            <img className='fl-pics' src={el.profile_pic} alt='pending friend' />
             <p>{el.username}</p>
             <button onClick={() => acceptInvite(el.sender_id, el.pending_id)}>Accept</button>
             <button onClick={() => rejectInvite(el.pending_id)}>Decline</button>
@@ -84,7 +85,8 @@ const Friends = (props) => {
     })
 
     const mappedFriends = friends.map((el, i) => {
-        return <section key={i}>
+        return <section className='friend-list' key={i}>
+            <img className='fl-pics' src={el.profile_pic} alt='friend' />
             <p onClick={() => handleInviteTolobby(el.friend_decidee_id)}>{el.username}</p>
         </section>
     })
@@ -119,6 +121,7 @@ const Friends = (props) => {
                 ?
                 (
                     <>
+                        <img className='fl-pics' src={potentialFriend[0].profile_pic} alt={potentialFriend} />
                         <p>Result: {potentialFriend[0].username}</p>
                         <button onClick={sendFriendInvite}>Send Invite</button>
                         <button onClick={cancelInvite}>Cancel</button>
