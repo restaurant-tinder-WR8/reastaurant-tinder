@@ -2,7 +2,8 @@ CREATE TABLE decidee (
     decidee_id SERIAL PRIMARY KEY,
     email VARCHAR(250),
     username VARCHAR(50),
-    password VARCHAR(250)
+    password VARCHAR(250),
+    profile_pic TEXT
 );
 
 CREATE TABLE friend_list (

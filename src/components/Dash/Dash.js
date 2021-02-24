@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useCallback } from "react";
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { initSocket, disconnectSocket, subscribeToChat, sendNotification, lobbyResult } from '../../Sockets/ChatSocket';
+import { initSocket, disconnectSocket, subscribeToChat, sendNotification, lobbyResult, nextRestaurant } from '../../Sockets/ChatSocket';
 import useGeolocation from 'react-hook-geolocation'
 import axios from 'axios';
 import AppContext from "../../context/app-context";
@@ -10,6 +10,8 @@ import LobbyActive from './LobbyActive/LobbyActive';
 import LobbyResult from './LobbyResult/LobbyResult';
 import Chat from './Chat/Chat';
 import './Dash.scss';
+let cleanUp;
+
 
 const Dash = (props) => {
     const { decidee } = useContext(AppContext)
@@ -26,6 +28,7 @@ const Dash = (props) => {
     const [currentRestaurantsIndex, setCurrentRestaurantIndex] = useState(0)
     const [lobbyVotes, setLobbyVotes] = useState([])
     const [result, setResult] = useState(null)
+    const [hostId, setHostID] = useState(null)
     const geoLocation = useGeolocation()
 
     const [chatArr, setChatArr] = useState([])
@@ -33,7 +36,9 @@ const Dash = (props) => {
     const handleHostLobby = () => {
         axios.post('/api/lobby')
             .then(res => {
-                const { lobby_id, memberList } = res.data
+                console.log(res.data)
+                const { lobby_id, memberList, host_id } = res.data
+                setHostID(host_id)
                 setLobbyId(lobby_id)
                 console.log(memberList)
                 setLobbyMemberList(memberList)
@@ -97,11 +102,14 @@ const Dash = (props) => {
     //         .catch(err => console.log(err))
     // })
 
-    // const getLobbyMembers = useCallback(() => {
-    //     axios.get(`/api/lobby-members/${lobbyId}`)
-    //         .then(res => console.log('SDE: ', res.data))
-    //         .catch(err => console.log(err))
-    // })
+    const getLobbyMembers = useCallback(() => {
+        axios.get(`/api/lobby-members/${lobbyId}`)
+            .then(res => {
+                console.log('SDE: ', res.data)
+                setLobbyMemberList(res.data)
+            })
+            .catch(err => console.log(err))
+    })
 
     const getLobbyChat = useCallback(() => {
         axios.get(`/api/lobby-chat/${lobbyId}`)
@@ -149,27 +157,43 @@ const Dash = (props) => {
                     props.history.push(`/dash/lobbyactive/${lobbyId}`)
                 },
                 (vote, oldLobbyVotes) => {
+                    console.log(vote, oldLobbyVotes)
                     setLobbyVotes([...oldLobbyVotes, vote])
                 },
                 (restaurant) => {
                     setResult(restaurant)
                     console.log(restaurant)
                     props.history.push(`/dash/lobby-result/${lobbyId}`)
+                },
+                (newIndex) => {
+                    setLobbyVotes([])
+                    setCurrentRestaurantIndex(newIndex)
+                },
+                () => {
+                    getLobbyMembers()
                 }
             )
 
             getLobbyChat();
         };
-
-
     }, [lobbyId])
 
     useEffect(() => {
-        if (lobbyVotes.length === lobbyMemberList?.length && !lobbyVotes.some(vote => vote === false)) {
-            console.log('EVERYONE MATCHED!')
-            lobbyResult(lobbyId, restaurantList[currentRestaurantsIndex])
-        } else if (lobbyVotes.length === lobbyMemberList?.length && lobbyVotes.some(vote => vote === false)) {
-            console.log('NO MATCH VOTING DONE!')
+        console.log('REST LENGTH: ', restaurantList)
+
+        if (lobbyVotes.length > 0) {
+            if (lobbyVotes.length === lobbyMemberList?.length && !lobbyVotes.some(vote => vote === false)) {
+                console.log('EVERYONE MATCHED!')
+                lobbyResult(lobbyId, restaurantList[currentRestaurantsIndex])
+            } else if (lobbyVotes.length === lobbyMemberList?.length && lobbyVotes.some(vote => vote === false)) {
+                console.log('NO MATCH VOTING DONE!')
+                if (currentRestaurantsIndex === restaurantList.length - 1) {
+                    lobbyResult(lobbyId, null)
+                    console.log('NOOOOOOOOOO MMMMMMMAAAAAAAAAATCHES EEEEEVERERRRRRR')
+                } else {
+                    nextRestaurant(lobbyId, currentRestaurantsIndex + 1)
+                }
+            }
         }
     }, [lobbyVotes])
 
@@ -189,6 +213,13 @@ const Dash = (props) => {
     }, [])
 
 
+    useEffect(() => {
+
+        return () => {
+            window.removeEventListener("beforeunload", () => console.log('RAN'));
+        }
+    }, [])
+
 
 
     return (
@@ -207,6 +238,7 @@ const Dash = (props) => {
                     render={props => (
                         //Using render props in order to pass lobby info and functions with props
                         <Lobby {...props}
+                            hostId={hostId}
                             lobbyId={lobbyId}
                             lobbyMemberList={lobbyMemberList}
                             handleLeaveLobby={handleLeaveLobby}
@@ -222,6 +254,7 @@ const Dash = (props) => {
                             lobbyMemberList={lobbyMemberList}
                             handleLeaveLobby={handleLeaveLobby}
                             restaurantList={restaurantList}
+                            currentRestaurantsIndex={currentRestaurantsIndex}
                             lobbyVotes={lobbyVotes}
                         />
                     )}
@@ -230,6 +263,7 @@ const Dash = (props) => {
                     path={`${path}/lobby-result/:id`}
                     render={props => (
                         <LobbyResult {...props}
+                            handleLeaveLobby={handleLeaveLobby}
                             lobbyId={lobbyId}
                             result={result}
                         />

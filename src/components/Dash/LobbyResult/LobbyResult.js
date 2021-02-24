@@ -1,7 +1,9 @@
 import "./LobbyResult.scss"
 
 const LobbyResult = props => {
-    const { result } = props
+    const { result, handleLeaveLobby } = props
+
+
     return (
         <section className="session">
             <div className="restaurant-container">
@@ -12,7 +14,7 @@ const LobbyResult = props => {
                 </div>
             </div>
             <button>Menu</button>
-            <button>End</button>
+            <button onClick={handleLeaveLobby}>Leave Lobby</button>
 
         </section>
     )
