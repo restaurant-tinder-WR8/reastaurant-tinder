@@ -4,6 +4,13 @@ let socket;
 
 export const initSocket = (myId, cb1, cb2) => {
     socket = io();
+
+    socket.on('connect', () => {
+        socket.emit('addSocket', myId)
+    })
+
+    socket.on()
+
     socket.on('notify', ({ receiverId, notificationList }) => {
         console.log("hit", receiverId, notificationList)
         if (myId === receiverId) {
@@ -19,7 +26,7 @@ export const sendNotification = (receiverId, notificationList) => {
     socket.emit('newNotification', { receiverId, notificationList })
 }
 
-export const subscribeToChat = (lobbyId, cb, cb2, cb3, cb4, cb5) => {
+export const subscribeToChat = (lobbyId, cb, cb2, cb3, cb4, cb5, cb6) => {
     if (!socket) return (true);
     axios.get(`/api/lobby-members/${lobbyId}`)
         .then(res => {
@@ -38,6 +45,9 @@ export const subscribeToChat = (lobbyId, cb, cb2, cb3, cb4, cb5) => {
             })
             socket.on('nextRestaurant', (newIndex) => {
                 return cb5(newIndex)
+            })
+            socket.on('updateLobby', () => {
+                return cb6()
             })
         })
         .catch(err => console.log(err))
