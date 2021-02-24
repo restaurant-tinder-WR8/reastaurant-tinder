@@ -9,11 +9,11 @@ const LobbyResult = props => {
             <div className="restaurant-container">
                 <img className="photo-container" src={result?.image_url} />
                 <div className="info">
-                    <h2>Title of Restaurant</h2>
-                    <h3>Rating</h3><h3>Cost($$)</h3>
+                    <h2>{result?.name}</h2>
+                    <h3>Rating {result?.rating}</h3><h3>Cost({result?.price})</h3>
                 </div>
             </div>
-            <button>Menu</button>
+            {/* <button onClick={ }>Menu </button> */}
             <button onClick={handleLeaveLobby}>Leave Lobby</button>
 
         </section>
