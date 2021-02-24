@@ -3,12 +3,10 @@ import { lobbyVote } from '../../../Sockets/ChatSocket';
 import "./LobbyActive.scss"
 
 const LobbyActive = props => {
-    const { restaurantList, lobbyId, lobbyVotes, currentRestaurantsIndex } = props
+    const { restaurantList, lobbyId, lobbyVotes, currentRestaurantsIndex, decidee_id } = props
     const [voted, setVoted] = useState(false)
-<<<<<<< HEAD
-=======
 
-    const [time, setTime] = useState(5000);
+    const [time, setTime] = useState(decidee_id === 27 ? 3000 : 3000);
     const [timerOn, setTimerOn] = useState(false);
 
 
@@ -31,7 +29,12 @@ const LobbyActive = props => {
         if (time <= 0) {
             console.log('5 seconds done')
             setTimerOn(false)
-            setTime(5000)
+            if (decidee_id === 27) {
+                setTime(3000)
+            } else {
+                setTime(3000)
+            }
+
             if (voted === false) {
                 handleVoteBtn(false)
             }
@@ -40,7 +43,6 @@ const LobbyActive = props => {
 
     }, [time])
 
->>>>>>> main
     const handleVoteBtn = (vote) => {
         console.log('hit')
         console.log('vote: ', vote)
@@ -52,6 +54,7 @@ const LobbyActive = props => {
 
     useEffect(() => {
         setVoted(false)
+        setTimerOn(true)
     }, [currentRestaurantsIndex])
 
     return (

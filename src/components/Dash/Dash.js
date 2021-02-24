@@ -250,6 +250,7 @@ const Dash = (props) => {
                     path={`${path}/lobbyactive/:id`}
                     render={props => (
                         <LobbyActive {...props}
+                            decidee_id={decidee?.decidee_id}
                             lobbyId={lobbyId}
                             lobbyMemberList={lobbyMemberList}
                             handleLeaveLobby={handleLeaveLobby}
