@@ -1,4 +1,5 @@
 import { withRouter, Link } from 'react-router-dom'
+import logo from '../../assets/hungree.svg'
 import './Header.scss'
 
 const Header = (props) => {
@@ -8,6 +9,7 @@ const Header = (props) => {
             {props.location.pathname === '/dash' || props.location.pathname === '/profile'
             ? (
         <header className='header-container'>
+                <img src={logo} alt="Logo" className='logo'/>
                 <h1>Hungree</h1>
             {props.location.pathname !== '/dash'
             ? (
