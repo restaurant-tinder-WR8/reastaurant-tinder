@@ -67,7 +67,12 @@ io.on('connection', (socket) => {
 
     socket.on('lobbyResult', (obj) => {
         const { lobbyId, restaurant } = obj
-        io.to(lobbyId).emit('lobbyResult', restaurant)
+        axios.get(`http://localhost:${SERVER_PORT}/api/getRestaurant/${restaurant.id}`)
+            .then(res => {
+                io.to(lobbyId).emit('lobbyResult', res.data)
+            })
+            .catch(err => console.log(err))
+
     })
 
     socket.on('nextRestaurant', (obj) => {
@@ -144,8 +149,10 @@ app.post('/api/lobby-chat', chatCtrl.addMessageToLobby)
 
 //YELP ENDPOINTS
 app.post(`/api/getRestaurants`, yelpCtrl.getRestaurants)
+app.get(`/api/getRestaurant/:id`, yelpCtrl.getRestaurant)
 
 //UPLOAD ENDPOINTS (S3)
 app.get('/api/signs3', upCtrl.upload);
 
 server.listen(SERVER_PORT, () => console.log(`APP listening on port: ${SERVER_PORT}`))
+
