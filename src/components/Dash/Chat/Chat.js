@@ -12,7 +12,15 @@ const Chat = props => {
             <div>
                 <h3>Live Chat:</h3>
 
-                {chatArr?.map(message => <p key={message.message_id}>{message.message_text}</p>)}
+                {chatArr?.map(message => {
+                    return (
+                        <div key={message.message_id}>
+                            <img className='chatImg' src={message.profile_pic} />
+                            <p>{message.username}</p>
+                            <p>{message.message_text}</p>
+                        </div>
+                    )
+                })}
                 <input
                     type="text"
                     name="name"

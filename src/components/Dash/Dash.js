@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useCallback } from "react";
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { initSocket, disconnectSocket, subscribeToChat, sendNotification, lobbyResult, nextRestaurant } from '../../Sockets/ChatSocket';
+import { initSocket, leaveLobbyRoom, subscribeToChat, sendNotification, lobbyResult, nextRestaurant } from '../../Sockets/ChatSocket';
 import useGeolocation from 'react-hook-geolocation'
 import axios from 'axios';
 import AppContext from "../../context/app-context";
@@ -10,8 +10,6 @@ import LobbyActive from './LobbyActive/LobbyActive';
 import LobbyResult from './LobbyResult/LobbyResult';
 import Chat from './Chat/Chat';
 import './Dash.scss';
-let cleanUp;
-
 
 const Dash = (props) => {
     const { decidee } = useContext(AppContext)
@@ -68,7 +66,8 @@ const Dash = (props) => {
         const { decidee_id } = decidee
         axios.put(`/api/lobby-members`, { decidee_id, lobbyId })
             .then(res => {
-                disconnectSocket(lobbyId, res.data)
+                setChatArr([])
+                leaveLobbyRoom(lobbyId, res.data)
                 setLobbyId(null)
                 setJoinLobbyView(false);
                 setChatView(false);
@@ -146,9 +145,10 @@ const Dash = (props) => {
                 }))
         } else if (lobbyId && decidee) {
             //This has a cb function that is not ran by this invocation but only on socket event that it is being passed to in ChatSocket.js
+            getLobbyChat();
             subscribeToChat(
                 lobbyId,
-                err => {
+                (err) => {
                     if (err) return;
                     getLobbyChat();
                 },
@@ -157,16 +157,17 @@ const Dash = (props) => {
                     props.history.push(`/dash/lobbyactive/${lobbyId}`)
                 },
                 (lobbyVoteArr) => {
-                    console.log(lobbyVoteArr)
                     setLobbyVotes(lobbyVoteArr)
                 },
                 (restaurant) => {
                     setResult(restaurant)
+                    setCurrentRestaurantIndex(0)
                     console.log(restaurant)
                     props.history.push(`/dash/lobby-result/${lobbyId}`)
                 },
                 (newIndex) => {
                     setLobbyVotes([])
+                    console.log('NEW THING: ', newIndex)
                     setCurrentRestaurantIndex(newIndex)
                 },
                 () => {
@@ -174,13 +175,11 @@ const Dash = (props) => {
                 }
             )
 
-            getLobbyChat();
+
         };
     }, [lobbyId])
 
     useEffect(() => {
-        console.log('REST LENGTH: ', restaurantList)
-
         if (lobbyVotes.length > 0) {
             if (lobbyVotes.length === lobbyMemberList?.length && !lobbyVotes.some(vote => vote === false)) {
                 console.log('EVERYONE MATCHED!')
@@ -188,6 +187,7 @@ const Dash = (props) => {
             } else if (lobbyVotes.length === lobbyMemberList?.length && lobbyVotes.some(vote => vote === false)) {
                 console.log('NO MATCH VOTING DONE!')
                 if (currentRestaurantsIndex === restaurantList.length - 1) {
+                    console.log(currentRestaurantsIndex, restaurantList.length)
                     lobbyResult(lobbyId, null)
                     console.log('NOOOOOOOOOO MMMMMMMAAAAAAAAAATCHES EEEEEVERERRRRRR')
                 } else {
@@ -215,7 +215,9 @@ const Dash = (props) => {
     return (
         <main>
             {props.history.location.pathname === '/dash' &&
-                <h2>Welcome to HUNGREE, {decidee?.username}!</h2>
+                <>
+                    <h2>Welcome to HUNGREE, {decidee?.username}!</h2>
+                </>
             }
 
             <Switch>
