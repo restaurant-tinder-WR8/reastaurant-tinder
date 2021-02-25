@@ -24,7 +24,7 @@ export const initSocket = (myId, cb1, cb2) => {
     }
 }
 //LSJODIJOJOSIJFOIJSODIFJo
-//MORE TESTINGIONSG
+//MORE TESTINGION
 
 export const sendNotification = (receiverId, notificationList) => {
     socket.emit('newNotification', { receiverId, notificationList })
