@@ -17,7 +17,7 @@ const express = require('express'),
     server = http.createServer(app),
     io = socketio(server)
 
-let lobbyVoteArr = []
+let lobbyVoteObj = {}
 
 io.on('connection', (socket) => {
     console.log(`Connected: ${socket.id}`)
@@ -56,12 +56,13 @@ io.on('connection', (socket) => {
 
     socket.on('lobbyVote', (obj) => {
         const { lobbyId, vote, memberLength } = obj
-        lobbyVoteArr = [...lobbyVoteArr, vote]
+        tempArr = lobbyVoteObj[lobbyId] ? lobbyVoteObj[lobbyId] : []
+        lobbyVoteObj[lobbyId] = [...tempArr, vote]
         console.log(lobbyId, vote, memberLength)
-        console.log(lobbyVoteArr)
-        if (lobbyVoteArr.length === memberLength) {
-            io.to(lobbyId).emit('lobbyVote', { lobbyVoteArr })
-            lobbyVoteArr = []
+        console.log(lobbyVoteObj[lobbyId])
+        if (lobbyVoteObj[lobbyId].length === memberLength) {
+            io.to(lobbyId).emit('lobbyVote', { lobbyVoteArr: lobbyVoteObj[lobbyId] })
+            lobbyVoteObj[lobbyId] = []
         }
     })
 
