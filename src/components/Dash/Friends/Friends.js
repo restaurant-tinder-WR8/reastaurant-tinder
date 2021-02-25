@@ -6,7 +6,8 @@ import './Friends.scss';
 const Friends = (props) => {
     const { decidee } = useContext(AppContext);
     const { handleInviteTolobby } = props;
-    const [friends, setFriends] = useState([]);
+    const [onlineFriends, setOnlineFriends] = useState([]);
+    const [offlineFriends, setOfflineFriends] = useState([]);
     const [pending, setPending] = useState([]);
     const [input, setInput] = useState('');
     const [potentialFriend, setPotentialFriend] = useState(null);
@@ -15,7 +16,9 @@ const Friends = (props) => {
         if (decidee) {
             axios.get(`/api/friends/${decidee.decidee_id}`)
                 .then(res => {
-                    setFriends(res.data);
+                    const { offlineArr, onlineArr } = res.data
+                    setOnlineFriends(onlineArr);
+                    setOfflineFriends(offlineArr);
                 });
             axios.get(`/api/pending/${decidee.decidee_id}`)
                 .then(res => {
@@ -59,7 +62,7 @@ const Friends = (props) => {
     const acceptInvite = (friendId, pendingId) => {
         axios.post(`/api/pending/${decidee.decidee_id}`, { friendId, pendingId })
             .then(res => {
-                setFriends(res.data[0]);
+                setOfflineFriends(res.data[0]);
                 setPending(res.data[1]);
             })
             .catch(err => console.log(err));
@@ -84,8 +87,15 @@ const Friends = (props) => {
         </section>
     })
 
-    const mappedFriends = friends.map((el, i) => {
+    const mappedOfflineFriends = offlineFriends.map((el, i) => {
         return <section className='friend-list' key={i}>
+            <img className='fl-pics' src={el.profile_pic} alt='friend' />
+            <p onClick={() => handleInviteTolobby(el.friend_decidee_id)}>{el.username}</p>
+        </section>
+    })
+
+    const mappedOnlineFriends = onlineFriends.map((el, i) => {
+        return <section className='friend-list online-friend' key={i}>
             <img className='fl-pics' src={el.profile_pic} alt='friend' />
             <p onClick={() => handleInviteTolobby(el.friend_decidee_id)}>{el.username}</p>
         </section>
@@ -103,10 +113,10 @@ const Friends = (props) => {
                     </>
                 )
                 : null}
-            {friends.length > 0
+            {offlineFriends.length > 0 || onlineFriends.length > 0
                 ?
                 (
-                    mappedFriends
+                    [mappedOnlineFriends, mappedOfflineFriends]
                 )
                 :
                 (

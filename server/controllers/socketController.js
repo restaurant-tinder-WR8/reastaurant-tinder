@@ -4,7 +4,9 @@ module.exports = {
         const { socket_id } = req.params
         const { decidee_id } = req.body
         const db = req.app.get('db')
-        await db.socket.add_socket({ decidee_id, socket_id })
+        if (db !== undefined) {
+            await db.socket.add_socket({ decidee_id, socket_id })
+        }
         res.sendStatus(200)
     },
     removeSocket: async (req, res) => {

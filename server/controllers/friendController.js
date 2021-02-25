@@ -1,13 +1,18 @@
 module.exports = {
-    getFriends: (req, res) => {
+    getFriends: async (req, res) => {
         const { id } = req.params;
         const db = req.app.get('db');
 
-        db.friend.get_friends(id)
-            .then(friends => {
-                res.status(200).send(friends);
-            })
-            .catch(err => res.status(500).send(err));
+        const offlineArr = await db.friend.get_offline_friends(id)
+        const onlineArr = await db.friend.get_online_friends(id)
+
+        res.status(200).send({ offlineArr, onlineArr })
+
+        // db.friend.get_friends(id)
+        //     .then(friends => {
+        //         res.status(200).send(friends);
+        //     })
+        //     .catch(err => res.status(500).send(err));
     },
     getPotentialFriend: (req, res) => {
         const { id } = req.params;
