@@ -19,5 +19,22 @@ module.exports = {
             })
         // .catch(err =>
         //     console.log(err))
+    },
+
+    getRestaurant: async (req, res) => {
+        // console.log(req.body)
+        const { id } = req.params
+        var config = {
+            headers: {
+                'Authorization': `Bearer ${BEARER_TOKEN}`
+            }
+        }
+        const setUrl = `https://api.yelp.com/v3/businesses/${id}`
+        axios.get(`${setUrl}`, config)
+            .then(restaurant => {
+                res.status(200).send(restaurant.data)
+            })
+            .catch(err =>
+                console.log(err))
     }
 }

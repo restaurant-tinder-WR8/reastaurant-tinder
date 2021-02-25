@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useState, useEffect, useContext } from "react";
 import AppContext from "../../context/app-context";
+import logo from '../../assets/hungree.svg'
+import './Auth.scss'
 
 
 const Auth = (props) => {
@@ -74,6 +76,7 @@ const Auth = (props) => {
 
     return (
         <div>
+            <img src={logo} alt='Logo' className='Logo'/>
             <h1>Welcome to Hungree!</h1>
             <h3>When you are Hungry but need to Agree</h3>
             <h3>Login</h3>

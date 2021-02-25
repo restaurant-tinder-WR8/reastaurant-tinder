@@ -58,8 +58,8 @@ const LobbyActive = props => {
             <div className="restaurant-container">
                 <img className="photo-container" src={restaurantList[currentRestaurantsIndex]?.image_url} />
                 <div className="info">
-                    <h2>Title of Restaurant</h2>
-                    <h3>Rating</h3><h3>Cost($$)</h3>
+                    <h2>{restaurantList[currentRestaurantsIndex]?.name}</h2>
+                    <h3>Rating: {restaurantList[currentRestaurantsIndex]?.rating}</h3><h3>Cost({restaurantList[currentRestaurantsIndex]?.price}) </h3>
                 </div>
             </div>
 
