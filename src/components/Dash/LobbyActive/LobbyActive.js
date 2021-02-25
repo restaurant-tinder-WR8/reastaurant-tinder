@@ -28,7 +28,6 @@ const LobbyActive = props => {
         if (time <= 0) {
             console.log('5 seconds done')
             setTimerOn(false)
-            setTime(3000)
             if (voted === false) {
                 handleVoteBtn(false)
             }
@@ -48,6 +47,7 @@ const LobbyActive = props => {
     }
 
     useEffect(() => {
+        setTime(3000)
         setVoted(false)
         setTimerOn(true)
     }, [currentRestaurantsIndex])

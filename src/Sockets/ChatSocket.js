@@ -3,24 +3,28 @@ import axios from 'axios';
 let socket;
 
 export const initSocket = (myId, cb1, cb2) => {
-    socket = io();
+    if (!socket) {
+        socket = io();
 
-    socket.on('connect', () => {
-        socket.emit('addSocket', myId)
-    })
+        socket.on('connect', () => {
+            socket.emit('addSocket', myId)
+        })
 
-    socket.on()
+        socket.on()
 
-    socket.on('notify', ({ receiverId, notificationList }) => {
-        console.log("hit", receiverId, notificationList)
-        if (myId === receiverId) {
-            return cb1(notificationList)
-        }
-    })
-    socket.on('newLobbyMemberList', (memberList) => {
-        return cb2(memberList)
-    })
+        socket.on('notify', ({ receiverId, notificationList }) => {
+            console.log("hit", receiverId, notificationList)
+            if (myId === receiverId) {
+                return cb1(notificationList)
+            }
+        })
+        socket.on('newLobbyMemberList', (memberList) => {
+            return cb2(memberList)
+        })
+    }
 }
+//LSJODIJOJOSIJFOIJSODIFJo
+//MORE TESTINGIONSG
 
 export const sendNotification = (receiverId, notificationList) => {
     socket.emit('newNotification', { receiverId, notificationList })

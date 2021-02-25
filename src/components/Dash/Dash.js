@@ -135,6 +135,7 @@ const Dash = (props) => {
         //Create socket on component mount as well as socket listeners for notifications and lobby member changes
         if (!lobbyId && decidee) {
             //This has a cb functions that are not ran by this invocation but only on socket event that it is being passed to in ChatSocket.js
+            console.log('SOCKET-INIT-RUNNING')
             initSocket(
                 decidee.decidee_id,
                 (notificationList) => {
