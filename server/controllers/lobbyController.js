@@ -56,6 +56,11 @@ module.exports = {
         const { decidee_id, lobbyId } = req.body
         const db = req.app.get('db')
         const lobbyMemberList = await db.lobby.remove_lobby_member({ decidee_id, lobbyId })
+        const result = await db.lobby.check_lobby_empty({ lobby_id: lobbyId })
+        if (result.length === 0) {
+            db.chat.clear_lobby_chat({ lobby_id: lobbyId })
+            return res.sendStatus(200)
+        }
         res.status(200).send(lobbyMemberList)
     },
     addPendingInvite: async (req, res) => {

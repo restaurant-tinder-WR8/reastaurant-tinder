@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useCallback } from "react";
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { initSocket, disconnectSocket, subscribeToChat, sendNotification, lobbyResult, nextRestaurant } from '../../Sockets/ChatSocket';
+import { initSocket, leaveLobbyRoom, subscribeToChat, sendNotification, lobbyResult, nextRestaurant } from '../../Sockets/ChatSocket';
 import useGeolocation from 'react-hook-geolocation'
 import axios from 'axios';
 import AppContext from "../../context/app-context";
@@ -66,7 +66,8 @@ const Dash = (props) => {
         const { decidee_id } = decidee
         axios.put(`/api/lobby-members`, { decidee_id, lobbyId })
             .then(res => {
-                disconnectSocket(lobbyId, res.data)
+                setChatArr([])
+                leaveLobbyRoom(lobbyId, res.data)
                 setLobbyId(null)
                 setJoinLobbyView(false);
                 setChatView(false);
@@ -144,9 +145,10 @@ const Dash = (props) => {
                 }))
         } else if (lobbyId && decidee) {
             //This has a cb function that is not ran by this invocation but only on socket event that it is being passed to in ChatSocket.js
+            getLobbyChat();
             subscribeToChat(
                 lobbyId,
-                err => {
+                (err) => {
                     if (err) return;
                     getLobbyChat();
                 },
@@ -173,7 +175,7 @@ const Dash = (props) => {
                 }
             )
 
-            getLobbyChat();
+
         };
     }, [lobbyId])
 

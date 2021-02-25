@@ -22,9 +22,6 @@ let lobbyVoteObj = {}
 io.on('connection', (socket) => {
     console.log(`Connected: ${socket.id}`)
 
-    // socketFunctions.addSocket(socket.id)
-
-
     socket.on('addSocket', (decidee_id) => {
         axios.put(`http://localhost:${SERVER_PORT}/api/socket/${socket.id}`, { decidee_id })
             .then(res => console.log(res.data))
@@ -32,7 +29,6 @@ io.on('connection', (socket) => {
     })
 
     socket.on('newNotification', ({ receiverId, notificationList }) => {
-        console.log(receiverId, notificationList)
         socket.broadcast.emit('notify', { receiverId, notificationList })
     })
 
@@ -42,6 +38,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('leave', ({ lobbyId, memberList }) => {
+        socket.leave(lobbyId)
         socket.to(lobbyId).emit('newLobbyMemberList', memberList)
     })
 
@@ -58,8 +55,6 @@ io.on('connection', (socket) => {
         const { lobbyId, vote, memberLength } = obj
         tempArr = lobbyVoteObj[lobbyId] ? lobbyVoteObj[lobbyId] : []
         lobbyVoteObj[lobbyId] = [...tempArr, vote]
-        console.log(lobbyId, vote, memberLength)
-        console.log(lobbyVoteObj[lobbyId])
         if (lobbyVoteObj[lobbyId].length === memberLength) {
             io.to(lobbyId).emit('lobbyVote', { lobbyVoteArr: lobbyVoteObj[lobbyId] })
             lobbyVoteObj[lobbyId] = []
@@ -68,11 +63,15 @@ io.on('connection', (socket) => {
 
     socket.on('lobbyResult', (obj) => {
         const { lobbyId, restaurant } = obj
-        axios.get(`http://localhost:${SERVER_PORT}/api/getRestaurant/${restaurant.id}`)
-            .then(res => {
-                io.to(lobbyId).emit('lobbyResult', res.data)
-            })
-            .catch(err => console.log(err))
+        if (restaurant) {
+            axios.get(`http://localhost:${SERVER_PORT}/api/getRestaurant/${restaurant.id}`)
+                .then(res => {
+                    io.to(lobbyId).emit('lobbyResult', res.data)
+                })
+                .catch(err => console.log(err))
+        }
+        io.to(lobbyId).emit('lobbyResult', null)
+
 
     })
 

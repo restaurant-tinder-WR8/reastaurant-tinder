@@ -32,6 +32,7 @@ export const subscribeToChat = (lobbyId, cb, cb2, cb3, cb4, cb5, cb6) => {
         .then(res => {
             socket.emit('join', { lobbyId, memberList: res.data })
             socket.on('newMessage', () => {
+                console.log('hit')
                 return cb(null);
             });
             socket.on('lobbyStart', (restaurantList) => {
@@ -86,14 +87,10 @@ export const sendMessage = (lobbyId, message) => {
     }
 }
 
-export const disconnectSocket = (lobbyId, memberList) => {
+export const leaveLobbyRoom = (lobbyId, memberList) => {
     if (lobbyId && socket) {
-        socket.emit('leave', { lobbyId, memberList })
-        socket.disconnect()
-    } else if (socket) {
-        socket.disconnect();
+        if (memberList !== 'OK') {
+            socket.emit('leave', { lobbyId, memberList })
+        }
     }
-
-    // console.log('A USER DISCONNECTED!')
-    // if (socket) socket.disconnect();
 }
