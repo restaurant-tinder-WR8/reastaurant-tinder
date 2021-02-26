@@ -85,26 +85,25 @@ const Auth = (props) => {
                 ?
                 (
                     <>
-                        <label>Username/Email</label>
-                        <input type="text" name="userOrEmail" value={input.userOrEmail} onChange={handleChange}></input>
-                        <label>Password</label>
-                        <input type="password" name="password" value={input.password} onChange={handleChange}></input>
+                        
+                        <input type="text" name="userOrEmail" placeholder="Username/Email" value={input.userOrEmail} onChange={handleChange}></input>
+                        <input type="password" name="password" placeholder="Password"value={input.password} onChange={handleChange}></input>
                         <button onClick={handleLogin}>Login</button>
+                        <p>Don't have an account? <span onClick={() => setRegisterView(!registerView)}>Register here.</span></p>
                     </>
                 )
                 :
                 (
                     <>
-                        <label>Email</label>
-                        <input type="email" name="email" value={input.email} onChange={handleChange}></input>
-                        <label>Username</label>
-                        <input type="text" name="username" value={input.username} onChange={handleChange}></input>
+                        <input type="email" name="email" placeholder="Email" value={input.email} onChange={handleChange}></input>
+                        <input type="text" name="username" placeholder="Username" value={input.username} onChange={handleChange}></input>
                         <label>Password</label>
-                        <input type="password" name="password" value={input.password} onChange={handleChange}></input>
+                        <input type="password" name="password" placeholder="Password" value={input.password} onChange={handleChange}></input>
                         <button onClick={handleRegister}>Register</button>
+                        <p>Have an account? <span onClick={() => setRegisterView(!registerView)}>Login here.</span></p>
                     </>
                 )}
-            <button onClick={() => setRegisterView(!registerView)}>Toggle</button>
+           
             </section>
             </div>
             <div className="logo-master-container">
