@@ -24,7 +24,14 @@ io.on('connection', (socket) => {
 
     socket.on('addSocket', (decidee_id) => {
         axios.put(`http://localhost:${SERVER_PORT}/api/socket/${socket.id}`, { decidee_id })
-            .then(res => console.log(res.data))
+            .then(res => {
+                console.log(res.data)
+                const onlineFriendSocketArr = res.data
+                onlineFriendSocketArr.forEach(e => {
+                    const { socket_id } = e
+                    socket.to(socket_id).emit('newFriendOnline')
+                })
+            })
             .catch(err => console.log(err))
     })
 
@@ -84,11 +91,15 @@ io.on('connection', (socket) => {
         console.log(`Disconnected: ${socket.id}`)
         axios.delete(`http://localhost:${SERVER_PORT}/api/socket/${socket.id}`)
             .then(res => {
-                const { lobby_id } = res.data
+                const { lobby_id, onlineFriendSockets } = res.data
                 console.log('DISCONNECT AXIOS: ', res.data)
-                if (res.data != 'OK') {
+                if (lobby_id) {
                     io.to(lobby_id).emit('updateLobby', lobby_id)
                 }
+                onlineFriendSockets.forEach(e => {
+                    const { socket_id } = e
+                    socket.to(socket_id).emit('newFriendOnline')
+                })
             })
             .catch(err => console.log(err))
     })
@@ -109,6 +120,7 @@ massive({
 }).then(db => {
     app.set('db', db)
     console.log('DB ONLINE!!!!')
+    server.listen(SERVER_PORT, () => console.log(`APP listening on port: ${SERVER_PORT}`))
 });
 
 //AUTH ENDPOINTS
@@ -154,5 +166,5 @@ app.get(`/api/getRestaurant/:id`, yelpCtrl.getRestaurant)
 //UPLOAD ENDPOINTS (S3)
 app.get('/api/signs3', upCtrl.upload);
 
-server.listen(SERVER_PORT, () => console.log(`APP listening on port: ${SERVER_PORT}`))
+
 
