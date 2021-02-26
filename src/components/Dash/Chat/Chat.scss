@@ -1,6 +1,22 @@
+.chat-master-container{
+    padding-top: 80px;
+    margin-left: 80px;
+}
+
+#chat-container {
+    
+    height: 100%;
+    border-top-right-radius: 60px;
+    border-top-left-radius: 60px;
+    
+    background-color: rgba($color: #E2DED3, $alpha: .6);
+}
+
+
 .chatImg {
     height: 40px;
     width: 40px;
     border-radius: 20%;
     border: 1px solid white;
+    
 }
