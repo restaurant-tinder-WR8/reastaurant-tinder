@@ -77,6 +77,8 @@ const Auth = (props) => {
     return (
         <div>
             <img src={logo} alt='Logo' className='Logo'/>
+            <div className="login-master-container">
+            <section className="login-section">
             <h1>Welcome to Hungree!</h1>
             <h3>When you are Hungry but need to Agree</h3>
             <h3>Login</h3>
@@ -104,6 +106,8 @@ const Auth = (props) => {
                     </>
                 )}
             <button onClick={() => setRegisterView(!registerView)}>Toggle</button>
+            </section>
+            </div>
         </div>
     )
 

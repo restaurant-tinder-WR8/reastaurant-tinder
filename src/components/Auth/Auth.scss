@@ -2,3 +2,18 @@
     width: 200px;
     filter: invert(100%) sepia(0%) saturate(7494%) hue-rotate(16deg) brightness(122%) contrast(92%);
 }
+
+
+.login-section{
+    box-sizing: border-box;
+    top: 0px;
+    height: 100%;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    justify-content: center;
+    background-color: rgba($color: #E2DED3, $alpha: .6);
+    box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.25);
+    margin-bottom: 5000px;
+}
