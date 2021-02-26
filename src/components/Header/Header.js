@@ -12,7 +12,7 @@ const Header = (props) => {
 
                         <div className='title-container'>
                             <img src={logo} alt="Logo" className='logo' />
-                            <h1 className="title">hungree</h1>
+                            <h1 className="title">ungree</h1>
                         </div>
 
                         {props.location.pathname !== '/dash'

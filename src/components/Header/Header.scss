@@ -8,6 +8,7 @@
     box-sizing: border-box;
     padding: 0 30px;
     // box-shadow: 0 0 10px rgb(31, 31, 31);
+    
 }
 
 
@@ -25,7 +26,10 @@
 }
 
 .title {
-    font-size: 3rem;
+    position: relative;
+    top: 15px;
+    font-size: 4.7rem;
+    font-weight: 900;
 }
 
 .header-container nav {
