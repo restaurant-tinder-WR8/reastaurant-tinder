@@ -1,11 +1,26 @@
-#chat-container {
-    position: fixed;
-    left: 0px;
-    top: 120px;
-    border: 1px solid white;
-    height: 60vh;
-    background-color: rgb(138, 138, 138);
+main {
+    display: flex;
+
 }
+
+.welcome-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+
+
+.active-container {
+    width: 50%;
+    margin-right: 80px;
+    height: 100vh; 
+
+}
+
+
+
+
 
 #notification-container {
     position: fixed;

@@ -219,16 +219,25 @@ const Dash = (props) => {
 
     return (
         <main>
-            {props.history.location.pathname === '/dash' &&
-                <>
-                    <h2>Welcome to HUNGREE, {decidee?.username}!</h2>
-                </>
-            }
 
+            {chatView
+                && <Chat lobbyId={lobbyId} chatArr={chatArr} />
+            }
             <Switch>
                 <Route exact path={`${path}`}>
-                    <button onClick={handleHostLobby}>HOST LOBBY</button>
-                    <button onClick={() => setJoinLobbyView(true)}>JOIN LOBBY</button>
+                    <div className="welcome-container">
+                        {props.history.location.pathname === '/dash' &&
+                            <>
+                                <h2>Welcome to HUNGREE, {decidee?.username}!</h2>
+                            </>
+                        }
+                        <div className="button-container">
+                            <button onClick={handleHostLobby}>HOST LOBBY</button>
+                            <button onClick={() => setJoinLobbyView(true)}>JOIN LOBBY</button>
+                        </div>
+
+                    </div>
+
                 </Route>
                 <Route
                     path={`${path}/lobby/:id`}
@@ -280,9 +289,7 @@ const Dash = (props) => {
 
                 )
             }
-            {chatView
-                && <Chat lobbyId={lobbyId} chatArr={chatArr} />
-            }
+
             <div id='notification-container'>
                 RECENT LOBBY INVITES:
                 {receiverPendingList
