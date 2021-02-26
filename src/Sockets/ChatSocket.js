@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import axios from 'axios';
 let socket;
 
-export const initSocket = (myId, cb1, cb2) => {
+export const initSocket = (myId, cb1, cb2, cb3) => {
     if (!socket) {
         socket = io();
 
@@ -20,6 +20,10 @@ export const initSocket = (myId, cb1, cb2) => {
         })
         socket.on('newLobbyMemberList', (memberList) => {
             return cb2(memberList)
+        })
+
+        socket.on('newFriendOnline', () => {
+            return cb3()
         })
     }
 }
@@ -96,5 +100,12 @@ export const leaveLobbyRoom = (lobbyId, memberList) => {
         if (memberList !== 'OK') {
             socket.emit('leave', { lobbyId, memberList })
         }
+    }
+}
+
+export const disconnectSocket = () => {
+    if (socket) {
+        socket.disconnect()
+        socket = undefined;
     }
 }

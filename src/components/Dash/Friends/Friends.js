@@ -4,22 +4,24 @@ import AppContext from '../../../context/app-context';
 import './Friends.scss';
 
 const Friends = (props) => {
-    const { decidee } = useContext(AppContext);
+    const { decidee, onlineFriends, offlineFriends, setOfflineFriends, setOnlineFriends, contextGetFriendsList } = useContext(AppContext);
     const { handleInviteTolobby } = props;
-    const [onlineFriends, setOnlineFriends] = useState([]);
-    const [offlineFriends, setOfflineFriends] = useState([]);
+    // const [onlineFriends, setOnlineFriends] = useState([]);
+    // const [offlineFriends, setOfflineFriends] = useState([]);
     const [pending, setPending] = useState([]);
     const [input, setInput] = useState('');
     const [potentialFriend, setPotentialFriend] = useState(null);
 
     useEffect(() => {
         if (decidee) {
-            axios.get(`/api/friends/${decidee.decidee_id}`)
-                .then(res => {
-                    const { offlineArr, onlineArr } = res.data
-                    setOnlineFriends(onlineArr);
-                    setOfflineFriends(offlineArr);
-                });
+            // axios.get(`/api/friends/${decidee.decidee_id}`)
+            //     .then(res => {
+            //         const { offlineArr, onlineArr } = res.data
+            //         setOnlineFriends(onlineArr);
+            //         setOfflineFriends(offlineArr);
+            //     })
+            //     .catch(err => console.log(err))
+            contextGetFriendsList()
             axios.get(`/api/pending/${decidee.decidee_id}`)
                 .then(res => {
                     setPending(res.data)

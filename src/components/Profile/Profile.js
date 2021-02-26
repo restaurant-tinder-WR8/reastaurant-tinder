@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useEffect, useContext } from "react";
 import AppContext from "../../context/app-context";
+import { disconnectSocket } from '../../Sockets/ChatSocket';
 import Upload from './Upload/Upload';
 
 const Profile = (props) => {
@@ -46,7 +47,7 @@ const Profile = (props) => {
             .then(res => {
                 // console.log('TAS', res.data)
                 setDecidee(null)
-
+                disconnectSocket();
             })
             .catch(err => {
                 console.log('TAS', err)
@@ -70,18 +71,18 @@ const Profile = (props) => {
 
     return (
         <div>
-            {editPicView 
-                ? 
+            {editPicView
+                ?
                 (
                     <>
-                        <Upload 
+                        <Upload
                             decideeId={decidee?.decidee_id}
                             setDecidee={setDecidee}
-                            toggleFn={togglePicView}/>
+                            toggleFn={togglePicView} />
                         <button onClick={togglePicView}>Cancel</button>
                     </>
-                ) 
-                : 
+                )
+                :
                 (
                     <>
                         <img src={decidee?.profile_pic} />

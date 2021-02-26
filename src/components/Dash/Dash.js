@@ -12,7 +12,7 @@ import Chat from './Chat/Chat';
 import './Dash.scss';
 
 const Dash = (props) => {
-    const { decidee } = useContext(AppContext)
+    const { decidee, contextGetFriendsList } = useContext(AppContext)
     //Path and url used for nested Switch/Routes
     const { path, url } = useRouteMatch();
     const [lobbyId, setLobbyId] = useState(null)
@@ -130,6 +130,8 @@ const Dash = (props) => {
 
     useEffect(() => {
         // if (!lobbyId) {
+        console.log('LobbyId: ', lobbyId)
+        console.log('Decidee: ', decidee)
         //Create socket on component mount as well as socket listeners for notifications and lobby member changes
         if (!lobbyId && decidee) {
             //This has a cb functions that are not ran by this invocation but only on socket event that it is being passed to in ChatSocket.js
@@ -141,7 +143,11 @@ const Dash = (props) => {
                 },
                 (memberList => {
                     setLobbyMemberList(memberList)
-                }))
+                }),
+                () => {
+                    console.log('hit')
+                    contextGetFriendsList()
+                })
         } else if (lobbyId && decidee) {
             //This has a cb function that is not ran by this invocation but only on socket event that it is being passed to in ChatSocket.js
             getLobbyChat();
@@ -176,7 +182,7 @@ const Dash = (props) => {
 
 
         };
-    }, [lobbyId])
+    }, [lobbyId, decidee])
 
     useEffect(() => {
         if (lobbyVotes.length > 0) {

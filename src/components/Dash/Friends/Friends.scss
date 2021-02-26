@@ -16,7 +16,14 @@
 }
 
 .fl-pics {
-    height: 50px;
+    height: 45px;
     width: 50px;
     object-fit: cover;
+    border: 1px solid black;
+    border-radius: 25%;
+    background-color: white;
+}
+
+.online-friend {
+    border: 2px solid rgb(33, 219, 80);
 }

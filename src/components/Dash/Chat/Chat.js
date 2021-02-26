@@ -5,7 +5,14 @@ import './Chat.scss';
 const Chat = props => {
     const { lobbyId, chatArr } = props;
 
-    const [messageInput, setMessage] = useState('');
+    const [messageInput, setMessageInput] = useState('');
+
+    const handleSendMessage = () => {
+        if (messageInput != '') {
+            sendMessage(lobbyId, messageInput)
+            setMessageInput('')
+        }
+    }
     return (
         <section id='chat-container'>
             <h2>LOBBY CHAT: {lobbyId}</h2>
@@ -25,9 +32,9 @@ const Chat = props => {
                     type="text"
                     name="name"
                     value={messageInput}
-                    onChange={e => setMessage(e.target.value)}
+                    onChange={e => setMessageInput(e.target.value)}
                 />
-                <button onClick={() => sendMessage(lobbyId, messageInput)}>Send</button>
+                <button onClick={handleSendMessage}>Send</button>
             </div>
         </section>
     )
