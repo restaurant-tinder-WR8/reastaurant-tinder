@@ -47,7 +47,7 @@ const LobbyActive = props => {
     }
 
     useEffect(() => {
-        setTime(3000)
+        setTime(30000)
         setVoted(false)
         setTimerOn(true)
     }, [currentRestaurantsIndex])
@@ -72,9 +72,11 @@ const LobbyActive = props => {
                 <div className="Timers">
                     <h2>CountDown</h2>
                     <div id="display">
-                        <span>{("0" + Math.floor((time / 60000) % 60)).slice(-2)}:</span>
-                        <span>{("0" + Math.floor((time / 1000) % 60)).slice(-2)}:</span>
-                        <span>{("0" + ((time / 10) % 100)).slice(-2)}</span>
+                        {/* <span>{("0" + Math.floor((time / 60000) % 60)).slice(-2)}:</span> */}
+                        <div id='timer-middle'>
+                            <span >{(`${Math.floor((time / 1000) % 60)}`).slice(-2)}</span>
+                        </div>
+                        {/* <span>{("0" + ((time / 10) % 100)).slice(-2)}</span> */}
                     </div>
 
                     <div id="buttons">
