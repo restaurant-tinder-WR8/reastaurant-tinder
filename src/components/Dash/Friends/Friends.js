@@ -64,7 +64,7 @@ const Friends = (props) => {
     const acceptInvite = (friendId, pendingId) => {
         axios.post(`/api/pending/${decidee.decidee_id}`, { friendId, pendingId })
             .then(res => {
-                setOfflineFriends(res.data[0]);
+                contextGetFriendsList()
                 setPending(res.data[1]);
             })
             .catch(err => console.log(err));
@@ -90,40 +90,47 @@ const Friends = (props) => {
     })
 
     const mappedOfflineFriends = offlineFriends.map((el, i) => {
-        return <section className='friend-list' key={i}>
-            <img className='fl-pics' src={el.profile_pic} alt='friend' />
+        return <section className='friend-list-item' key={i}>
+            {/* <div className='fl-img-container'>
+                <img className={`fl-pics${el.profile_pic === 'https://demicog-bikes.s3-us-west-1.amazonaws.com/hungreeThumbSvg.svg' ? ' default-pic' : ''}`} src={el.profile_pic} alt='friend' />
+            </div> */}
             <p onClick={() => handleInviteTolobby(el.friend_decidee_id)}>{el.username}</p>
         </section>
     })
 
     const mappedOnlineFriends = onlineFriends.map((el, i) => {
-        return <section className='friend-list online-friend' key={i}>
-            <img className='fl-pics' src={el.profile_pic} alt='friend' />
+        return <section className='friend-list-item online-friend' key={i}>
+            <div className='fl-img-container'>
+                <img className={`fl-pics${el.profile_pic === 'https://demicog-bikes.s3-us-west-1.amazonaws.com/hungreeThumbSvg.svg' ? ' default-pic' : ''}`} src={el.profile_pic} alt='friend' />
+            </div>
             <p onClick={() => handleInviteTolobby(el.friend_decidee_id)}>{el.username}</p>
         </section>
     })
 
     return (
         <section id='friends-container'>
-            <h1>Friends</h1>
-            {pending.length > 0
-                ?
-                (
-                    <>
-                        <h3>Pending Friend Requests</h3>
-                        {mappedPending}
-                    </>
-                )
-                : null}
-            {offlineFriends.length > 0 || onlineFriends.length > 0
-                ?
-                (
-                    [mappedOnlineFriends, mappedOfflineFriends]
-                )
-                :
-                (
-                    <p>Get started by adding a friend!</p>
-                )}
+            <h1>friends</h1>
+            <div id="friend-scroll-box">
+                {pending.length > 0
+                    ?
+                    (
+                        <>
+                            <h3>Pending Friend Requests</h3>
+                            {mappedPending}
+                        </>
+                    )
+                    : null}
+                {offlineFriends.length > 0 || onlineFriends.length > 0
+                    ?
+                    (
+                        [mappedOnlineFriends, mappedOfflineFriends]
+                    )
+                    :
+                    (
+                        <p>Get started by adding a friend!</p>
+                    )}
+            </div>
+
             <h3>Find and Add Friends</h3>
             <input placeholder='Enter Friend Code'
                 value={input}

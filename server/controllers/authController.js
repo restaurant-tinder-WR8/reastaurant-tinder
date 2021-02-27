@@ -15,7 +15,7 @@ module.exports = {
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(password, salt);
 
-        const [newUser] = await db.decidee.register_decidee({ email, hash, username, profilePic: `https://${S_S3_BUCKET}.s3-us-west-1.amazonaws.com/hungree.svg` })
+        const [newUser] = await db.decidee.register_decidee({ email, hash, username, profilePic: `https://${S_S3_BUCKET}.s3-us-west-1.amazonaws.com/hungreeThumbSvg.svg` })
 
         req.session.user = newUser;
         res.status(201).send(req.session.user)
@@ -81,9 +81,9 @@ module.exports = {
         res.status(201).send(req.session.user)
     },
     editProfilePic: (req, res) => {
-        const {decideeId} = req.params;
+        const { decideeId } = req.params;
         console.log(decideeId)
-        const {newProfilePic} = req.body;
+        const { newProfilePic } = req.body;
         console.log(newProfilePic)
         const db = req.app.get('db');
 
