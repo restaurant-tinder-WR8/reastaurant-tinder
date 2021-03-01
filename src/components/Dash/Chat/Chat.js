@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { sendMessage } from '../../../Sockets/ChatSocket';
+import AppContext from "../../../context/app-context";
 import './Chat.scss';
 
 const Chat = props => {
     const { lobbyId, chatArr } = props;
-
+    const { decidee } = useContext(AppContext)
     const [messageInput, setMessageInput] = useState('');
 
     const handleSendMessage = () => {
@@ -13,32 +14,42 @@ const Chat = props => {
             setMessageInput('')
         }
     }
+
+
     return (
         <div className="chat-master-container active-container">
             <section id='chat-container' >
                 <div id='chat-inner-container'>
                     <h2>LOBBY CHAT: {lobbyId}</h2>
-                    <div>
-                        <h3>Live Chat:</h3>
+                    <div className="chat-scroll-box">
+
 
                         {chatArr?.map(message => {
+
                             return (
-                                <div className="message" key={message.message_id}>
-                                    <img className='chatImg' src={message.profile_pic} />
-                                    <p>{message.username}</p>
+                                <div className={`message ${decidee.decidee_id === message.decidee_id ? "user-message" : ''}`} key={message.message_id}>
+                                    <div className="message-profile">
+
+                                        <img className='chatImg' src={message.profile_pic} />
+                                        <p>{message.username} </p>
+                                    </div>
                                     <p>{message.message_text}</p>
                                 </div>
                             )
                         })}
-                        <input
-                            id="chat-input"
-                            type="text"
-                            name="name"
-                            value={messageInput}
-                            onChange={e => setMessageInput(e.target.value)}
-                        />
-                        <button onClick={handleSendMessage}>Send</button>
+                        <div className="chat-input-sticky">
+                            <input
+                                id="chat-input"
+                                type="text"
+                                name="name"
+                                value={messageInput}
+                                onChange={e => setMessageInput(e.target.value)}
+                            />
+                            <button onClick={handleSendMessage}>Send</button>
+                        </div>
+
                     </div>
+
                 </div>
             </section>
         </div>
