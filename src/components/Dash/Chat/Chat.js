@@ -23,7 +23,7 @@ const Chat = props => {
 
                         {chatArr?.map(message => {
                             return (
-                                <div key={message.message_id}>
+                                <div className="message" key={message.message_id}>
                                     <img className='chatImg' src={message.profile_pic} />
                                     <p>{message.username}</p>
                                     <p>{message.message_text}</p>
@@ -31,6 +31,7 @@ const Chat = props => {
                             )
                         })}
                         <input
+                            id="chat-input"
                             type="text"
                             name="name"
                             value={messageInput}
