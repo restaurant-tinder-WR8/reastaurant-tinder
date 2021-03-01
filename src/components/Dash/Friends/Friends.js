@@ -1,16 +1,22 @@
 import axios from 'axios';
 import { useState, useEffect, useContext } from 'react';
 import AppContext from '../../../context/app-context';
+import OnlineFriend from './OnlineFriend/OnlineFriend'
+import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import './Friends.scss';
+import { lobbyResult } from '../../../Sockets/ChatSocket';
 
 const Friends = (props) => {
     const { decidee, onlineFriends, offlineFriends, setOfflineFriends, setOnlineFriends, contextGetFriendsList } = useContext(AppContext);
-    const { handleInviteTolobby } = props;
+    const { handleInviteTolobby, lobbyStarted } = props;
     // const [onlineFriends, setOnlineFriends] = useState([]);
     // const [offlineFriends, setOfflineFriends] = useState([]);
     const [pending, setPending] = useState([]);
     const [input, setInput] = useState('');
     const [potentialFriend, setPotentialFriend] = useState(null);
+    const [friendView, setFriendView] = useState(false);
+
 
     useEffect(() => {
         if (decidee) {
@@ -52,6 +58,7 @@ const Friends = (props) => {
                 setPotentialFriend(null);
                 setInput('');
                 alert(res.data);
+                console.log(res.data)
             })
             .catch(err => console.log(err));
     }
@@ -65,6 +72,7 @@ const Friends = (props) => {
         axios.post(`/api/pending/${decidee.decidee_id}`, { friendId, pendingId })
             .then(res => {
                 contextGetFriendsList()
+                console.log(res.data)
                 setPending(res.data[1]);
             })
             .catch(err => console.log(err));
@@ -82,10 +90,9 @@ const Friends = (props) => {
 
     const mappedPending = pending.map((el, i) => {
         return <section className='friend-list' key={i}>
-            <img className='fl-pics' src={el.profile_pic} alt='pending friend' />
             <p>{el.username}</p>
-            <button onClick={() => acceptInvite(el.sender_id, el.pending_id)}>Accept</button>
-            <button onClick={() => rejectInvite(el.pending_id)}>Decline</button>
+            <button onClick={() => acceptInvite(el.sender_id, el.pending_id)}>ACCEPT</button>
+            <button onClick={() => rejectInvite(el.pending_id)}>DECLINE</button>
         </section>
     })
 
@@ -99,55 +106,86 @@ const Friends = (props) => {
     })
 
     const mappedOnlineFriends = onlineFriends.map((el, i) => {
-        return <section className='friend-list-item online-friend' key={i}>
-            <div className='fl-img-container'>
-                <img className={`fl-pics${el.profile_pic === 'https://demicog-bikes.s3-us-west-1.amazonaws.com/hungreeThumbSvg.svg' ? ' default-pic' : ''}`} src={el.profile_pic} alt='friend' />
-            </div>
-            <p onClick={() => handleInviteTolobby(el.friend_decidee_id)}>{el.username}</p>
-        </section>
+        return <OnlineFriend el={el} key={el.friend_decidee_id} lobbyStarted={lobbyStarted} handleInviteTolobby={handleInviteTolobby} />
     })
 
     return (
-        <section id='friends-container'>
-            <h1>friends</h1>
-            <div id="friend-scroll-box">
-                {pending.length > 0
-                    ?
-                    (
-                        <>
-                            <h3>Pending Friend Requests</h3>
-                            {mappedPending}
-                        </>
-                    )
-                    : null}
-                {offlineFriends.length > 0 || onlineFriends.length > 0
-                    ?
-                    (
-                        [mappedOnlineFriends, mappedOfflineFriends]
-                    )
-                    :
-                    (
-                        <p>Get started by adding a friend!</p>
-                    )}
-            </div>
+        <>
+            {friendView && (
+                <div id='page-block-btn' onClick={() => setFriendView(false)}></div>
+            )}
 
-            <h3>Find and Add Friends</h3>
-            <input placeholder='Enter Friend Code'
-                value={input}
-                onChange={(e) => setInput(e.target.value)} />
-            <button onClick={getPotentialFriend}>Search For Friend</button>
-            {potentialFriend && potentialFriend[0]
-                ?
-                (
-                    <>
-                        <img className='fl-pics' src={potentialFriend[0].profile_pic} alt={potentialFriend} />
-                        <p>Result: {potentialFriend[0].username}</p>
-                        <button onClick={sendFriendInvite}>Send Invite</button>
-                        <button onClick={cancelInvite}>Cancel</button>
-                    </>
-                )
-                : null}
-        </section>
+            <section id='friends-container' className={`${friendView ? 'show-friend-container' : ''}`}>
+
+                <div id='friends-toggle-button' onClick={() => setFriendView(!friendView)}>
+                    <div className='button-text'>
+                        <span className={`${friendView ? 'friend-arrow-open' : ''}`}><ArrowDropDownIcon /></span>
+                    FRIENDS
+                    <span className={`${friendView ? 'friend-arrow-open' : ''}`}><ArrowDropDownIcon /></span>
+                    </div>
+
+                </div>
+                <div id="friend-scroll-box">
+                    <h3>friends</h3>
+                    <div id='list-container'>
+                        {pending.length > 0
+                            ?
+                            (
+                                <>
+                                    <h2>PENDING FRIENDS:</h2>
+                                    {mappedPending}
+                                </>
+                            )
+                            : null}
+                        {offlineFriends.length > 0 || onlineFriends.length > 0
+                            ?
+                            (
+                                [mappedOnlineFriends, mappedOfflineFriends]
+                            )
+                            :
+                            (
+                                <p>Get started by adding a friend!</p>
+                            )}
+
+                    </div>
+                    {potentialFriend && potentialFriend[0]
+                        ?
+                        (
+                            <div id='potential-friend-container'>
+                                <h3>SEARCH RESULT:</h3>
+                                <div id='potential-friend-title-container'>
+                                    <div className='fl-img-container' >
+                                        <img className={`fl-pics ${potentialFriend[0].profile_pic === 'https://demicog-bikes.s3-us-west-1.amazonaws.com/hungreeThumbSvgFixed.svg' ? 'default-pic' : ''}`} src={potentialFriend[0].profile_pic} alt={potentialFriend[0].username} />
+                                    </div>
+                                    <p>{potentialFriend[0].username}</p>
+                                </div>
+
+                                <div className='potential-friend-btn-container'>
+                                    <button onClick={sendFriendInvite}>ADD</button>
+                                    <button onClick={cancelInvite}>CANCEL</button>
+                                </div>
+
+                            </div>
+                        )
+                        : null}
+
+                    <div id='find-friend-container'>
+                        <h3>Add Friend</h3>
+                        <div id="find-friend-input-container">
+                            <input className='find-friend-input' placeholder='Enter Friend Code'
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)} />
+                            <button className='find-friend-input' onClick={getPotentialFriend}><PageviewOutlinedIcon /></button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </section>
+        </>
+
     )
 }
 
