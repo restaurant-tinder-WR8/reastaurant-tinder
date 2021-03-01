@@ -21,6 +21,7 @@ const Dash = (props) => {
     const [lobbyPendingList, setLobbyPendingList] = useState(null)
     const [joinLobbyView, setJoinLobbyView] = useState(false)
     const [chatView, setChatView] = useState(false)
+    const [lobbyStarted, setLobbyStarted] = useState(false)
     const [lobbyIdInput, setLobbyIdInput] = useState('')
     const [restaurantList, setRestaurants] = useState([])
     const [currentRestaurantsIndex, setCurrentRestaurantIndex] = useState(0)
@@ -42,6 +43,7 @@ const Dash = (props) => {
                 setLobbyMemberList(memberList)
                 props.history.push(`${url}/lobby/${lobby_id}`)
                 setChatView(true)
+                setLobbyStarted(true)
             })
             .catch(err => console.log(err))
     }
@@ -58,6 +60,7 @@ const Dash = (props) => {
                 props.history.push(`${url}/lobby/${lobby_id}`)
                 setJoinLobbyView(false)
                 setChatView(true)
+                setLobbyStarted(true)
             })
             .catch(err => console.log(err))
     }
@@ -72,6 +75,7 @@ const Dash = (props) => {
                 setJoinLobbyView(false);
                 setChatView(false);
                 props.history.push(`/dash`)
+                setLobbyStarted(false)
             })
             .catch(err => console.log(err))
     }
@@ -297,7 +301,7 @@ const Dash = (props) => {
                     receiverPendingList.map(el => <p key={el.row_id} onClick={() => handleJoinLobby(el.lobby_id)}>{el.username} has invited you to their lobby!</p>)
                 }
             </div>
-            <Friends handleInviteTolobby={handleInviteTolobby} />
+            <Friends handleInviteTolobby={handleInviteTolobby} lobbyStarted={lobbyStarted} />
         </main >
 
     )

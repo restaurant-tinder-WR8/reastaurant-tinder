@@ -6,7 +6,7 @@ const LobbyActive = props => {
     const { restaurantList, lobbyId, memberLength, currentRestaurantsIndex } = props
     const [voted, setVoted] = useState(false)
 
-    const [time, setTime] = useState(3000);
+    const [time, setTime] = useState(30000);
     const [timerOn, setTimerOn] = useState(false);
 
     useEffect(() => {
@@ -47,7 +47,7 @@ const LobbyActive = props => {
     }
 
     useEffect(() => {
-        setTime(3000)
+        setTime(30000)
         setVoted(false)
         setTimerOn(true)
     }, [currentRestaurantsIndex])
@@ -60,22 +60,25 @@ const LobbyActive = props => {
                     <img className="photo-container" src={restaurantList[currentRestaurantsIndex]?.image_url} />
                     <div className="info">
                         <h2>{restaurantList[currentRestaurantsIndex]?.name}</h2>
-                        <h3>Rating: {restaurantList[currentRestaurantsIndex]?.rating}</h3><h3>Cost({restaurantList[currentRestaurantsIndex]?.price}) </h3>
+                        <div><h3>Rating: {restaurantList[currentRestaurantsIndex]?.rating}</h3><h3>Cost({restaurantList[currentRestaurantsIndex]?.price}) </h3></div>
                     </div>
                 </div>
 
-                <>
+                <div className="vote-btns">
                     <button className="stomp" onClick={() => handleVoteBtn(false)}>Stomp</button>
-                    <button onClick={() => handleVoteBtn(true)}>Chomp</button>
-                </>
+                    <div id="timer-middle"><span className="timer">{(`${Math.floor((time / 1000) % 60)}`).slice(-2)}</span></div>
+                    <button className="chomp" onClick={() => handleVoteBtn(true)}>Chomp</button>
+
+                </div>
 
                 <div className="Timers">
-                    <h2>CountDown</h2>
-                    <div id="display">
-                        <span>{("0" + Math.floor((time / 60000) % 60)).slice(-2)}:</span>
-                        <span>{("0" + Math.floor((time / 1000) % 60)).slice(-2)}:</span>
-                        <span>{("0" + ((time / 10) % 100)).slice(-2)}</span>
-                    </div>
+
+                    {/* <div id="display">
+
+                        <div id='timer-middle'>
+                            <span >{(`${Math.floor((time / 1000) % 60)}`).slice(-2)}</span>
+                        </div>
+                    </div> */}
 
                     <div id="buttons">
 

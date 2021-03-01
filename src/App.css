@@ -53,3 +53,16 @@ button {
     transform: rotate(360deg);
   }
 }
+
+*::-webkit-scrollbar {
+  width: 10px;
+}
+ 
+*::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+ 
+*::-webkit-scrollbar-thumb {
+  background-color:#D6603A;
+  border-radius: 5px;
+}
