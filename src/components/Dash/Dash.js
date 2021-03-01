@@ -8,19 +8,17 @@ import Friends from './Friends/Friends';
 import Lobby from './Lobby/Lobby';
 import LobbyActive from './LobbyActive/LobbyActive';
 import LobbyResult from './LobbyResult/LobbyResult';
-import Chat from './Chat/Chat';
 import './Dash.scss';
 
 const Dash = (props) => {
     const { decidee, contextGetFriendsList } = useContext(AppContext)
     //Path and url used for nested Switch/Routes
-    const { path, url } = useRouteMatch();
+    // const { path, url } = useRouteMatch();
     const [lobbyId, setLobbyId] = useState(null)
     const [lobbyMemberList, setLobbyMemberList] = useState(null)
     const [receiverPendingList, setReceiverPendingList] = useState(null)
     const [lobbyPendingList, setLobbyPendingList] = useState(null)
     const [joinLobbyView, setJoinLobbyView] = useState(false)
-    const [chatView, setChatView] = useState(false)
     const [lobbyStarted, setLobbyStarted] = useState(false)
     const [lobbyIdInput, setLobbyIdInput] = useState('')
     const [restaurantList, setRestaurants] = useState([])
@@ -41,8 +39,7 @@ const Dash = (props) => {
                 setLobbyId(lobby_id)
                 console.log(memberList)
                 setLobbyMemberList(memberList)
-                props.history.push(`${url}/lobby/${lobby_id}`)
-                setChatView(true)
+                props.history.push(`/dash/lobby/${lobby_id}`)
                 setLobbyStarted(true)
             })
             .catch(err => console.log(err))
@@ -57,9 +54,8 @@ const Dash = (props) => {
                 setLobbyId(lobby_id)
                 setLobbyMemberList(memberList)
                 setReceiverPendingList(newInviteList)
-                props.history.push(`${url}/lobby/${lobby_id}`)
+                props.history.push(`/dash/lobby/${lobby_id}`)
                 setJoinLobbyView(false)
-                setChatView(true)
                 setLobbyStarted(true)
             })
             .catch(err => console.log(err))
@@ -73,7 +69,6 @@ const Dash = (props) => {
                 leaveLobbyRoom(lobbyId, res.data)
                 setLobbyId(null)
                 setJoinLobbyView(false);
-                setChatView(false);
                 props.history.push(`/dash`)
                 setLobbyStarted(false)
             })
@@ -213,22 +208,15 @@ const Dash = (props) => {
                 .catch(err => console.log(err))
         }
         if (lobbyId) {
-            props.history.push(`${url}/lobby/${lobbyId}`)
+            props.history.push(`/dash/lobby/${lobbyId}`)
         }
-        // return () => {
-        //     console.log('HITHITHITHITHITHIHTIHT')
-        //     disconnectSocket();
-        // }
+
     }, [])
 
     return (
         <main>
-
-            {chatView
-                && <Chat lobbyId={lobbyId} chatArr={chatArr} />
-            }
             <Switch>
-                <Route exact path={`${path}`}>
+                <Route exact path={`/dash`}>
                     <div className="welcome-container">
                         {props.history.location.pathname === '/dash' &&
                             <>
@@ -244,12 +232,13 @@ const Dash = (props) => {
 
                 </Route>
                 <Route
-                    path={`${path}/lobby/:id`}
+                    path={`/dash/lobby/:id`}
                     render={props => (
-                        //Using render props in order to pass lobby info and functions with props
+                        //Using render props in order to pass lobby info and functions within routes
                         <Lobby {...props}
                             hostId={hostId}
                             lobbyId={lobbyId}
+                            chatArr={chatArr}
                             lobbyMemberList={lobbyMemberList}
                             handleLeaveLobby={handleLeaveLobby}
                             geoLocation={geoLocation}
@@ -257,11 +246,12 @@ const Dash = (props) => {
                     )}
                 />
                 <Route
-                    path={`${path}/lobbyactive/:id`}
+                    path={`/dash/lobbyactive/:id`}
                     render={props => (
                         <LobbyActive {...props}
                             decidee_id={decidee?.decidee_id}
                             lobbyId={lobbyId}
+                            chatArr={chatArr}
                             memberLength={lobbyMemberList?.length}
                             handleLeaveLobby={handleLeaveLobby}
                             restaurantList={restaurantList}
@@ -271,9 +261,11 @@ const Dash = (props) => {
                     )}
                 />
                 <Route
-                    path={`${path}/lobby-result/:id`}
+                    path={`/dash/lobby-result/:id`}
                     render={props => (
                         <LobbyResult {...props}
+                            lobbyId={lobbyId}
+                            chatArr={chatArr}
                             handleLeaveLobby={handleLeaveLobby}
                             lobbyId={lobbyId}
                             result={result}
