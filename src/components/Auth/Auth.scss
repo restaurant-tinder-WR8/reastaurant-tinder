@@ -9,6 +9,7 @@
     flex-direction: column;
     position: absolute;
     justify-content: center;
+    align-items: center;
     background-color: rgba($color: #E2DED3, $alpha: .6);
     box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.25);
     margin-bottom: 5000px;
@@ -16,7 +17,7 @@
 
 .login-section h1{
     font-size: 2rem;
-    font-weight: 800;
+    font-weight: 900;
     padding-bottom: 20px;
     color: #393D46;
 }
@@ -28,8 +29,11 @@
 
 .login-section p{
     color: #393D46
+    
 }
-
+.login-section span{
+    cursor: pointer;
+}
 
 
 .login-section input{
@@ -39,12 +43,10 @@
     color: #393D46;
     border: none;
     border-bottom: 2px solid #353130;
-    margin-bottom: 20px;
     font-size: 20px;
     outline: none;
-    margin-left: 16%;
-    
-}
+    margin: 0 0 20px 0;
+    }
 
 .login-section button{
     height: 30px;
@@ -55,7 +57,8 @@
     border-radius: 15px;
     font-size: 20px;
     outline: none;
-    margin-left: 16%;
+    cursor: pointer;
+    
   }
   
   button:hover {
@@ -90,4 +93,10 @@
     font-size: 5.4rem;
     position: relative;
     top:-20px;
+}
+
+.logo-container h3 {
+    font-weight: 900;
+    font-size: 1.5rem;
+    margin-top:-20px;
 }
