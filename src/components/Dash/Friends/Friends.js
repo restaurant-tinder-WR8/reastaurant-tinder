@@ -119,9 +119,9 @@ const Friends = (props) => {
 
                 <div id='friends-toggle-button' onClick={() => setFriendView(!friendView)}>
                     <div className='button-text'>
-                        <span className={`${friendView ? 'friend-arrow-open' : ''}`}><ArrowDropDownIcon /></span>
+                        <div className={`${friendView ? 'friend-arrow-open' : ''}`}><ArrowDropDownIcon /></div>
                     FRIENDS
-                    <span className={`${friendView ? 'friend-arrow-open' : ''}`}><ArrowDropDownIcon /></span>
+                    <div className={`${friendView ? 'friend-arrow-open' : ''}`}><ArrowDropDownIcon /></div>
                     </div>
 
                 </div>

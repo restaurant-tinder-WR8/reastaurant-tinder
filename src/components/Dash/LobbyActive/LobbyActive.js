@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
+import Chat from '../Chat/Chat';
 import { lobbyVote } from '../../../Sockets/ChatSocket';
 import "./LobbyActive.scss"
 
 const LobbyActive = props => {
-    const { restaurantList, lobbyId, memberLength, currentRestaurantsIndex } = props
+    const { restaurantList, lobbyId, memberLength, currentRestaurantsIndex, chatArr } = props
     const [voted, setVoted] = useState(false)
 
     const [time, setTime] = useState(30000);
@@ -53,25 +54,27 @@ const LobbyActive = props => {
     }, [currentRestaurantsIndex])
 
     return (
-        <div className="restaurant-master-container active-container">
-            <section className="restaurant-container">
-                {/* <button onClick={searchRestaurants}>Get Restaurants</button> */}
-                <div className="">
-                    <img className="photo-container" src={restaurantList[currentRestaurantsIndex]?.image_url} />
-                    <div className="info">
-                        <h2>{restaurantList[currentRestaurantsIndex]?.name}</h2>
-                        <div><h3>Rating: {restaurantList[currentRestaurantsIndex]?.rating}</h3><h3>Cost({restaurantList[currentRestaurantsIndex]?.price}) </h3></div>
+        <>
+            <Chat lobbyId={lobbyId} chatArr={chatArr} />
+            <div className="restaurant-master-container active-container">
+                <section className="restaurant-container">
+                    {/* <button onClick={searchRestaurants}>Get Restaurants</button> */}
+                    <div className="">
+                        <img className="photo-container" src={restaurantList[currentRestaurantsIndex]?.image_url} />
+                        <div className="info">
+                            <h2>{restaurantList[currentRestaurantsIndex]?.name}</h2>
+                            <div><h3>Rating: {restaurantList[currentRestaurantsIndex]?.rating}</h3><h3>Cost({restaurantList[currentRestaurantsIndex]?.price}) </h3></div>
+                        </div>
                     </div>
-                </div>
 
-                <div className="vote-btns">
-                    <button className="stomp" onClick={() => handleVoteBtn(false)}>Stomp</button>
-                    <div id="timer-middle"><span className="timer">{(`${Math.floor((time / 1000) % 60)}`).slice(-2)}</span></div>
-                    <button className="chomp" onClick={() => handleVoteBtn(true)}>Chomp</button>
+                    <div className="vote-btns">
+                        <button className="stomp" onClick={() => handleVoteBtn(false)}>Stomp</button>
+                        <div id="timer-middle"><span className="timer">{(`${Math.floor((time / 1000) % 60)}`).slice(-2)}</span></div>
+                        <button className="chomp" onClick={() => handleVoteBtn(true)}>Chomp</button>
 
-                </div>
+                    </div>
 
-                {/* <div className="Timers">
+                    {/* <div className="Timers">
 
                     <div id="display">
 
@@ -80,21 +83,25 @@ const LobbyActive = props => {
                         </div>
                     </div>
 
-                    <div id="buttons">
+                        <div id="buttons">
 
-                        <button onClick={() => setTimerOn(true)}>Start</button>
-                        <button onClick={() => setTimerOn(false)}>Stop</button>
-                        <button onClick={() => setTime(5000, time)}>Reset</button>
-                        <button onClick={() => setTimerOn(true)}>Resume</button>
+                            <button onClick={() => setTimerOn(true)}>Start</button>
+                            <button onClick={() => setTimerOn(false)}>Stop</button>
+                            <button onClick={() => setTime(5000, time)}>Reset</button>
+                            <button onClick={() => setTimerOn(true)}>Resume</button>
 
 
+                        </div>
                     </div>
                 </div> */}
 
 
 
-            </section >
-        </div>
+                </section >
+            </div>
+        </>
+
+
     )
 }
 export default LobbyActive;
