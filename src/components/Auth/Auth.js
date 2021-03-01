@@ -79,7 +79,6 @@ const Auth = (props) => {
             <div className="login-master-container">
             <section className="login-section">
             <h1>Welcome to Hungree!</h1>
-            
             {!registerView
                 ?
                 (
@@ -102,13 +101,13 @@ const Auth = (props) => {
                         <p>Have an account? <span onClick={() => setRegisterView(!registerView)}>Login here.</span></p>
                     </>
                 )}
-           
             </section>
             </div>
             <div className="logo-master-container">
             <section className="logo-container">
             <img src={logo} alt='Logo' className='Logo'/>
             <h1>hungree</h1>
+            <h3>When you are Hungry, but need to Agree</h3>
             </section>
             </div>
         </div>
