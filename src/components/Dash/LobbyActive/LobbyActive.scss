@@ -1,23 +1,36 @@
 .restaurant-master-container{
+    position: relative;
     padding-bottom: 80px;
   
 }
+
+.restaurant-master-container::before {
+    z-index: 2;
+    content: "";
+    position: absolute;
+    left: -160px;
+    top: 0px;
+    height: 60px;
+    width: 200px;
+    background-color: transparent;
+    box-shadow: 80px 0px 0px #e2ded3;
+    // background-color: rgba($color: #E2DED3, $alpha: .6);
+    border-top-right-radius: 60px;
+}
+
+
 
 .restaurant-container{
     padding: 30px;
     box-sizing: border-box;
     height: 100%;
     color: black;
-
     display: flex;
     flex-direction: column;
     position: relative;
     margin: auto;
-    margin-left: 40px;
-    
+    margin-left: 40px; 
     justify-content: flex-end;
-
-
     background: #E2DED3;
     box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.25);
     border-bottom-right-radius: 60px;
