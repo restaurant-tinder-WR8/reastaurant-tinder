@@ -1,9 +1,14 @@
 .Upload {
+    height: 320px;
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+
+  .upload-div {
+    cursor: pointer;
   }
   
   .App-logo {

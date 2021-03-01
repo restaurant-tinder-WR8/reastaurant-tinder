@@ -76,18 +76,17 @@ class Upload extends Component {
     return (
       <div className="Upload">
         <h1>Upload</h1>
-        <img src={url} alt="" width="450px" />
 
         <Dropzone
           onDropAccepted={this.getSignedRequest}
           accept="image/*"
           multiple={false}>
           {({getRootProps, getInputProps}) => (
-            <div 
+            <div className='upload-div'
               style = {{
               position: 'relative',
-              width: 160,
-              height: 80,
+              width: 320,
+              height: 160,
               borderWidth: 5,
               marginTop: 25,
               borderColor: 'gray',
