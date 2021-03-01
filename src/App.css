@@ -26,14 +26,6 @@ body {
   pointer-events: none;
 }
 
-.pointer {
-  cursor: pointer;
-}
-
-button {
-  outline: none;
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -52,17 +44,4 @@ button {
   to {
     transform: rotate(360deg);
   }
-}
-
-*::-webkit-scrollbar {
-  width: 10px;
-}
- 
-*::-webkit-scrollbar-track {
-  background-color: transparent;
-}
- 
-*::-webkit-scrollbar-thumb {
-  background-color:#D6603A;
-  border-radius: 5px;
 }
