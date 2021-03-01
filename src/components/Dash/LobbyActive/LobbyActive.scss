@@ -13,6 +13,7 @@
     flex-direction: column;
     position: relative;
     margin: auto;
+    margin-left: 40px;
     
     justify-content: flex-end;
 
@@ -81,3 +82,19 @@
 
 
 
+// #timer-middle {
+//     width: 150px;
+//     height: 150px;
+//     border-radius: 50%;
+//     border: 3px solid white;
+//     color: white;
+//     position: fixed;
+//     left: 50%;
+//     top: 50%;
+//     font-size: 5rem;
+//     transform: translateX(-50%) translateY(-50%);
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     font-weight: 900;
+// }

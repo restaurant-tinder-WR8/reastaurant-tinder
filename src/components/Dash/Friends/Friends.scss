@@ -1,29 +1,293 @@
 #friends-container {
     position: fixed;
-    right: 0px;
-    top: 120px;
-    border: 1px solid white;
-    height: 60vh;
+    top: 0;
+    right: -340px;
+    width: 350px;
+    height: 100vh;
     margin: auto 0;
-    background-color: rgb(138, 138, 138);
+    padding: 10px 0 10px 10px;
     display: flex;
     flex-direction: column;
+    background-color: #e2ded3;
+    color: black;
+    box-shadow: 0 0 10px rgb(0, 0, 0);
+    transition: transform .5s;
+    z-index: 1;
 }
 
-.friend-list {
+#page-block-btn {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.75);
+    z-index: 0;
+}
+
+.show-friend-container {
+    transform: translateX(-340px);
+}
+
+#friends-container h3 {
+    font-weight: 900;
+    text-align: left;
+    font-size: 2rem;
+    text-transform: uppercase;
+    color: #D6603A;
+    // color: white;
+    border-bottom: 1px solid rgb(61, 61, 61);
+    background-color: black;
+    width: 100%;
+    position: sticky;
+    top: 0px;
+    text-align: center
+}
+
+#friend-scroll-box {
+    height: 100%;
+    position: relative;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: black;
+    color: white;
+    overflow-y: auto;
+    padding: 0px 5px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    justify-content: space-between;
+    
+}
+
+#list-container {
+    justify-self:self-start;
+    flex-grow: 1;
+    overflow-y: auto;
+
+}
+
+.friend-list-item {
+    display: flex;
+    border-bottom: 1px solid rgb(61, 61, 61);
+    padding: 5px;
+    align-items: flex-end;
+    color:rgb(61, 61, 61);
+}
+
+.fl-img-container {
+    display: flex;
+    max-height: 50px;
+    max-width: 50px;
+    min-height: 50px;
+    min-width: 50px;
+    border: 2px solid white;
+    background-color: #393D46;
+    border-radius: 20%;
+    overflow: hidden;
+    margin-right: 5px;
+    
+}
+
+.friend-list-item p {
+    font-size: 1.3rem;
+}
+
+#friend-invite-btn {
+    height: 40px;
+    width: 100px;
+    right: 10px;
+    border-radius: 10px;
+    position: absolute;
+    background-color: black;
+    border: 2px solid white;
+    color: white;
+    cursor: pointer;
+    align-self: center;
+    outline: none;
 }
 
 .fl-pics {
-    height: 45px;
-    width: 50px;
+    min-height: 100%;
+    min-width: 100%;
     object-fit: cover;
-    border: 1px solid black;
-    border-radius: 25%;
+}
+
+.default-pic {
+    filter: invert(100%) sepia(0%) saturate(7494%) hue-rotate(16deg) brightness(122%) contrast(92%);
+    width: 90%;
+    height: 90%;
+    align-self: center;
+}
+
+.online-friend p{
+    color: white;
+}
+
+#find-friend-container {
+    width: 100%;
+    min-height: 100px;
+    position: sticky;
+    bottom: 0px;
+    background-color: black;
+    border-top: 1px solid rgb(61, 61, 61);
+}
+
+#find-friend-container h3 {
+    border-bottom: none;
+}
+
+#find-friend-input-container {
+    width: 100%;
+    display: flex;
+}
+
+.find-friend-input {
+    height: 50px;
+    border-radius: 10px;
+    outline: none;
+}
+
+#find-friend-input-container input {
+    width: 100%;
+}
+
+#find-friend-input-container button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    min-width: 50px;
+    max-width: 50px;
+    border: none;
+    outline: none;
+    background-color: black;
+    border: 3px solid white;
+    color: white;
+    
+}
+
+#find-friend-input-container button:hover {
+    color: black;
     background-color: white;
 }
 
-.online-friend {
-    border: 2px solid rgb(33, 219, 80);
+#find-friend-input-container svg {
+    width: 40px;
+    height: 40px;
 }
+
+#friends-toggle-button {
+    position: absolute;
+    width: 40px;
+    height: 300px;
+    left: -40px;
+    top: 50%;
+    background-color: #e2ded3;
+    transform: translateY(-50%);
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color .25s, font-size .25s;
+}
+
+#friends-toggle-button:hover {
+    color:rgb(61, 61, 61);
+    font-size: 2.05rem;
+}
+
+#friends-toggle-button::before {
+    content: "";
+    position: absolute;
+    right: 0px;
+    top: -40px;
+    height: 40px;
+    width: 30px;
+    background-color: transparent;
+    box-shadow: 0px 20px 0px #e2ded3;
+    // background-color: rgba($color: #E2DED3, $alpha: .6);
+    border-bottom-right-radius: 20px;
+}
+
+#friends-toggle-button::after {
+    content: "";
+    position: absolute;
+    right: 0px;
+    bottom: -40px;
+    height: 40px;
+    width: 30px;
+    background-color: transparent;
+    box-shadow: 0px -20px 0px #e2ded3;
+    border-top-right-radius: 20px;
+}
+
+#friends-toggle-button .button-text {
+    min-width: 300px;
+    height: 40px;
+    transform: rotate(90deg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#friends-toggle-button svg {
+    margin: 0 10px;
+    min-width: 50px;
+    min-height: 50px;
+    
+}
+
+.friend-arrow-open {
+    transform: rotate(180deg);
+}
+
+#potential-friend-container {
+    width: 100%;
+    position: sticky;
+    bottom: 0px;
+    padding: 5px;
+}
+
+#potential-friend-title-container {
+    display: flex;
+    align-items: flex-end;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 5px 0px;
+}
+
+#potential-friend-container img {
+    width: 100%;
+    height: 100%;
+}
+
+.potential-friend-btn-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+#potential-friend-container button {
+    width: 48%;
+    height: 40px;
+    border-radius: 10px;
+    background-color: white;
+    color: black;
+    font-size: 1rem;
+    font-weight: 900;
+    outline: none;
+}
+
+#potential-friend-container button:hover {
+    color: white;
+    border: 2px solid white;
+    background-color: black;
+}
+
+
+
+

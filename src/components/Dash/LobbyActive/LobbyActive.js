@@ -71,14 +71,14 @@ const LobbyActive = props => {
 
                 </div>
 
-                {/* <div className="Timers">
+                <div className="Timers">
 
-                    <div id="display">
-                        <span>{("0" + Math.floor((time / 60000) % 60)).slice(-2)}:</span>
+                    {/* <div id="display">
 
-                        <span>{("0" + ((time / 10) % 100)).slice(-2)}</span>
-
-                    </div>
+                        <div id='timer-middle'>
+                            <span >{(`${Math.floor((time / 1000) % 60)}`).slice(-2)}</span>
+                        </div>
+                    </div> */}
 
                     <div id="buttons">
 
@@ -89,7 +89,7 @@ const LobbyActive = props => {
 
 
                     </div>
-                </div> */}
+                </div>
 
 
 
