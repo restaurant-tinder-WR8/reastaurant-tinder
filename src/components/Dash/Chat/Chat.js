@@ -16,26 +16,28 @@ const Chat = props => {
     return (
         <div className="chat-master-container active-container">
             <section id='chat-container' >
-                <h2>LOBBY CHAT: {lobbyId}</h2>
-                <div>
-                    <h3>Live Chat:</h3>
+                <div id='chat-inner-container'>
+                    <h2>LOBBY CHAT: {lobbyId}</h2>
+                    <div>
+                        <h3>Live Chat:</h3>
 
-                    {chatArr?.map(message => {
-                        return (
-                            <div key={message.message_id}>
-                                <img className='chatImg' src={message.profile_pic} />
-                                <p>{message.username}</p>
-                                <p>{message.message_text}</p>
-                            </div>
-                        )
-                    })}
-                    <input
-                        type="text"
-                        name="name"
-                        value={messageInput}
-                        onChange={e => setMessageInput(e.target.value)}
-                    />
-                    <button onClick={handleSendMessage}>Send</button>
+                        {chatArr?.map(message => {
+                            return (
+                                <div key={message.message_id}>
+                                    <img className='chatImg' src={message.profile_pic} />
+                                    <p>{message.username}</p>
+                                    <p>{message.message_text}</p>
+                                </div>
+                            )
+                        })}
+                        <input
+                            type="text"
+                            name="name"
+                            value={messageInput}
+                            onChange={e => setMessageInput(e.target.value)}
+                        />
+                        <button onClick={handleSendMessage}>Send</button>
+                    </div>
                 </div>
             </section>
         </div>
