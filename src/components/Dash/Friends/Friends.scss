@@ -184,7 +184,7 @@
     height: 40px;
 }
 
-#friends-toggle-button {
+.friends-toggle-button {
     position: absolute;
     width: 40px;
     height: 300px;
@@ -200,17 +200,17 @@
     font-weight: 900;
     font-size: 2rem;
     cursor: pointer;
-    transition: color .25s, font-size .25s;
+    transition: color .1s, font-size .25s;
     z-index: 4;
-    box-shadow: -2px 0 10px rgb(0, 0, 0);
+    box-shadow: -4px 0 7px rgb(39, 39, 39);
 }
 
-#friends-toggle-button:hover {
+.friends-toggle-button:hover {
     color:rgb(61, 61, 61);
     font-size: 2.05rem;
 }
 
-#friends-toggle-button::before {
+.friends-toggle-button::before {
     content: "";
     position: absolute;
     right: 0px;
@@ -223,7 +223,7 @@
     border-bottom-right-radius: 20px;
 }
 
-#friends-toggle-button::after {
+.friends-toggle-button::after {
     content: "";
     position: absolute;
     right: 0px;
@@ -235,7 +235,7 @@
     border-top-right-radius: 20px;
 }
 
-#friends-toggle-button .button-text {
+.friends-toggle-button .button-text {
     min-width: 300px;
     height: 40px;
     transform: rotate(90deg);
@@ -245,7 +245,7 @@
     border-bottom: none;
 }
 
-#friends-toggle-button svg {
+.friends-toggle-button svg {
     margin: 0 10px;
     min-width: 50px;
     min-height: 50px;
@@ -304,13 +304,14 @@
 #notification-container {
     position: absolute;
     width: 350px;
-    left: -350px;
+    left: 0px;
     top: 0px;
     height: 100%;
     background-color: #e2ded3;
     z-index: 3;
     box-shadow: inset -5px 0 4px rgb(58, 58, 58);
     padding: 10px 0 10px 10px;
+    transition: all .5s;
 }
 
 #notification-scroll-container {
@@ -346,4 +347,22 @@
     position: relative !important;
     right: 0px !important;
     margin: 0px 5px;
+}
+
+.show-invite-container {
+    transform: translateX(-350px);
+}
+
+.invite-toggle {
+    top: 17%;
+    height: auto;
+    padding: 25px 0;
+}
+
+.invite-toggle .button-text {
+    justify-content: center;
+}
+
+.notify-color {
+    color: #D6603A;
 }

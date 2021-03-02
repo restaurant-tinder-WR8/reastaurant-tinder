@@ -5,6 +5,7 @@ import OnlineFriend from './OnlineFriend/OnlineFriend';
 import LobbyInvite from './LobbyInvite/LobbyInvite';
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import MailRoundedIcon from '@material-ui/icons/MailRounded';
 import './Friends.scss';
 import { addedFriend, lobbyStart, notifyFriendInvite } from '../../../Sockets/ChatSocket';
 
@@ -17,7 +18,7 @@ const Friends = (props) => {
     const [input, setInput] = useState('');
     const [potentialFriend, setPotentialFriend] = useState(null);
     const [friendView, setFriendView] = useState(false);
-
+    const [inviteView, setInviteView] = useState(false);
 
     useEffect(() => {
         if (decidee) {
@@ -27,7 +28,10 @@ const Friends = (props) => {
 
     }, [decidee])
 
-
+    const handleCloseSliders = () => {
+        setFriendView(false);
+        setInviteView(false);
+    }
 
     const getPotentialFriend = () => {
         if (input !== '') {
@@ -102,11 +106,18 @@ const Friends = (props) => {
         <>
 
             {friendView && (
-                <div id='page-block-btn' onClick={() => setFriendView(false)}></div>
+                <div id='page-block-btn' onClick={handleCloseSliders}></div>
             )}
 
             <section id='friends-container' className={`${friendView ? 'show-friend-container' : ''}`}>
-                <div id='notification-container'>
+                <div id='notification-container' className={`${inviteView ? 'show-invite-container' : ''}`}>
+                    <div className='friends-toggle-button invite-toggle' onClick={() => setInviteView(!inviteView)}>
+                        <div className={`button-text ${receiverPendingList?.length > 0 ? 'notify-color' : ''}`}>
+                            {/* <div className={`${friendView ? 'friend-arrow-open' : ''}`}><ArrowDropDownIcon /></div> */}
+                            <MailRoundedIcon />
+                            {/* <div className={`${friendView ? 'friend-arrow-open' : ''}`}><ArrowDropDownIcon /></div> */}
+                        </div>
+                    </div>
                     <div id='notification-scroll-container'>
                         <h3>LOBBY INVITES</h3>
                         {receiverPendingList
@@ -114,9 +125,8 @@ const Friends = (props) => {
                             receiverPendingList.map(el => <LobbyInvite lobbyStarted={lobbyStarted} handleJoinLobby={handleJoinLobby} el={el} />)
                         }
                     </div>
-
                 </div>
-                <div id='friends-toggle-button' onClick={() => setFriendView(!friendView)}>
+                <div className='friends-toggle-button' onClick={() => setFriendView(!friendView)}>
                     <div className='button-text'>
                         <div className={`${friendView ? 'friend-arrow-open' : ''}`}><ArrowDropDownIcon /></div>
                     FRIENDS
