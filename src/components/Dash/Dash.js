@@ -294,14 +294,7 @@ const Dash = (props) => {
                 )
             }
 
-            <div id='notification-container'>
-                RECENT LOBBY INVITES:
-                {receiverPendingList
-                    &&
-                    receiverPendingList.map(el => <p key={el.row_id} onClick={() => handleJoinLobby(el.lobby_id)}>{el.username} has invited you to their lobby!</p>)
-                }
-            </div>
-            <Friends handleInviteTolobby={handleInviteTolobby} lobbyStarted={lobbyStarted} />
+            <Friends handleInviteTolobby={handleInviteTolobby} lobbyStarted={lobbyStarted} receiverPendingList={receiverPendingList} handleJoinLobby={handleJoinLobby} />
         </main >
 
     )

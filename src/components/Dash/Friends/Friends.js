@@ -1,15 +1,16 @@
 import axios from 'axios';
 import { useState, useEffect, useContext, useCallback } from 'react';
 import AppContext from '../../../context/app-context';
-import OnlineFriend from './OnlineFriend/OnlineFriend'
+import OnlineFriend from './OnlineFriend/OnlineFriend';
+import LobbyInvite from './LobbyInvite/LobbyInvite';
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import './Friends.scss';
-import { addedFriend, notifyFriendInvite } from '../../../Sockets/ChatSocket';
+import { addedFriend, lobbyStart, notifyFriendInvite } from '../../../Sockets/ChatSocket';
 
 const Friends = (props) => {
-    const { decidee, onlineFriends, offlineFriends, setOfflineFriends, setOnlineFriends, contextGetFriendsList, pending, setPending, getPendingFriends } = useContext(AppContext);
-    const { handleInviteTolobby, lobbyStarted } = props;
+    const { decidee, onlineFriends, offlineFriends, contextGetFriendsList, pending, setPending, getPendingFriends } = useContext(AppContext);
+    const { handleInviteTolobby, lobbyStarted, receiverPendingList, handleJoinLobby } = props;
     // const [onlineFriends, setOnlineFriends] = useState([]);
     // const [offlineFriends, setOfflineFriends] = useState([]);
     // const [pending, setPending] = useState([]);
@@ -20,13 +21,6 @@ const Friends = (props) => {
 
     useEffect(() => {
         if (decidee) {
-            // axios.get(`/api/friends/${decidee.decidee_id}`)
-            //     .then(res => {
-            //         const { offlineArr, onlineArr } = res.data
-            //         setOnlineFriends(onlineArr);
-            //         setOfflineFriends(offlineArr);
-            //     })
-            //     .catch(err => console.log(err))
             contextGetFriendsList()
             getPendingFriends()
         }
@@ -106,12 +100,22 @@ const Friends = (props) => {
 
     return (
         <>
+
             {friendView && (
                 <div id='page-block-btn' onClick={() => setFriendView(false)}></div>
             )}
 
             <section id='friends-container' className={`${friendView ? 'show-friend-container' : ''}`}>
+                <div id='notification-container'>
+                    <div id='notification-scroll-container'>
+                        <h3>LOBBY INVITES</h3>
+                        {receiverPendingList
+                            &&
+                            receiverPendingList.map(el => <LobbyInvite lobbyStarted={lobbyStarted} handleJoinLobby={handleJoinLobby} el={el} />)
+                        }
+                    </div>
 
+                </div>
                 <div id='friends-toggle-button' onClick={() => setFriendView(!friendView)}>
                     <div className='button-text'>
                         <div className={`${friendView ? 'friend-arrow-open' : ''}`}><ArrowDropDownIcon /></div>
@@ -120,7 +124,7 @@ const Friends = (props) => {
                     </div>
 
                 </div>
-                <div id="friend-scroll-box">
+                <div className="friend-scroll-box">
                     <h3>friends</h3>
                     <div id='list-container'>
                         {pending.length > 0
