@@ -45,7 +45,7 @@ const Chat = props => {
                                 value={messageInput}
                                 onChange={e => setMessageInput(e.target.value)}
                             />
-                            <button onClick={handleSendMessage}>Send</button>
+                            <button className="pointer" onClick={handleSendMessage}>Send</button>
                         </div>
 
                     </div>
