@@ -14,7 +14,7 @@
     background-color: #e2ded3;
     overflow: hidden;
     border-bottom-right-radius: 30px;
-    border-bottom-left-radius: 20px;
+    // border-bottom-left-radius: 20px;
 }
 
 #chat-inner-container {
@@ -44,6 +44,7 @@
 }
 
 .chat-scroll-box{
+    margin-top: 10px;
     width: 100%;
     flex-grow: 1;
     display: flex;
@@ -55,8 +56,10 @@
 .chatImg {
     height: 40px;
     width: 40px;
+    object-fit: cover;
     border-radius: 20%;
-    border: 1px solid white;    
+    border: 1px solid white;
+    background-color: white;
 }
 
 .chat-input-sticky {
@@ -68,11 +71,20 @@
     background-color: #e2ded3a2;
 }
 
+.chat-input-sticky button {
+    width: 25%;
+    height: 30px;
+    background: #726867;
+    border: none;
+    border-radius: 35px;
+    margin-left: 2%;
+}
+
 #chat-input {
     height: 30px;
-    width: 70%;
+    width: 65%;
     background-color: transparent;
-    color: white;
+    color: black;
     border: none;
     border-bottom: 2px solid #353130;
     font-size: 20px;
@@ -83,7 +95,6 @@
 
 .message {
     display: flex;
-
     width: 70%;
     height: auto;
     background: #726867;
@@ -101,4 +112,9 @@
 .message-profile {
     padding: 5px;
     margin-left: 5px;
+}
+
+.msg-txt-align {
+    text-align: left;
+    margin: 3px 5px;
 }

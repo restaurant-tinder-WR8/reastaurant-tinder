@@ -94,12 +94,10 @@ const Profile = (props) => {
                         (
                             <div className='profile-info'>
                                 <h1>Username: {decidee?.username}</h1>
-                                <label>Enter New Username:</label>
-                                <input type="text" name="username" value={input.username} onChange={handleChange}></input>
+                                <input type="text" name="username" placeholder="Enter New Username" value={input.username} onChange={handleChange}></input>
                                 <h1>Email: {decidee?.email}</h1>
-                                <label>Enter New Email:</label>
-                                <input type="email" name="email" value={input.email} onChange={handleChange}></input>
-                                <button onClick={handleUpdatedUserInfo}>Update New Info</button>
+                                <input type="email" name="email" placeholder="Enter New Email" value={input.email} onChange={handleChange}></input>
+                                <button className='alt-prof-btns pointer' onClick={handleUpdatedUserInfo}>Update New Info</button>
                                 <button className='profile-btns pointer' onClick={() => setEditInfoView(!editInfoView)}>Cancel</button>
                             </div>
                         )

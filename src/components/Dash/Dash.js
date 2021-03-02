@@ -232,8 +232,8 @@ const Dash = (props) => {
                             </>
                         }
                         <div className="button-container">
-                            <button onClick={handleHostLobby}>HOST LOBBY</button>
-                            <button onClick={() => setJoinLobbyView(true)}>JOIN LOBBY</button>
+                            <button className="dash-button" onClick={handleHostLobby}>HOST LOBBY</button>
+                            <button className="dash-button" onClick={() => setJoinLobbyView(true)}>JOIN LOBBY</button>
                         </div>
 
                     </div>

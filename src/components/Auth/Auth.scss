@@ -61,12 +61,12 @@
     
   }
   
-  button:hover {
+  .auth-buttons:hover {
     background-color: #E2DED3;
     color: #393D46;
   }
   
-  button:active {
+  .auth-buttons:active {
     background-color: transparent;
     color: white;
   }
