@@ -1,11 +1,11 @@
-import { useState, useEffect, useContext } from "react";
+import { useContext } from 'react';
 import Chat from '../Chat/Chat';
 import { lobbyStart } from '../../../Sockets/ChatSocket';
 import AppContext from "../../../context/app-context";
 import axios from "axios";
 
 const Lobby = props => {
-    const { decidee_id } = AppContext
+    const { decidee_id } = useContext(AppContext)
     const { lobbyId, handleLeaveLobby, lobbyMemberList, geoLocation, hostId, chatArr } = props;
 
     const shuffle = (array) => {
@@ -38,6 +38,7 @@ const Lobby = props => {
 
     return (
         <>
+
             <Chat lobbyId={lobbyId} chatArr={chatArr} />
             <div>
                 <button onClick={handleLeaveLobby}>LEAVE LOBBY</button>

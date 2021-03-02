@@ -18,11 +18,13 @@ const express = require('express'),
     io = socketio(server)
 
 let lobbyVoteObj = {}
+let socketObj = {}
 
 io.on('connection', (socket) => {
     console.log(`Connected: ${socket.id}`)
 
     socket.on('addSocket', (decidee_id) => {
+        socketObj[decidee_id] = socket.id
         axios.put(`http://localhost:${SERVER_PORT}/api/socket/${socket.id}`, { decidee_id })
             .then(res => {
                 console.log(res.data)
@@ -33,6 +35,13 @@ io.on('connection', (socket) => {
                 })
             })
             .catch(err => console.log(err))
+    })
+
+    socket.on('notifyFriendInvite', newFriendId => {
+        const foundSocket = socketObj[newFriendId]
+        if (foundSocket) {
+            socket.to(foundSocket).emit('notifyFriendInvite')
+        }
     })
 
     socket.on('newNotification', ({ receiverId, notificationList }) => {
@@ -91,8 +100,8 @@ io.on('connection', (socket) => {
         console.log(`Disconnected: ${socket.id}`)
         axios.delete(`http://localhost:${SERVER_PORT}/api/socket/${socket.id}`)
             .then(res => {
-                const { lobby_id, onlineFriendSockets } = res.data
-                console.log('DISCONNECT AXIOS: ', res.data)
+                const { lobby_id, onlineFriendSockets, decidee_id } = res.data
+                delete socketObj[decidee_id]
                 if (lobby_id) {
                     io.to(lobby_id).emit('updateLobby', lobby_id)
                 }

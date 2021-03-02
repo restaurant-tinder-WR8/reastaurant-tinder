@@ -1,18 +1,18 @@
 import axios from 'axios';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import AppContext from '../../../context/app-context';
 import OnlineFriend from './OnlineFriend/OnlineFriend'
 import PageviewOutlinedIcon from '@material-ui/icons/PageviewOutlined';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import './Friends.scss';
-import { lobbyResult } from '../../../Sockets/ChatSocket';
+import { addedFriend, notifyFriendInvite } from '../../../Sockets/ChatSocket';
 
 const Friends = (props) => {
-    const { decidee, onlineFriends, offlineFriends, setOfflineFriends, setOnlineFriends, contextGetFriendsList } = useContext(AppContext);
+    const { decidee, onlineFriends, offlineFriends, setOfflineFriends, setOnlineFriends, contextGetFriendsList, pending, setPending, getPendingFriends } = useContext(AppContext);
     const { handleInviteTolobby, lobbyStarted } = props;
     // const [onlineFriends, setOnlineFriends] = useState([]);
     // const [offlineFriends, setOfflineFriends] = useState([]);
-    const [pending, setPending] = useState([]);
+    // const [pending, setPending] = useState([]);
     const [input, setInput] = useState('');
     const [potentialFriend, setPotentialFriend] = useState(null);
     const [friendView, setFriendView] = useState(false);
@@ -28,13 +28,12 @@ const Friends = (props) => {
             //     })
             //     .catch(err => console.log(err))
             contextGetFriendsList()
-            axios.get(`/api/pending/${decidee.decidee_id}`)
-                .then(res => {
-                    setPending(res.data)
-                })
+            getPendingFriends()
         }
 
     }, [decidee])
+
+
 
     const getPotentialFriend = () => {
         if (input !== '') {
@@ -57,8 +56,7 @@ const Friends = (props) => {
             .then(res => {
                 setPotentialFriend(null);
                 setInput('');
-                alert(res.data);
-                console.log(res.data)
+                notifyFriendInvite(potentialFriend[0].decidee_id)
             })
             .catch(err => console.log(err));
     }
@@ -71,8 +69,8 @@ const Friends = (props) => {
     const acceptInvite = (friendId, pendingId) => {
         axios.post(`/api/pending/${decidee.decidee_id}`, { friendId, pendingId })
             .then(res => {
+                addedFriend(decidee.decidee_id)
                 contextGetFriendsList()
-                console.log(res.data)
                 setPending(res.data[1]);
             })
             .catch(err => console.log(err));
@@ -98,9 +96,6 @@ const Friends = (props) => {
 
     const mappedOfflineFriends = offlineFriends.map((el, i) => {
         return <section className='friend-list-item' key={i}>
-            {/* <div className='fl-img-container'>
-                <img className={`fl-pics${el.profile_pic === 'https://demicog-bikes.s3-us-west-1.amazonaws.com/hungreeThumbSvg.svg' ? ' default-pic' : ''}`} src={el.profile_pic} alt='friend' />
-            </div> */}
             <p onClick={() => handleInviteTolobby(el.friend_decidee_id)}>{el.username}</p>
         </section>
     })
