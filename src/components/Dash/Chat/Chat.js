@@ -33,7 +33,7 @@ const Chat = props => {
                                         <img className='chatImg' src={message.profile_pic} />
                                         <p>{message.username} </p>
                                     </div>
-                                    <p>{message.message_text}</p>
+                                    <p className='msg-txt-align'>{message.message_text}</p>
                                 </div>
                             )
                         })}
