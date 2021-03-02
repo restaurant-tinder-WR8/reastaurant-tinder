@@ -11,7 +11,7 @@ import LobbyResult from './LobbyResult/LobbyResult';
 import './Dash.scss';
 
 const Dash = (props) => {
-    const { decidee, contextGetFriendsList, getPendingFriends, logo} = useContext(AppContext)
+    const { decidee, contextGetFriendsList, getPendingFriends, logo } = useContext(AppContext)
     //Path and url used for nested Switch/Routes
     // const { path, url } = useRouteMatch();
     const [lobbyId, setLobbyId] = useState(null)
@@ -232,8 +232,8 @@ const Dash = (props) => {
                             </>
                         }
                         <div className="button-container">
-                            <button onClick={handleHostLobby}>HOST LOBBY</button>
-                            <button onClick={() => setJoinLobbyView(true)}>JOIN LOBBY</button>
+                            <button className="dash-button" onClick={handleHostLobby}>HOST LOBBY</button>
+                            <button className="dash-button" onClick={() => setJoinLobbyView(true)}>JOIN LOBBY</button>
                         </div>
 
                     </div>
