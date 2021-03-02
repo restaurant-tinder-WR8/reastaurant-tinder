@@ -59,6 +59,19 @@
     margin-bottom: 50px;
 }
 
+.profile-info input{
+    height: 30px;
+    width: 350px;
+    background-color: transparent;
+    color: #0e0d0d;
+    border: none;
+    border-bottom: 2px solid #353130;
+    font-size: 20px;
+    font-weight: 600;
+    outline: none;
+    margin: 0 0 20px 0;
+}
+
 .profile-btns {
     width: 175px;
     height: 60px;
@@ -67,6 +80,15 @@
     border-radius: 35px;
     color: white;
     font-size: 18px;
+}
+.profile-btns:hover {
+    background-color: #E2DED3;
+    color: #393D46;
+}
+
+.profile-btns:active{
+    background-color: transparent;
+    color: white;
 }
 
 .alt-prof-btns {
@@ -78,3 +100,14 @@
     color: white;
     font-size: 15px;
 }
+
+.alt-prof-btns:hover {
+    background-color: #E2DED3;
+    color: #393D46;
+}
+
+.alt-prof-btns:active{
+    background-color: transparent;
+    color: white;
+}
+
