@@ -4,9 +4,10 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { HashRouter } from 'react-router-dom';
-import AppState from "./context/AppState"
+import AppState from "./context/AppState";
+import axios from 'axios';
 
-
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 ReactDOM.render(
   <React.StrictMode>
     <AppState>
