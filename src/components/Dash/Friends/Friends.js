@@ -124,64 +124,65 @@ const Friends = (props) => {
                     </div>
 
                 </div>
-                <div className="friend-scroll-box">
-                    <h3>friends</h3>
-                    <div id='list-container'>
-                        {pending.length > 0
+                <div className="friend-scroll-box-outer-container">
+
+                    <div className="friend-scroll-box">
+                        <h3>friends</h3>
+                        <div id='list-container'>
+                            {pending.length > 0
+                                ?
+                                (
+                                    <>
+                                        <h2>PENDING FRIENDS:</h2>
+                                        {mappedPending}
+                                    </>
+                                )
+                                : null}
+                            {offlineFriends.length > 0 || onlineFriends.length > 0
+                                ?
+                                (
+                                    [mappedOnlineFriends, mappedOfflineFriends]
+                                )
+                                :
+                                (
+                                    <p>Get started by adding a friend!</p>
+                                )}
+
+                        </div>
+                        {potentialFriend && potentialFriend[0]
                             ?
                             (
-                                <>
-                                    <h2>PENDING FRIENDS:</h2>
-                                    {mappedPending}
-                                </>
+                                <div id='potential-friend-container'>
+                                    <h3>SEARCH RESULT:</h3>
+                                    <div id='potential-friend-title-container'>
+                                        <div className='fl-img-container' >
+                                            <img className={`fl-pics ${potentialFriend[0].profile_pic === 'https://demicog-bikes.s3-us-west-1.amazonaws.com/hungreeThumbSvgFixed.svg' ? 'default-pic' : ''}`} src={potentialFriend[0].profile_pic} alt={potentialFriend[0].username} />
+                                        </div>
+                                        <p>{potentialFriend[0].username}</p>
+                                    </div>
+
+                                    <div className='potential-friend-btn-container'>
+                                        <button onClick={sendFriendInvite}>ADD</button>
+                                        <button onClick={cancelInvite}>CANCEL</button>
+                                    </div>
+
+                                </div>
                             )
                             : null}
-                        {offlineFriends.length > 0 || onlineFriends.length > 0
-                            ?
-                            (
-                                [mappedOnlineFriends, mappedOfflineFriends]
-                            )
-                            :
-                            (
-                                <p>Get started by adding a friend!</p>
-                            )}
 
-                    </div>
-                    {potentialFriend && potentialFriend[0]
-                        ?
-                        (
-                            <div id='potential-friend-container'>
-                                <h3>SEARCH RESULT:</h3>
-                                <div id='potential-friend-title-container'>
-                                    <div className='fl-img-container' >
-                                        <img className={`fl-pics ${potentialFriend[0].profile_pic === 'https://demicog-bikes.s3-us-west-1.amazonaws.com/hungreeThumbSvgFixed.svg' ? 'default-pic' : ''}`} src={potentialFriend[0].profile_pic} alt={potentialFriend[0].username} />
-                                    </div>
-                                    <p>{potentialFriend[0].username}</p>
-                                </div>
-
-                                <div className='potential-friend-btn-container'>
-                                    <button onClick={sendFriendInvite}>ADD</button>
-                                    <button onClick={cancelInvite}>CANCEL</button>
-                                </div>
-
+                        <div id='find-friend-container'>
+                            <h3>Add Friend</h3>
+                            <div id="find-friend-input-container">
+                                <input className='find-friend-input' placeholder='Enter Friend Code'
+                                    value={input}
+                                    onChange={(e) => setInput(e.target.value)} />
+                                <button className='find-friend-input' onClick={getPotentialFriend}><PageviewOutlinedIcon /></button>
                             </div>
-                        )
-                        : null}
 
-                    <div id='find-friend-container'>
-                        <h3>Add Friend</h3>
-                        <div id="find-friend-input-container">
-                            <input className='find-friend-input' placeholder='Enter Friend Code'
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)} />
-                            <button className='find-friend-input' onClick={getPotentialFriend}><PageviewOutlinedIcon /></button>
                         </div>
 
                     </div>
-
                 </div>
-
-
             </section>
         </>
 

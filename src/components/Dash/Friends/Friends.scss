@@ -5,7 +5,7 @@
     width: 350px;
     height: 100vh;
     margin: auto 0;
-    padding: 10px 0 10px 10px;
+    // padding: 10px 0 10px 10px;
     display: flex;
     flex-direction: column;
     background-color: #e2ded3;
@@ -44,6 +44,14 @@
     text-align: center;
 }
 
+.friend-scroll-box-outer-container {
+    height: 100%;
+    width: 100%;
+    padding: 10px 0 10px 10px;
+    background-color: #e2ded3;
+    z-index: 5;
+}
+
 .friend-scroll-box {
     height: 100%;
     position: relative;
@@ -56,7 +64,6 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    
 }
 
 #list-container {
@@ -195,7 +202,7 @@
     cursor: pointer;
     transition: color .25s, font-size .25s;
     z-index: 4;
-    box-shadow: -10px 0 7px rgb(48, 48, 48);
+    box-shadow: -2px 0 10px rgb(0, 0, 0);
 }
 
 #friends-toggle-button:hover {
@@ -320,13 +327,13 @@
 }
 
 #notification-scroll-container h3 {
-    position: sticky;
-    top: 0px;
     border-top-left-radius: 10px;
+    z-index: 5;
 }
 
 #notification-scroll-container .friend-list-item {
     flex-direction: column;
+    margin-right: 40px;
 }   
 
 #lobby-invite-item-btn-container {
@@ -337,5 +344,6 @@
 
 .lobby-invite-btn {
     position: relative !important;
-    right: 0;
+    right: 0px !important;
+    margin: 0px 5px;
 }
