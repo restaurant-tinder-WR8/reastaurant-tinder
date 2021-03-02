@@ -18,7 +18,7 @@ body {
   background: linear-gradient(180deg, #393D46 33%, #804d41 66%, #D6603A 100%);
   box-sizing: border-box;
   color: white;
-  
+
 }
 
 .App-logo {
@@ -52,4 +52,17 @@ button {
   to {
     transform: rotate(360deg);
   }
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+}
+ 
+*::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+ 
+*::-webkit-scrollbar-thumb {
+  background-color:#272a30;
+  border-radius: 5px;
 }
