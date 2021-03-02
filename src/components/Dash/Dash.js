@@ -11,7 +11,7 @@ import LobbyResult from './LobbyResult/LobbyResult';
 import './Dash.scss';
 
 const Dash = (props) => {
-    const { decidee, contextGetFriendsList, getPendingFriends, logo} = useContext(AppContext)
+    const { decidee, contextGetFriendsList, getPendingFriends, logo } = useContext(AppContext)
     //Path and url used for nested Switch/Routes
     // const { path, url } = useRouteMatch();
     const [lobbyId, setLobbyId] = useState(null)
@@ -294,14 +294,7 @@ const Dash = (props) => {
                 )
             }
 
-            <div id='notification-container'>
-                RECENT LOBBY INVITES:
-                {receiverPendingList
-                    &&
-                    receiverPendingList.map(el => <p key={el.row_id} onClick={() => handleJoinLobby(el.lobby_id)}>{el.username} has invited you to their lobby!</p>)
-                }
-            </div>
-            <Friends handleInviteTolobby={handleInviteTolobby} lobbyStarted={lobbyStarted} />
+            <Friends handleInviteTolobby={handleInviteTolobby} lobbyStarted={lobbyStarted} receiverPendingList={receiverPendingList} handleJoinLobby={handleJoinLobby} />
         </main >
 
     )
