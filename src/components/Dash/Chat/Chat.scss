@@ -44,6 +44,7 @@
 }
 
 .chat-scroll-box{
+    margin-top: 10px;
     width: 100%;
     flex-grow: 1;
     display: flex;
@@ -68,6 +69,15 @@
     background-color: #e2ded3a2;
 }
 
+.chat-input-sticky button {
+    width: 25%;
+    height: 30px;
+    background: #726867;
+    border: none;
+    border-radius: 35px;
+    margin-left: 2%;
+}
+
 #chat-input {
     height: 30px;
     width: 70%;
@@ -83,7 +93,6 @@
 
 .message {
     display: flex;
-
     width: 70%;
     height: auto;
     background: #726867;
