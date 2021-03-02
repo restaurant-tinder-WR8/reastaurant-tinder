@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useCallback } from "react";
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { initSocket, leaveLobbyRoom, subscribeToChat, sendNotification, lobbyResult, nextRestaurant } from '../../Sockets/ChatSocket';
+import { initSocket, leaveLobbyRoom, subscribeToChat, sendNotification, lobbyResult, nextRestaurant, lobbyStart } from '../../Sockets/ChatSocket';
 import useGeolocation from 'react-hook-geolocation'
 import axios from 'axios';
 import AppContext from "../../context/app-context";
@@ -11,7 +11,7 @@ import LobbyResult from './LobbyResult/LobbyResult';
 import './Dash.scss';
 
 const Dash = (props) => {
-    const { decidee, contextGetFriendsList } = useContext(AppContext)
+    const { decidee, contextGetFriendsList, getPendingFriends, logo} = useContext(AppContext)
     //Path and url used for nested Switch/Routes
     // const { path, url } = useRouteMatch();
     const [lobbyId, setLobbyId] = useState(null)
@@ -146,6 +146,9 @@ const Dash = (props) => {
                 () => {
                     console.log('hit')
                     contextGetFriendsList()
+                },
+                () => {
+                    getPendingFriends()
                 })
         } else if (lobbyId && decidee) {
             //This has a cb function that is not ran by this invocation but only on socket event that it is being passed to in ChatSocket.js
@@ -215,6 +218,11 @@ const Dash = (props) => {
 
     return (
         <main>
+            {lobbyStarted && (
+                <div className='title-container lobby-title'>
+                    <img src={logo} alt="Logo" className='logo' />
+                </div>
+            )}
             <Switch>
                 <Route exact path={`/dash`}>
                     <div className="welcome-container">

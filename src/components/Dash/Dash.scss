@@ -15,10 +15,6 @@ main {
     height: 100vh;
 }
 
-
-
-
-
 #notification-container {
     position: fixed;
     left: 0px;
@@ -26,4 +22,15 @@ main {
     border: 1px solid white;
     height: auto;
     background-color: rgb(138, 138, 138);
+}
+
+.lobby-title {
+    height: auto !important;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+}
+
+.lobby-title img {
+    width: 70px;
 }
