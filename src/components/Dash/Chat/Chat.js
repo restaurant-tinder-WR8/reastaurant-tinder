@@ -20,7 +20,7 @@ const Chat = props => {
         <div className="chat-master-container active-container">
             <section id='chat-container' >
                 <div id='chat-inner-container'>
-                    <h2>LOBBY CHAT: {lobbyId}</h2>
+                    {/* <h2>LOBBY CHAT: {lobbyId}</h2> */}
                     <div className="chat-scroll-box">
 
 

@@ -18,8 +18,6 @@
     border-top-right-radius: 60px;
 }
 
-
-
 .restaurant-container{
     padding: 30px;
     box-sizing: border-box;
@@ -37,10 +35,17 @@
     border-bottom-left-radius: 60px;
 }
 
+.restaurant-container-active{
+    margin-bottom: 35px;
+}
+
 .vote-btns{
     display: flex;
     justify-content: space-between;
 }
+
+
+
 
 .chomp, .stomp {
     width: 175px;
@@ -49,6 +54,20 @@
     border: none;
     border-radius: 35px;
 }
+
+.chomp:hover {
+    background-color: #393D46;
+    color: white
+  }
+  
+
+
+  .stomp:hover {
+    background-color: #393D46;
+    color: white
+  }
+  
+
 
 .timer {
     font-size: 3rem;
@@ -61,28 +80,20 @@
     border-radius: 50%;
     border: 3px solid black;
     color: black;
-    // position: fixed;
-    // left: 50%;
-    // top: 50%;
-    // font-size: 5rem;
-    // transform: translateX(-50%) translateY(-50%);
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: 900;
 }
 
-
-
 .info{
     margin:auto;
     margin-bottom:5px;
-  
     display: flex;
     justify-content: space-around;
 }
-.photo-container{
 
+.photo-container{
     min-width: 350px;
     min-height: 400px;
     max-width: 350px;
@@ -92,21 +103,3 @@
     border-radius: 50px;
 }
 
-
-
-// #timer-middle {
-//     width: 150px;
-//     height: 150px;
-//     border-radius: 50%;
-//     border: 3px solid white;
-//     color: white;
-//     position: fixed;
-//     left: 50%;
-//     top: 50%;
-//     font-size: 5rem;
-//     transform: translateX(-50%) translateY(-50%);
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     font-weight: 900;
-// }
