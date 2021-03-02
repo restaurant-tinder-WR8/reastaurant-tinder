@@ -16,10 +16,37 @@ const express = require('express'),
     http = require('http'),
     socketio = require('socket.io'),
     server = http.createServer(app),
-    io = socketio(server)
+    io = socketio(server, {
+        cors: {
+            origin: process.env.APP_BASE_URL,
+            methods: ['GET', 'POST', 'PUT', 'DELETE'],
+            credentials: true
+        }
+    })
 
 let lobbyVoteObj = {}
 let socketObj = {}
+
+app.use(cors({
+    credentials: true,
+    origin: process.env.APP_BASE_URL
+}));
+app.use(express.json());
+app.use(session({
+    resave: true,
+    saveUninitialized: false,
+    secret: SESSION_SECRET,
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 365 }
+}));
+
+massive({
+    connectionString: CONNECTION_STRING,
+    ssl: { rejectUnauthorized: false }
+}).then(db => {
+    app.set('db', db)
+    console.log('DB ONLINE!!!!')
+    server.listen(SERVER_PORT, () => console.log(`APP listening on port: ${SERVER_PORT}`))
+});
 
 io.on('connection', (socket) => {
     console.log(`Connected: ${socket.id}`)
@@ -114,24 +141,6 @@ io.on('connection', (socket) => {
             .catch(err => console.log(err))
     })
 
-});
-
-app.use(cors());
-app.use(express.json());
-app.use(session({
-    resave: true,
-    saveUninitialized: false,
-    secret: SESSION_SECRET,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 365 }
-}));
-
-massive({
-    connectionString: CONNECTION_STRING,
-    ssl: { rejectUnauthorized: false }
-}).then(db => {
-    app.set('db', db)
-    console.log('DB ONLINE!!!!')
-    server.listen(SERVER_PORT, () => console.log(`APP listening on port: ${SERVER_PORT}`))
 });
 
 //AUTH ENDPOINTS

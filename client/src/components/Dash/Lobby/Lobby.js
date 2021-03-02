@@ -47,8 +47,8 @@ const Lobby = props => {
                     LOBBY MEMBERS:
                 {lobbyMemberList
                         && (
-                            lobbyMemberList.map((el) => {
-                                return <p>{el.username}</p>
+                            lobbyMemberList.map((el, i) => {
+                                return <p key={i}>{el.username}</p>
                             })
                         )
                     }
