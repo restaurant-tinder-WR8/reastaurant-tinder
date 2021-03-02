@@ -11,7 +11,7 @@ import LobbyResult from './LobbyResult/LobbyResult';
 import './Dash.scss';
 
 const Dash = (props) => {
-    const { decidee, contextGetFriendsList } = useContext(AppContext)
+    const { decidee, contextGetFriendsList, getPendingFriends } = useContext(AppContext)
     //Path and url used for nested Switch/Routes
     // const { path, url } = useRouteMatch();
     const [lobbyId, setLobbyId] = useState(null)
@@ -146,6 +146,9 @@ const Dash = (props) => {
                 () => {
                     console.log('hit')
                     contextGetFriendsList()
+                },
+                () => {
+                    getPendingFriends()
                 })
         } else if (lobbyId && decidee) {
             //This has a cb function that is not ran by this invocation but only on socket event that it is being passed to in ChatSocket.js

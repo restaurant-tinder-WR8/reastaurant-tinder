@@ -6,6 +6,7 @@ const AppState = (props) => {
     const [decidee, setDecidee] = useState(null);
     const [onlineFriends, setOnlineFriends] = useState([]);
     const [offlineFriends, setOfflineFriends] = useState([]);
+    const [pending, setPending] = useState([])
 
     const contextGetFriendsList = useCallback(() => {
         axios.get(`/api/friends/${decidee.decidee_id}`)
@@ -17,16 +18,26 @@ const AppState = (props) => {
             .catch(err => console.log(err))
     })
 
+    const getPendingFriends = useCallback(() => {
+        axios.get(`/api/pending/${decidee.decidee_id}`)
+            .then(res => {
+                setPending(res.data)
+            })
+    })
+
     return (
         <AppContext.Provider
             value={{
                 decidee,
                 setDecidee,
+                pending,
+                setPending,
                 onlineFriends,
                 offlineFriends,
                 setOnlineFriends,
                 setOfflineFriends,
-                contextGetFriendsList
+                contextGetFriendsList,
+                getPendingFriends
             }}
         >
             {props.children}
