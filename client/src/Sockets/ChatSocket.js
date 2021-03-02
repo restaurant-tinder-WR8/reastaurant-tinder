@@ -4,7 +4,9 @@ let socket;
 
 export const initSocket = (myId, cb1, cb2, cb3, cb4) => {
     if (!socket) {
-        socket = io();
+        socket = io(process.env.REACT_APP_API_URL, {
+            withCredentials: true
+        });
 
         socket.on('connect', () => {
             socket.emit('addSocket', myId)
