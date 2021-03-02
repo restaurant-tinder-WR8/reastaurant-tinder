@@ -59,7 +59,7 @@ const LobbyActive = props => {
             <div className="restaurant-master-container active-container">
                 <section className="restaurant-container">
                     {/* <button onClick={searchRestaurants}>Get Restaurants</button> */}
-                    <div className="">
+                    <div className="restaurant-container-active">
                         <img className="photo-container" src={restaurantList[currentRestaurantsIndex]?.image_url} />
                         <div className="info">
                             <h2>{restaurantList[currentRestaurantsIndex]?.name}</h2>

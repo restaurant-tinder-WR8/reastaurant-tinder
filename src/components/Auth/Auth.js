@@ -77,38 +77,38 @@ const Auth = (props) => {
     return (
         <div>
             <div className="login-master-container">
-            <section className="login-section">
-            <h1>Welcome to Hungree!</h1>
-            {!registerView
-                ?
-                (
-                    <>
-                        <h3>Login</h3>
-                        <input type="text" name="userOrEmail" placeholder="Username/Email" value={input.userOrEmail} onChange={handleChange}></input>
-                        <input type="password" name="password" placeholder="Password" value={input.password} onChange={handleChange}></input>
-                        <button onClick={handleLogin}>Login</button>
-                        <p>Don't have an account? <span onClick={() => setRegisterView(!registerView)}>Register here.</span></p>
-                    </>
-                )
-                :
-                (
-                    <>
-                        <h3>Register</h3>
-                        <input type="email" name="email" placeholder="Email" value={input.email} onChange={handleChange}></input>
-                        <input type="text" name="username" placeholder="Username" value={input.username} onChange={handleChange}></input>
-                        <input type="password" name="password" placeholder="Password" value={input.password} onChange={handleChange}></input>
-                        <button onClick={handleRegister}>Register</button>
-                        <p>Have an account? <span onClick={() => setRegisterView(!registerView)}>Login here.</span></p>
-                    </>
-                )}
-            </section>
+                <section className="login-section">
+                    <h1>Welcome to Hungree!</h1>
+                    {!registerView
+                        ?
+                        (
+                            <>
+                                <h3>Login</h3>
+                                <input type="text" name="userOrEmail" placeholder="Username/Email" value={input.userOrEmail} onChange={handleChange}></input>
+                                <input type="password" name="password" placeholder="Password" value={input.password} onChange={handleChange}></input>
+                                <button className="auth-buttons" onClick={handleLogin}>Login</button>
+                                <p>Don't have an account? <span onClick={() => setRegisterView(!registerView)}>Register here.</span></p>
+                            </>
+                        )
+                        :
+                        (
+                            <>
+                                <h3>Register</h3>
+                                <input type="email" name="email" placeholder="Email" value={input.email} onChange={handleChange}></input>
+                                <input type="text" name="username" placeholder="Username" value={input.username} onChange={handleChange}></input>
+                                <input type="password" name="password" placeholder="Password" value={input.password} onChange={handleChange}></input>
+                                <button className="auth-buttons" onClick={handleRegister}>Register</button>
+                                <p>Have an account? <span onClick={() => setRegisterView(!registerView)}>Login here.</span></p>
+                            </>
+                        )}
+                </section>
             </div>
             <div className="logo-master-container">
-            <section className="logo-container">
-            <img src={logo} alt='Logo' className='Logo'/>
-            <h1>hungree</h1>
-            <h3>When you are Hungry, but need to Agree</h3>
-            </section>
+                <section className="logo-container">
+                    <img src={logo} alt='Logo' className='Logo' />
+                    <h1>hungree</h1>
+                    <h3>When you are Hungry, but need to Agree</h3>
+                </section>
             </div>
         </div>
     )
