@@ -2,15 +2,13 @@ import io from 'socket.io-client';
 import axios from 'axios';
 let socket;
 
-export const initSocket = (myId, cb1, cb2, cb3) => {
+export const initSocket = (myId, cb1, cb2, cb3, cb4) => {
     if (!socket) {
         socket = io();
 
         socket.on('connect', () => {
             socket.emit('addSocket', myId)
         })
-
-        socket.on()
 
         socket.on('notify', ({ receiverId, notificationList }) => {
             console.log("hit", receiverId, notificationList)
@@ -25,10 +23,20 @@ export const initSocket = (myId, cb1, cb2, cb3) => {
         socket.on('newFriendOnline', () => {
             return cb3()
         })
+
+        socket.on('notifyFriendInvite', () => {
+            console.log('hit')
+            return cb4();
+        })
     }
 }
 //LSJODIJOJOSIJFOIJSODIFJo
 //MORE TESTINGION
+
+export const notifyFriendInvite = (newFriendId) => {
+    console.log(newFriendId)
+    socket.emit('notifyFriendInvite', newFriendId)
+}
 
 export const sendNotification = (receiverId, notificationList) => {
     socket.emit('newNotification', { receiverId, notificationList })
@@ -62,6 +70,10 @@ export const subscribeToChat = (lobbyId, cb, cb2, cb3, cb4, cb5, cb6) => {
         })
         .catch(err => console.log(err))
 
+}
+
+export const addedFriend = (myId) => {
+    socket.emit('addSocket', myId)
 }
 
 export const lobbyStart = (lobbyId, restaurantList) => {

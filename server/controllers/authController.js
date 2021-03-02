@@ -15,7 +15,7 @@ module.exports = {
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(password, salt);
 
-        const [newUser] = await db.decidee.register_decidee({ email, hash, username, profilePic: `https://${S_S3_BUCKET}.s3-us-west-1.amazonaws.com/hungreeThumbSvg.svg` })
+        const [newUser] = await db.decidee.register_decidee({ email, hash, username, profilePic: `https://${S_S3_BUCKET}.s3-us-west-1.amazonaws.com/hungreeThumbSvgFixed.svg` })
 
         req.session.user = newUser;
         res.status(201).send(req.session.user)
