@@ -10,7 +10,7 @@ const LobbyResult = props => {
             <Chat lobbyId={lobbyId} chatArr={chatArr} />
             <div className="restaurant-master-container active-container">
                 <section className="restaurant-container">
-                    <div className="">
+                    <div className="restuarant-result">
                         <img className="photo-container" src={result?.image_url} />
                         <div className="info">
                             <h2>{result?.name}</h2>
@@ -18,7 +18,7 @@ const LobbyResult = props => {
                         </div>
                     </div>
                     {/* <button onClick={ }>Menu </button> */}
-                    <button onClick={handleLeaveLobby}>Leave Lobby</button>
+                    <button className="lobby-result-button pointer" onClick={handleLeaveLobby}>Leave Lobby</button>
 
                 </section>
             </div>
