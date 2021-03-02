@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import axios from 'axios';
 import AppContext from "./app-context";
+import logo from '../assets/hungree.svg'
 
 const AppState = (props) => {
     const [decidee, setDecidee] = useState(null);
@@ -28,6 +29,7 @@ const AppState = (props) => {
     return (
         <AppContext.Provider
             value={{
+                logo,
                 decidee,
                 setDecidee,
                 pending,
