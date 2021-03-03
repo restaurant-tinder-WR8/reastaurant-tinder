@@ -6,7 +6,7 @@ import axios from "axios";
 
 const Lobby = props => {
     const { decidee_id } = useContext(AppContext)
-    const { lobbyId, handleLeaveLobby, lobbyMemberList, geoLocation, hostId, chatArr } = props;
+    const { lobbyId, handleLeaveLobby, lobbyMemberList, geoLocation, hostId, chatArr, logo} = props;
 
     const shuffle = (array) => {
         var currentIndex = array.length, temporaryValue, randomIndex;
@@ -38,7 +38,9 @@ const Lobby = props => {
 
     return (
         <>
-
+            <div className='title-container lobby-title'>
+                <img src={logo} alt="Logo" className='logo' />
+            </div>
             <Chat lobbyId={lobbyId} chatArr={chatArr} />
             <div>
                 <button onClick={handleLeaveLobby}>LEAVE LOBBY</button>

@@ -105,7 +105,7 @@ const Friends = (props) => {
     return (
         <>
 
-            {friendView && (
+            {(friendView || inviteView) && (
                 <div id='page-block-btn' onClick={handleCloseSliders}></div>
             )}
 
@@ -125,6 +125,7 @@ const Friends = (props) => {
                             receiverPendingList.map(el => <LobbyInvite lobbyStarted={lobbyStarted} handleJoinLobby={handleJoinLobby} el={el} />)
                         }
                     </div>
+
                 </div>
                 <div className='friends-toggle-button' onClick={() => setFriendView(!friendView)}>
                     <div className='button-text'>

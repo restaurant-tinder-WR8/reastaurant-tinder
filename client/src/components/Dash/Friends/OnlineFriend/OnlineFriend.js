@@ -11,7 +11,7 @@ const OnlineFriend = props => {
                 <img className={`fl-pics${el.profile_pic === 'https://demicog-bikes.s3-us-west-1.amazonaws.com/hungreeThumbSvgFixed.svg' ? ' default-pic' : ''}`} src={el.profile_pic} alt='friend' />
             </div>
             <p>{el.username}</p>
-            {showInvite && (
+            {lobbyStarted && (
                 <button id='friend-invite-btn' onClick={() => handleInviteTolobby(el.friend_decidee_id)}>INVITE</button>
             )}
         </section>

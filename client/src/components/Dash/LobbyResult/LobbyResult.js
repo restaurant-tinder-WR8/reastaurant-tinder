@@ -2,11 +2,14 @@ import Chat from '../Chat/Chat';
 import "./LobbyResult.scss"
 
 const LobbyResult = props => {
-    const { result, handleLeaveLobby, chatArr, lobbyId } = props
+    const { result, handleLeaveLobby, chatArr, lobbyId, logo } = props
 
 
     return (
         <>
+            <div className='title-container lobby-title'>
+                <img src={logo} alt="Logo" className='logo' />
+            </div>
             <Chat lobbyId={lobbyId} chatArr={chatArr} />
             <div className="restaurant-master-container active-container">
                 <section className="restaurant-container">
