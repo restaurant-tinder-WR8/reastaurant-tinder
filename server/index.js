@@ -11,7 +11,7 @@ const express = require('express'),
     yelpCtrl = require('./controllers/yelpCtrl'),
     socketCtrl = require('./controllers/socketController'),
     upCtrl = require('./controllers/uploadController'),
-    { SERVER_PORT, SESSION_SECRET, CONNECTION_STRING } = process.env,
+    { SERVER_PORT, SESSION_SECRET, DATABASE_URL, API_BASE_URL } = process.env,
     app = express(),
     http = require('http'),
     socketio = require('socket.io'),
@@ -40,7 +40,7 @@ app.use(session({
 }));
 
 massive({
-    connectionString: CONNECTION_STRING,
+    connectionString: DATABASE_URL,
     ssl: { rejectUnauthorized: false }
 }).then(db => {
     app.set('db', db)
@@ -53,7 +53,7 @@ io.on('connection', (socket) => {
 
     socket.on('addSocket', (decidee_id) => {
         socketObj[decidee_id] = socket.id
-        axios.put(`http://localhost:${SERVER_PORT}/api/socket/${socket.id}`, { decidee_id })
+        axios.put(`${API_BASE_URL}/api/socket/${socket.id}`, { decidee_id })
             .then(res => {
                 console.log(res.data)
                 const onlineFriendSocketArr = res.data
@@ -108,7 +108,7 @@ io.on('connection', (socket) => {
     socket.on('lobbyResult', (obj) => {
         const { lobbyId, restaurant } = obj
         if (restaurant) {
-            axios.get(`http://localhost:${SERVER_PORT}/api/getRestaurant/${restaurant.id}`)
+            axios.get(`${API_BASE_URL}/api/getRestaurant/${restaurant.id}`)
                 .then(res => {
                     io.to(lobbyId).emit('lobbyResult', res.data)
                 })
@@ -126,7 +126,7 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log(`Disconnected: ${socket.id}`)
-        axios.delete(`http://localhost:${SERVER_PORT}/api/socket/${socket.id}`)
+        axios.delete(`${API_BASE_URL}/api/socket/${socket.id}`)
             .then(res => {
                 const { lobby_id, onlineFriendSockets, decidee_id } = res.data
                 delete socketObj[decidee_id]
