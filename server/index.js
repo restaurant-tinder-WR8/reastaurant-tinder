@@ -11,7 +11,7 @@ const express = require('express'),
     yelpCtrl = require('./controllers/yelpCtrl'),
     socketCtrl = require('./controllers/socketController'),
     upCtrl = require('./controllers/uploadController'),
-    { SERVER_PORT, SESSION_SECRET, DATABASE_URL, API_BASE_URL } = process.env,
+    { PORT, SESSION_SECRET, DATABASE_URL, API_BASE_URL } = process.env,
     app = express(),
     http = require('http'),
     socketio = require('socket.io'),
@@ -45,7 +45,7 @@ massive({
 }).then(db => {
     app.set('db', db)
     console.log('DB ONLINE!!!!')
-    server.listen(SERVER_PORT, () => console.log(`APP listening on port: ${SERVER_PORT}`))
+    server.listen(PORT, () => console.log(`APP listening on port: ${PORT}`))
 });
 
 io.on('connection', (socket) => {
