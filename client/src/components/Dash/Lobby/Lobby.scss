@@ -1,0 +1,24 @@
+.lobby-controls {
+    width: 50%;
+    margin-top: 50px;
+    height: 40%;
+}
+
+.lobby-controls > * {
+    margin-bottom: 10px;
+}
+
+
+.lobby-btns{
+    width: 175px;
+    height: 35px;
+    background: #E2DED3;
+    border: none;
+    border-radius: 35px;
+}
+
+
+.lobby-btns:hover {
+    background-color: #726867;
+    color: white
+  }
