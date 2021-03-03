@@ -4,7 +4,7 @@ import { lobbyVote } from '../../../Sockets/ChatSocket';
 import "./LobbyActive.scss"
 
 const LobbyActive = props => {
-    const { restaurantList, lobbyId, memberLength, currentRestaurantsIndex, chatArr } = props
+    const { restaurantList, lobbyId, memberLength, currentRestaurantsIndex, chatArr, logo } = props
     const [voted, setVoted] = useState(false)
 
     const [time, setTime] = useState(30000);
@@ -55,6 +55,9 @@ const LobbyActive = props => {
 
     return (
         <>
+            <div className='title-container lobby-title'>
+                <img src={logo} alt="Logo" className='logo' />
+            </div>
             <Chat lobbyId={lobbyId} chatArr={chatArr} />
             <div className="restaurant-master-container active-container">
                 <section className="restaurant-container">

@@ -218,11 +218,6 @@ const Dash = (props) => {
 
     return (
         <main>
-            {lobbyStarted && (
-                <div className='title-container lobby-title'>
-                    <img src={logo} alt="Logo" className='logo' />
-                </div>
-            )}
             <Switch>
                 <Route exact path={`/dash`}>
                     <div className="welcome-container">
@@ -244,6 +239,7 @@ const Dash = (props) => {
                     render={props => (
                         //Using render props in order to pass lobby info and functions within routes
                         <Lobby {...props}
+                            logo={logo}
                             hostId={hostId}
                             lobbyId={lobbyId}
                             chatArr={chatArr}
@@ -257,6 +253,7 @@ const Dash = (props) => {
                     path={`/dash/lobbyactive/:id`}
                     render={props => (
                         <LobbyActive {...props}
+                            logo={logo}
                             decidee_id={decidee?.decidee_id}
                             lobbyId={lobbyId}
                             chatArr={chatArr}
@@ -272,6 +269,7 @@ const Dash = (props) => {
                     path={`/dash/lobby-result/:id`}
                     render={props => (
                         <LobbyResult {...props}
+                            logo={logo}
                             lobbyId={lobbyId}
                             chatArr={chatArr}
                             handleLeaveLobby={handleLeaveLobby}
