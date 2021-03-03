@@ -11,14 +11,14 @@ const express = require('express'),
     yelpCtrl = require('./controllers/yelpCtrl'),
     socketCtrl = require('./controllers/socketController'),
     upCtrl = require('./controllers/uploadController'),
-    { SERVER_PORT, SESSION_SECRET, CONNECTION_STRING } = process.env,
+    { PORT, SESSION_SECRET, DATABASE_URL, API_BASE_URL, APP_BASE_URL } = process.env,
     app = express(),
     http = require('http'),
     socketio = require('socket.io'),
     server = http.createServer(app),
     io = socketio(server, {
         cors: {
-            origin: process.env.APP_BASE_URL,
+            origin: APP_BASE_URL,
             methods: ['GET', 'POST', 'PUT', 'DELETE'],
             credentials: true
         }
@@ -27,25 +27,31 @@ const express = require('express'),
 let lobbyVoteObj = {}
 let socketObj = {}
 
+app.set('trust proxy', 1)
 app.use(cors({
     credentials: true,
-    origin: process.env.APP_BASE_URL
+    origin: APP_BASE_URL
 }));
 app.use(express.json());
 app.use(session({
     resave: true,
     saveUninitialized: false,
     secret: SESSION_SECRET,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 365 }
+    cookie: { 
+        maxAge: 1000 * 60 * 60 * 24 * 365,
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none' 
+    }
 }));
 
 massive({
-    connectionString: CONNECTION_STRING,
+    connectionString: DATABASE_URL,
     ssl: { rejectUnauthorized: false }
 }).then(db => {
     app.set('db', db)
     console.log('DB ONLINE!!!!')
-    server.listen(SERVER_PORT, () => console.log(`APP listening on port: ${SERVER_PORT}`))
+    server.listen(PORT, () => console.log(`APP listening on port: ${PORT}`))
 });
 
 io.on('connection', (socket) => {
@@ -53,7 +59,7 @@ io.on('connection', (socket) => {
 
     socket.on('addSocket', (decidee_id) => {
         socketObj[decidee_id] = socket.id
-        axios.put(`http://localhost:${SERVER_PORT}/api/socket/${socket.id}`, { decidee_id })
+        axios.put(`${API_BASE_URL}/api/socket/${socket.id}`, { decidee_id })
             .then(res => {
                 console.log(res.data)
                 const onlineFriendSocketArr = res.data
@@ -108,7 +114,7 @@ io.on('connection', (socket) => {
     socket.on('lobbyResult', (obj) => {
         const { lobbyId, restaurant } = obj
         if (restaurant) {
-            axios.get(`http://localhost:${SERVER_PORT}/api/getRestaurant/${restaurant.id}`)
+            axios.get(`${API_BASE_URL}/api/getRestaurant/${restaurant.id}`)
                 .then(res => {
                     io.to(lobbyId).emit('lobbyResult', res.data)
                 })
@@ -126,7 +132,7 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log(`Disconnected: ${socket.id}`)
-        axios.delete(`http://localhost:${SERVER_PORT}/api/socket/${socket.id}`)
+        axios.delete(`${API_BASE_URL}/api/socket/${socket.id}`)
             .then(res => {
                 const { lobby_id, onlineFriendSockets, decidee_id } = res.data
                 delete socketObj[decidee_id]
