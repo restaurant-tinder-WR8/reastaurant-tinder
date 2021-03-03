@@ -11,14 +11,14 @@ const express = require('express'),
     yelpCtrl = require('./controllers/yelpCtrl'),
     socketCtrl = require('./controllers/socketController'),
     upCtrl = require('./controllers/uploadController'),
-    { PORT, SESSION_SECRET, DATABASE_URL, API_BASE_URL } = process.env,
+    { PORT, SESSION_SECRET, DATABASE_URL, API_BASE_URL, APP_BASE_URL } = process.env,
     app = express(),
     http = require('http'),
     socketio = require('socket.io'),
     server = http.createServer(app),
     io = socketio(server, {
         cors: {
-            origin: process.env.APP_BASE_URL,
+            origin: APP_BASE_URL,
             methods: ['GET', 'POST', 'PUT', 'DELETE'],
             credentials: true
         }
@@ -27,9 +27,10 @@ const express = require('express'),
 let lobbyVoteObj = {}
 let socketObj = {}
 
+app.set('trust proxy', 1)
 app.use(cors({
     credentials: true,
-    origin: process.env.APP_BASE_URL
+    origin: APP_BASE_URL
 }));
 app.use(express.json());
 app.use(session({
