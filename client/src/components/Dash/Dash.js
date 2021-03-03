@@ -222,13 +222,13 @@ const Dash = (props) => {
                 <Route exact path={`/dash`}>
                     <div className="welcome-container">
                         {props.history.location.pathname === '/dash' &&
-                            <>
+                            <div className="welcome">
                                 <h2>Welcome to HUNGREE, {decidee?.username}!</h2>
-                            </>
+                            </div>
                         }
                         <div className="button-container">
                             <button className="dash-button" onClick={handleHostLobby}>HOST LOBBY</button>
-                            <button className="dash-button" onClick={() => setJoinLobbyView(true)}>JOIN LOBBY</button>
+                            {/* <button className="dash-button" onClick={() => setJoinLobbyView(true)}>JOIN LOBBY</button> */}
                         </div>
 
                     </div>

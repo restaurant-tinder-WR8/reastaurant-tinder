@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import Chat from '../Chat/Chat';
 import { lobbyStart } from '../../../Sockets/ChatSocket';
 import AppContext from "../../../context/app-context";
+import './Lobby.scss'
 import axios from "axios";
 
 const Lobby = props => {
@@ -42,8 +43,8 @@ const Lobby = props => {
                 <img src={logo} alt="Logo" className='logo' />
             </div>
             <Chat lobbyId={lobbyId} chatArr={chatArr} />
-            <div>
-                <button onClick={handleLeaveLobby}>LEAVE LOBBY</button>
+            <div className="lobby-controls">
+                <button className="lobby-btns" onClick={handleLeaveLobby}>LEAVE LOBBY</button>
                 <h3>LOBBY-ID: {lobbyId}</h3>
                 <div className='member-list-container'>
                     LOBBY MEMBERS:
@@ -55,7 +56,7 @@ const Lobby = props => {
                         )
                     }
                 </div>
-                {(hostId === decidee_id) && <>< button onClick={startLobby}>Start Lobby</button></>}
+                {(hostId === decidee_id) && <>< button className="lobby-btns" onClick={startLobby}>Start Lobby</button></>}
 
 
             </div >
