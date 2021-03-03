@@ -114,7 +114,9 @@ const Friends = (props) => {
                     <div className='friends-toggle-button invite-toggle' onClick={() => setInviteView(!inviteView)}>
                         <div className={`button-text ${receiverPendingList?.length > 0 ? 'notify-color' : ''}`}>
                             {/* <div className={`${friendView ? 'friend-arrow-open' : ''}`}><ArrowDropDownIcon /></div> */}
-                            <MailRoundedIcon />
+                            <div className={`${inviteView ? 'invite-flip' : ''}`}>
+                                <MailRoundedIcon />
+                            </div>
                             {/* <div className={`${friendView ? 'friend-arrow-open' : ''}`}><ArrowDropDownIcon /></div> */}
                         </div>
                     </div>
