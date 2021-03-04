@@ -57,9 +57,9 @@ const Lobby = props => {
                 </div>
                 {(hostId === decidee?.decidee_id) && <>< button className="lobby-btns" onClick={startLobby}>Start Lobby</button></>}
 
-
             </div >
         </>
+        //RANDOM CHANGE
 
     )
 }
