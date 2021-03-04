@@ -45,14 +45,20 @@ main {
 .dash-button{
     width: 175px;
     height: 100px;
-    background: #E2DED3;
+    background: #726867;
     border: none;
     border-radius: 35px;
+    color: white;
+    font-size: 18px;
 }
 
 .dash-button:hover {
-    background-color: #726867;
-    color: white
+    background-color: #E2DED3;
+    color: #393D46;
   }
 
 
+  .dash-button:active{
+    background-color: transparent;
+    color: white;
+}
