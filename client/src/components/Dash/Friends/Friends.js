@@ -86,8 +86,8 @@ const Friends = (props) => {
     const mappedPending = pending.map((el, i) => {
         return <section className='friend-list' key={i}>
             <p>{el.username}</p>
-            <button onClick={() => acceptInvite(el.sender_id, el.pending_id)}>ACCEPT</button>
-            <button onClick={() => rejectInvite(el.pending_id)}>DECLINE</button>
+            <button className="friend-request-btn" onClick={() => acceptInvite(el.sender_id, el.pending_id)}>ACCEPT</button>
+            <button className="friend-request-btn" onClick={() => rejectInvite(el.pending_id)}>DECLINE</button>
         </section>
     })
 
@@ -174,8 +174,8 @@ const Friends = (props) => {
                                     </div>
 
                                     <div className='potential-friend-btn-container'>
-                                        <button onClick={sendFriendInvite}>ADD</button>
-                                        <button onClick={cancelInvite}>CANCEL</button>
+                                        <button className="friend=request-btn" onClick={sendFriendInvite}>ADD</button>
+                                        <button className="friend=request-btn" onClick={cancelInvite}>CANCEL</button>
                                     </div>
 
                                 </div>

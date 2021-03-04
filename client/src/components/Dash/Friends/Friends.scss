@@ -343,6 +343,24 @@
     justify-content: center;
 }
 
+.friend-request-btn {
+    width: 48%;
+    height: 40px;
+    border-radius: 10px;
+    background-color: white;
+    color: black;
+    font-size: 1rem;
+    font-weight: 900;
+    outline: none;
+}
+
+.friend-request-btn:hover{
+    color: white;
+    border: 2px solid white;
+    background-color: black;
+}
+
+
 .lobby-invite-btn {
     position: relative !important;
     right: 0px !important;
