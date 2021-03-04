@@ -103,3 +103,25 @@
     border-radius: 50px;
 }
 
+#vote-indicator-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    left: 0px;
+    bottom: -65px;
+}
+
+.vote-circle {
+    margin: 10px 2px 0px 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    background-color: #393D46;
+    border: 2px solid white;
+    color: #D6603A;
+}
+
