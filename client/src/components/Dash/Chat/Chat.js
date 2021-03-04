@@ -7,14 +7,19 @@ const Chat = props => {
     const { lobbyId, chatArr } = props;
     const { decidee } = useContext(AppContext)
     const [messageInput, setMessageInput] = useState('');
+    
+    const scrollToEnd = () => {
+        const chatScroll = document.querySelector('#chat-inner-container');
+        chatScroll.scrollTop = chatScroll.scrollHeight;
+    }
 
     const handleSendMessage = () => {
         if (messageInput != '') {
-            sendMessage(lobbyId, messageInput)
-            setMessageInput('')
+            scrollToEnd();
+            sendMessage(lobbyId, messageInput);
+            setMessageInput('');
         }
     }
-
 
     return (
         <div className="chat-master-container active-container">
