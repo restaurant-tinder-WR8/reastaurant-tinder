@@ -26,8 +26,12 @@ const express = require('express'),
 
 let lobbyVoteObj = {}
 let socketObj = {}
+<<<<<<< HEAD
 
 // app.set('trust proxy', 1)
+=======
+app.set('trust proxy', 1)
+>>>>>>> e840df91a8b063d7e58254ff324e1e2683324a73
 app.use(cors({
     credentials: true,
     origin: APP_BASE_URL
@@ -39,9 +43,15 @@ app.use(session({
     secret: SESSION_SECRET,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365,
+<<<<<<< HEAD
         // httpOnly: true,
         // secure: true,
         // sameSite: 'none' 
+=======
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none'
+>>>>>>> e840df91a8b063d7e58254ff324e1e2683324a73
     }
 }));
 
@@ -105,8 +115,8 @@ io.on('connection', (socket) => {
         const { lobbyId, vote, memberLength } = obj
         tempArr = lobbyVoteObj[lobbyId] ? lobbyVoteObj[lobbyId] : []
         lobbyVoteObj[lobbyId] = [...tempArr, vote]
+        io.to(lobbyId).emit('lobbyVote', { lobbyVoteArr: lobbyVoteObj[lobbyId] })
         if (lobbyVoteObj[lobbyId].length === memberLength) {
-            io.to(lobbyId).emit('lobbyVote', { lobbyVoteArr: lobbyVoteObj[lobbyId] })
             lobbyVoteObj[lobbyId] = []
         }
     })

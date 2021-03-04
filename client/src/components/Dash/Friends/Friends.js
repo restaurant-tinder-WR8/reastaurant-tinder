@@ -11,7 +11,7 @@ import { addedFriend, lobbyStart, notifyFriendInvite } from '../../../Sockets/Ch
 
 const Friends = (props) => {
     const { decidee, onlineFriends, offlineFriends, contextGetFriendsList, pending, setPending, getPendingFriends } = useContext(AppContext);
-    const { handleInviteTolobby, lobbyStarted, receiverPendingList, handleJoinLobby } = props;
+    const { handleInviteTolobby, lobbyStarted, receiverPendingList, handleJoinLobby, handleDeclineInvite } = props;
     // const [onlineFriends, setOnlineFriends] = useState([]);
     // const [offlineFriends, setOfflineFriends] = useState([]);
     // const [pending, setPending] = useState([]);
@@ -83,7 +83,6 @@ const Friends = (props) => {
     }
 
 
-
     const mappedPending = pending.map((el, i) => {
         return <section className='friend-list' key={i}>
             <p>{el.username}</p>
@@ -114,7 +113,9 @@ const Friends = (props) => {
                     <div className='friends-toggle-button invite-toggle' onClick={() => setInviteView(!inviteView)}>
                         <div className={`button-text ${receiverPendingList?.length > 0 ? 'notify-color' : ''}`}>
                             {/* <div className={`${friendView ? 'friend-arrow-open' : ''}`}><ArrowDropDownIcon /></div> */}
-                            <MailRoundedIcon />
+                            <div className={`${inviteView ? 'invite-flip' : ''}`}>
+                                <MailRoundedIcon />
+                            </div>
                             {/* <div className={`${friendView ? 'friend-arrow-open' : ''}`}><ArrowDropDownIcon /></div> */}
                         </div>
                     </div>
@@ -122,7 +123,7 @@ const Friends = (props) => {
                         <h3>LOBBY INVITES</h3>
                         {receiverPendingList
                             &&
-                            receiverPendingList.map(el => <LobbyInvite lobbyStarted={lobbyStarted} handleJoinLobby={handleJoinLobby} el={el} />)
+                            receiverPendingList.map(el => <LobbyInvite key={el.row_id} el={el} lobbyStarted={lobbyStarted} handleJoinLobby={handleJoinLobby} handleDeclineInvite={handleDeclineInvite} />)
                         }
                     </div>
 
@@ -173,8 +174,8 @@ const Friends = (props) => {
                                     </div>
 
                                     <div className='potential-friend-btn-container'>
-                                        <button onClick={sendFriendInvite}>ADD</button>
-                                        <button onClick={cancelInvite}>CANCEL</button>
+                                        <button className="friend=request-btn" onClick={sendFriendInvite}>ADD</button>
+                                        <button className="friend=request-btn" onClick={cancelInvite}>CANCEL</button>
                                     </div>
 
                                 </div>

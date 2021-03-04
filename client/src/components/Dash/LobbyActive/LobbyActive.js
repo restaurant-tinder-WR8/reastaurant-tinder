@@ -1,15 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Chat from '../Chat/Chat';
 import { lobbyVote } from '../../../Sockets/ChatSocket';
+import ThumbUpRoundedIcon from '@material-ui/icons/ThumbUpRounded';
+import ThumbDownRoundedIcon from '@material-ui/icons/ThumbDownRounded';
+import HourglassEmptyRoundedIcon from '@material-ui/icons/HourglassEmptyRounded';
 import "./LobbyActive.scss"
 
 const LobbyActive = props => {
-    const { restaurantList, lobbyId, memberLength, currentRestaurantsIndex, chatArr, logo } = props
+    const { restaurantList, lobbyId, memberLength, currentRestaurantsIndex, chatArr, logo, lobbyVotes } = props
     const [voted, setVoted] = useState(false)
 
     const [time, setTime] = useState(30000);
     const [timerOn, setTimerOn] = useState(false);
-
+    const [lobbyVoteIndicatorArr, setLobbyVoteIndicatorArr] = useState([])
     useEffect(() => {
         let interval = null;
 
@@ -37,16 +40,25 @@ const LobbyActive = props => {
 
     }, [time])
 
+    useEffect(() => {
+        let newLobbyArr = []
+        for (let i = 0; i < memberLength; i++) {
+            newLobbyArr.push(lobbyVotes[i] !== null ? lobbyVotes[i] : null)
+        }
+        setLobbyVoteIndicatorArr(newLobbyArr)
+        console.log(newLobbyArr)
+    }, [lobbyVotes])
+
     const handleVoteBtn = (vote) => {
-        console.log('hit')
-        console.log('voted: ', voted)
-        console.log(memberLength)
         if (!voted) {
             setVoted(true)
             lobbyVote(lobbyId, vote, memberLength)
         }
     }
 
+    useEffect(() => {
+        console.log(lobbyVotes)
+    }, [lobbyVotes])
     useEffect(() => {
         setTime(30000)
         setVoted(false)
@@ -75,6 +87,19 @@ const LobbyActive = props => {
                         <div id="timer-middle"><span className="timer">{(`${Math.floor((time / 1000) % 60)}`).slice(-2)}</span></div>
                         <button className="chomp" onClick={() => handleVoteBtn(true)}>Chomp</button>
 
+                    </div>
+
+                    <div id='vote-indicator-container'>
+                        {lobbyVoteIndicatorArr.map((vote, i) => {
+                            if (vote) {
+                                return <span className='vote-circle'><ThumbUpRoundedIcon /></span>
+                            } else if (vote === false) {
+                                return <span className='vote-circle'><ThumbDownRoundedIcon /></span>
+                            } else {
+                                return <span className='vote-circle'><HourglassEmptyRoundedIcon /></span>
+                            }
+
+                        })}
                     </div>
 
                     {/* <div className="Timers">

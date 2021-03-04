@@ -6,8 +6,8 @@ import './Lobby.scss'
 import axios from "axios";
 
 const Lobby = props => {
-    const { decidee_id } = useContext(AppContext)
-    const { lobbyId, handleLeaveLobby, lobbyMemberList, geoLocation, hostId, chatArr, logo} = props;
+    const { decidee } = useContext(AppContext)
+    const { lobbyId, handleLeaveLobby, lobbyMemberList, geoLocation, hostId, chatArr, logo } = props;
 
     const shuffle = (array) => {
         var currentIndex = array.length, temporaryValue, randomIndex;
@@ -36,7 +36,6 @@ const Lobby = props => {
             })
             .catch(err => console.log(err))
     }
-
     return (
         <>
             <div className='title-container lobby-title'>
@@ -56,7 +55,7 @@ const Lobby = props => {
                         )
                     }
                 </div>
-                {(hostId === decidee_id) && <>< button className="lobby-btns" onClick={startLobby}>Start Lobby</button></>}
+                {(hostId === decidee?.decidee_id) && <>< button className="lobby-btns" onClick={startLobby}>Start Lobby</button></>}
 
 
             </div >

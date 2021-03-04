@@ -1,9 +1,8 @@
 import { useState } from 'react';
 
 const LobbyInvite = props => {
-    const { lobbyStarted, el, handleJoinLobby } = props;
+    const { lobbyStarted, el, handleJoinLobby, handleDeclineInvite } = props;
     const [showInvite, setShowInvite] = useState(false)
-    console.log(el)
     return (
 
 
@@ -14,7 +13,7 @@ const LobbyInvite = props => {
             {/* {showInvite && ( */}
             <div id='lobby-invite-item-btn-container'>
                 <button id='friend-invite-btn' className='lobby-invite-btn' onClick={() => handleJoinLobby(el.lobby_id)}>JOIN</button>
-                <button id='friend-invite-btn' className='lobby-invite-btn' onClick={() => { }}>DECLINE</button>
+                <button id='friend-invite-btn' className='lobby-invite-btn' onClick={() => handleDeclineInvite(el.lobby_id)}>DECLINE</button>
             </div>
         </section>
     )
