@@ -25,8 +25,9 @@ const Dash = (props) => {
     const [currentRestaurantsIndex, setCurrentRestaurantIndex] = useState(0)
     const [lobbyVotes, setLobbyVotes] = useState([])
     const [result, setResult] = useState(null)
-    const [hostId, setHostID] = useState(null)
+    const [hostId, setHostId] = useState(null)
     const geoLocation = useGeolocation()
+    // const [lobbyVoteIndicatorArr, setLobbyVoteIndicatorArr] = useState([])
 
     const [chatArr, setChatArr] = useState([])
 
@@ -34,7 +35,7 @@ const Dash = (props) => {
         axios.post('/api/lobby')
             .then(res => {
                 const { lobby_id, memberList, host_id } = res.data
-                setHostID(host_id)
+                setHostId(host_id)
                 setLobbyId(lobby_id)
                 setLobbyMemberList(memberList)
                 props.history.push(`/dash/lobby/${lobby_id}`)
@@ -46,7 +47,8 @@ const Dash = (props) => {
     const handleJoinLobby = (targetLobbyId) => {
         axios.put(`/api/lobby/${targetLobbyId}`)
             .then(res => {
-                const { lobby_id, memberList, newInviteList } = res.data;
+                const { lobby_id, host_id, memberList, newInviteList } = res.data;
+                setHostId(host_id)
                 setLobbyId(lobby_id)
                 setLobbyMemberList(memberList)
                 setReceiverPendingList(newInviteList)
@@ -70,6 +72,7 @@ const Dash = (props) => {
         axios.put(`/api/lobby-members`, { decidee_id, lobbyId })
             .then(res => {
                 setChatArr([])
+                setLobbyVotes([])
                 leaveLobbyRoom(lobbyId, res.data)
                 setLobbyId(null)
                 setJoinLobbyView(false);
@@ -141,6 +144,9 @@ const Dash = (props) => {
                 },
                 (memberList => {
                     setLobbyMemberList(memberList)
+                    if (!memberList.some(e => hostId === e.decidee_id)) {
+                        setHostId(decidee.decidee_id)
+                    }
                 }),
                 () => {
                     contextGetFriendsList()
@@ -186,14 +192,20 @@ const Dash = (props) => {
         if (lobbyVotes.length > 0) {
             if (lobbyVotes.length === lobbyMemberList?.length && !lobbyVotes.some(vote => vote === false)) {
                 console.log('EVERYONE MATCHED!')
-                lobbyResult(lobbyId, restaurantList[currentRestaurantsIndex])
+                setTimeout(() => {
+                    lobbyResult(lobbyId, restaurantList[currentRestaurantsIndex])
+                }, 1000)
             } else if (lobbyVotes.length === lobbyMemberList?.length && lobbyVotes.some(vote => vote === false)) {
                 console.log('NO MATCH VOTING DONE!')
                 if (currentRestaurantsIndex === restaurantList.length - 1) {
-                    lobbyResult(lobbyId, null)
+                    setTimeout(() => {
+                        lobbyResult(lobbyId, null)
+                    }, 1000)
                     console.log('NOOOOOOOOOO MMMMMMMAAAAAAAAAATCHES EEEEEVERERRRRRR')
                 } else {
-                    nextRestaurant(lobbyId, currentRestaurantsIndex + 1)
+                    setTimeout(() => {
+                        nextRestaurant(lobbyId, currentRestaurantsIndex + 1)
+                    }, 1000)
                 }
             }
         }
@@ -252,6 +264,8 @@ const Dash = (props) => {
                             decidee_id={decidee?.decidee_id}
                             lobbyId={lobbyId}
                             chatArr={chatArr}
+                            lobbyVotes={lobbyVotes}
+
                             memberLength={lobbyMemberList?.length}
                             handleLeaveLobby={handleLeaveLobby}
                             restaurantList={restaurantList}

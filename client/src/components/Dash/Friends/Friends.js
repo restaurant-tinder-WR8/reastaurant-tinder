@@ -83,7 +83,6 @@ const Friends = (props) => {
     }
 
 
-
     const mappedPending = pending.map((el, i) => {
         return <section className='friend-list' key={i}>
             <p>{el.username}</p>
@@ -124,7 +123,7 @@ const Friends = (props) => {
                         <h3>LOBBY INVITES</h3>
                         {receiverPendingList
                             &&
-                            receiverPendingList.map(el => <LobbyInvite el={el} lobbyStarted={lobbyStarted} handleJoinLobby={handleJoinLobby} handleDeclineInvite={handleDeclineInvite} />)
+                            receiverPendingList.map(el => <LobbyInvite key={el.row_id} el={el} lobbyStarted={lobbyStarted} handleJoinLobby={handleJoinLobby} handleDeclineInvite={handleDeclineInvite} />)
                         }
                     </div>
 

@@ -13,7 +13,6 @@ export const initSocket = (myId, cb1, cb2, cb3, cb4) => {
         })
 
         socket.on('notify', ({ receiverId, notificationList }) => {
-            console.log("hit", receiverId, notificationList)
             if (myId === receiverId) {
                 return cb1(notificationList)
             }
