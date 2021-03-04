@@ -41,6 +41,7 @@ app.use(session({
         httpOnly: true,
         secure: true,
         sameSite: 'none'
+        //ARBITRARY CHANGE
     }
 }));
 
