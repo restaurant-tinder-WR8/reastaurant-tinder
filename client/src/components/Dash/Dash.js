@@ -33,11 +33,9 @@ const Dash = (props) => {
     const handleHostLobby = () => {
         axios.post('/api/lobby')
             .then(res => {
-                console.log(res.data)
                 const { lobby_id, memberList, host_id } = res.data
                 setHostID(host_id)
                 setLobbyId(lobby_id)
-                console.log(memberList)
                 setLobbyMemberList(memberList)
                 props.history.push(`/dash/lobby/${lobby_id}`)
                 setLobbyStarted(true)
@@ -46,10 +44,8 @@ const Dash = (props) => {
     }
 
     const handleJoinLobby = (targetLobbyId) => {
-        console.log(targetLobbyId)
         axios.put(`/api/lobby/${targetLobbyId}`)
             .then(res => {
-                console.log(res.data)
                 const { lobby_id, memberList, newInviteList } = res.data;
                 setLobbyId(lobby_id)
                 setLobbyMemberList(memberList)
@@ -57,6 +53,14 @@ const Dash = (props) => {
                 props.history.push(`/dash/lobby/${lobby_id}`)
                 setJoinLobbyView(false)
                 setLobbyStarted(true)
+            })
+            .catch(err => console.log(err))
+    }
+
+    const handleDeclineInvite = (targetLobbyId) => {
+        axios.delete(`/api/lobby-invites/${targetLobbyId}`)
+            .then(res => {
+                setReceiverPendingList(res.data)
             })
             .catch(err => console.log(err))
     }
@@ -79,7 +83,6 @@ const Dash = (props) => {
         if (lobbyId) {
             axios.post('/api/pending-lobby', { lobbyId, friend_id })
                 .then(res => {
-                    console.log(res.data)
                     const { newLobbyPendingList, newReceiverPendingList } = res.data;
                     setLobbyPendingList(newLobbyPendingList)
                     sendNotification(friend_id, newReceiverPendingList)
@@ -103,7 +106,6 @@ const Dash = (props) => {
     const getLobbyMembers = useCallback(() => {
         axios.get(`/api/lobby-members/${lobbyId}`)
             .then(res => {
-                console.log('SDE: ', res.data)
                 setLobbyMemberList(res.data)
             })
             .catch(err => console.log(err))
@@ -128,9 +130,6 @@ const Dash = (props) => {
     }, [decidee])
 
     useEffect(() => {
-        // if (!lobbyId) {
-        console.log('LobbyId: ', lobbyId)
-        console.log('Decidee: ', decidee)
         //Create socket on component mount as well as socket listeners for notifications and lobby member changes
         if (!lobbyId && decidee) {
             //This has a cb functions that are not ran by this invocation but only on socket event that it is being passed to in ChatSocket.js
@@ -144,7 +143,6 @@ const Dash = (props) => {
                     setLobbyMemberList(memberList)
                 }),
                 () => {
-                    console.log('hit')
                     contextGetFriendsList()
                 },
                 () => {
@@ -169,12 +167,10 @@ const Dash = (props) => {
                 (restaurant) => {
                     setResult(restaurant)
                     setCurrentRestaurantIndex(0)
-                    console.log(restaurant)
                     props.history.push(`/dash/lobby-result/${lobbyId}`)
                 },
                 (newIndex) => {
                     setLobbyVotes([])
-                    console.log('NEW THING: ', newIndex)
                     setCurrentRestaurantIndex(newIndex)
                 },
                 () => {
@@ -194,7 +190,6 @@ const Dash = (props) => {
             } else if (lobbyVotes.length === lobbyMemberList?.length && lobbyVotes.some(vote => vote === false)) {
                 console.log('NO MATCH VOTING DONE!')
                 if (currentRestaurantsIndex === restaurantList.length - 1) {
-                    console.log(currentRestaurantsIndex, restaurantList.length)
                     lobbyResult(lobbyId, null)
                     console.log('NOOOOOOOOOO MMMMMMMAAAAAAAAAATCHES EEEEEVERERRRRRR')
                 } else {
@@ -292,7 +287,12 @@ const Dash = (props) => {
                 )
             }
 
-            <Friends handleInviteTolobby={handleInviteTolobby} lobbyStarted={lobbyStarted} receiverPendingList={receiverPendingList} handleJoinLobby={handleJoinLobby} />
+            <Friends
+                handleInviteTolobby={handleInviteTolobby}
+                lobbyStarted={lobbyStarted}
+                receiverPendingList={receiverPendingList}
+                handleJoinLobby={handleJoinLobby}
+                handleDeclineInvite={handleDeclineInvite} />
         </main >
 
     )
