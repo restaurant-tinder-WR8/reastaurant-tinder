@@ -88,7 +88,7 @@ module.exports = {
         const { decidee_id } = req.session.user
         const db = req.app.get('db')
 
-        await db.lobby.remove_lobby_invites({ id, decidee_id })
-        //FINISH THIS!
+        const newInviteList = await db.lobby.remove_lobby_invites({ id, decidee_id })
+        res.status(200).send(newInviteList)
     }
 }

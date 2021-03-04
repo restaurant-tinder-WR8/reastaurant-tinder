@@ -355,14 +355,26 @@
 
 .invite-toggle {
     top: 17%;
-    height: auto;
-    padding: 25px 0;
+    height: 85px;
+    width: 40px;
+    box-shadow: -4px 0 4px rgb(39, 39, 39);
 }
 
 .invite-toggle .button-text {
     justify-content: center;
+    align-items: center;
+    min-width: 80px;
+}
+
+.invite-toggle svg {
+    width: 40px;
+    height: 40px;
 }
 
 .notify-color {
     color: #D6603A;
+}
+
+.invite-flip svg{
+    transform: rotate(180deg);
 }

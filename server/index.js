@@ -37,11 +37,11 @@ app.use(session({
     resave: true,
     saveUninitialized: false,
     secret: SESSION_SECRET,
-    cookie: { 
+    cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365,
         httpOnly: true,
         secure: true,
-        sameSite: 'none' 
+        sameSite: 'none'
     }
 }));
 
