@@ -42,7 +42,7 @@ app.use(session({
         httpOnly: true,
         secure: true,
         sameSite: 'none'
-        //ARBITRARY CHANGE
+        ARBITRARY CHANGE
     }
 }));
 
@@ -85,28 +85,28 @@ io.on('connection', (socket) => {
 
     socket.on('join', ({ lobbyId, memberList }) => {
         socket.join(lobbyId)
-        socket.to(lobbyId).emit('newLobbyMemberList', memberList)
+        socket.in(lobbyId).emit('newLobbyMemberList', memberList)
     })
 
     socket.on('leave', ({ lobbyId, memberList }) => {
         socket.leave(lobbyId)
-        socket.to(lobbyId).emit('newLobbyMemberList', memberList)
+        socket.in(lobbyId).emit('newLobbyMemberList', memberList)
     })
 
     socket.on('chat', (lobbyId) => {
-        io.to(lobbyId).emit('newMessage')
+        socket.in(lobbyId).emit('newMessage')
     })
 
     socket.on('lobbyStart', (obj) => {
         const { lobbyId, restaurantList } = obj
-        io.to(lobbyId).emit('lobbyStart', restaurantList)
+        socket.in(lobbyId).emit('lobbyStart', restaurantList)
     })
 
     socket.on('lobbyVote', (obj) => {
         const { lobbyId, vote, memberLength } = obj
         tempArr = lobbyVoteObj[lobbyId] ? lobbyVoteObj[lobbyId] : []
         lobbyVoteObj[lobbyId] = [...tempArr, vote]
-        io.to(lobbyId).emit('lobbyVote', { lobbyVoteArr: lobbyVoteObj[lobbyId] })
+        socket.in(lobbyId).emit('lobbyVote', { lobbyVoteArr: lobbyVoteObj[lobbyId] })
         if (lobbyVoteObj[lobbyId].length === memberLength) {
             lobbyVoteObj[lobbyId] = []
         }
@@ -117,7 +117,7 @@ io.on('connection', (socket) => {
         if (restaurant) {
             axios.get(`${API_BASE_URL}/api/getRestaurant/${restaurant.id}`)
                 .then(res => {
-                    io.to(lobbyId).emit('lobbyResult', res.data)
+                    io.in(lobbyId).emit('lobbyResult', res.data)
                 })
                 .catch(err => console.log(err))
         }
