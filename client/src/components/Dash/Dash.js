@@ -159,8 +159,7 @@ const Dash = (props) => {
             getLobbyChat();
             subscribeToChat(
                 lobbyId,
-                (err) => {
-                    if (err) return;
+                () => {
                     getLobbyChat();
                 },
                 (newRestaurantList) => {

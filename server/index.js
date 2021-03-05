@@ -27,7 +27,7 @@ const express = require('express'),
 let lobbyVoteObj = {}
 let socketObj = {}
 
-app.set('trust proxy', 1)
+// app.set('trust proxy', 1)
 app.use(cors({
     credentials: true,
     origin: APP_BASE_URL
@@ -39,9 +39,9 @@ app.use(session({
     secret: SESSION_SECRET,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365,
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none'
+        // httpOnly: true,
+        // secure: true,
+        // sameSite: 'none'
         //ARBITRARY CHANGE
     }
 }));
@@ -94,19 +94,19 @@ io.on('connection', (socket) => {
     })
 
     socket.on('chat', (lobbyId) => {
-        io.to(lobbyId).emit('newMessage')
+        socket.to(lobbyId).emit('newMessage')
     })
 
     socket.on('lobbyStart', (obj) => {
         const { lobbyId, restaurantList } = obj
-        io.to(lobbyId).emit('lobbyStart', restaurantList)
+        socket.to(lobbyId).emit('lobbyStart', restaurantList)
     })
 
     socket.on('lobbyVote', (obj) => {
         const { lobbyId, vote, memberLength } = obj
         tempArr = lobbyVoteObj[lobbyId] ? lobbyVoteObj[lobbyId] : []
         lobbyVoteObj[lobbyId] = [...tempArr, vote]
-        io.to(lobbyId).emit('lobbyVote', { lobbyVoteArr: lobbyVoteObj[lobbyId] })
+        socket.to(lobbyId).emit('lobbyVote', { lobbyVoteArr: lobbyVoteObj[lobbyId] })
         if (lobbyVoteObj[lobbyId].length === memberLength) {
             lobbyVoteObj[lobbyId] = []
         }
