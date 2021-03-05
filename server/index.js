@@ -85,28 +85,28 @@ io.on('connection', (socket) => {
 
     socket.on('join', ({ lobbyId, memberList }) => {
         socket.join(lobbyId)
-        socket.to(lobbyId).emit('newLobbyMemberList', memberList)
+        io.in(lobbyId).emit('newLobbyMemberList', memberList)
     })
 
     socket.on('leave', ({ lobbyId, memberList }) => {
         socket.leave(lobbyId)
-        socket.to(lobbyId).emit('newLobbyMemberList', memberList)
+        io.in(lobbyId).emit('newLobbyMemberList', memberList)
     })
 
     socket.on('chat', (lobbyId) => {
-        io.to(lobbyId).emit('newMessage')
+        io.in(lobbyId).emit('newMessage')
     })
 
     socket.on('lobbyStart', (obj) => {
         const { lobbyId, restaurantList } = obj
-        io.to(lobbyId).emit('lobbyStart', restaurantList)
+        io.in(lobbyId).emit('lobbyStart', restaurantList)
     })
 
     socket.on('lobbyVote', (obj) => {
         const { lobbyId, vote, memberLength } = obj
         tempArr = lobbyVoteObj[lobbyId] ? lobbyVoteObj[lobbyId] : []
         lobbyVoteObj[lobbyId] = [...tempArr, vote]
-        io.to(lobbyId).emit('lobbyVote', { lobbyVoteArr: lobbyVoteObj[lobbyId] })
+        io.in(lobbyId).emit('lobbyVote', { lobbyVoteArr: lobbyVoteObj[lobbyId] })
         if (lobbyVoteObj[lobbyId].length === memberLength) {
             lobbyVoteObj[lobbyId] = []
         }

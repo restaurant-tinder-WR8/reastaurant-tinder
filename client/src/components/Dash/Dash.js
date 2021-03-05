@@ -133,6 +133,12 @@ const Dash = (props) => {
     }, [decidee])
 
     useEffect(() => {
+        if (!memberList.some(e => hostId === e.decidee_id)) {
+            setHostId(decidee.decidee_id)
+        }
+    }, [memberList])
+
+    useEffect(() => {
         //Create socket on component mount as well as socket listeners for notifications and lobby member changes
         if (!lobbyId && decidee) {
             //This has a cb functions that are not ran by this invocation but only on socket event that it is being passed to in ChatSocket.js
@@ -144,9 +150,7 @@ const Dash = (props) => {
                 },
                 (memberList => {
                     setLobbyMemberList(memberList)
-                    if (!memberList.some(e => hostId === e.decidee_id)) {
-                        setHostId(decidee.decidee_id)
-                    }
+
                 }),
                 () => {
                     contextGetFriendsList()
@@ -159,8 +163,7 @@ const Dash = (props) => {
             getLobbyChat();
             subscribeToChat(
                 lobbyId,
-                (err) => {
-                    if (err) return;
+                () => {
                     getLobbyChat();
                 },
                 (newRestaurantList) => {

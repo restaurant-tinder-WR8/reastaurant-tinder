@@ -44,32 +44,35 @@ export const sendNotification = (receiverId, notificationList) => {
 }
 
 export const subscribeToChat = (lobbyId, cb, cb2, cb3, cb4, cb5, cb6) => {
-    if (!socket) return (true);
-    axios.get(`/api/lobby-members/${lobbyId}`)
-        .then(res => {
-            socket.emit('join', { lobbyId, memberList: res.data })
-            socket.on('newMessage', () => {
-                console.log('hit')
-                return cb(null);
-            });
-            socket.on('lobbyStart', (restaurantList) => {
-                return cb2(restaurantList)
+    // if (!socket) return (true);
+    if (socket) {
+        axios.get(`/api/lobby-members/${lobbyId}`)
+            .then(res => {
+                socket.emit('join', { lobbyId, memberList: res.data })
+                socket.on('newMessage', () => {
+                    console.log('hit')
+                    return cb();
+                });
+                socket.on('lobbyStart', (restaurantList) => {
+                    return cb2(restaurantList)
+                })
+                socket.on('lobbyVote', ({ lobbyVoteArr }) => {
+                    console.log(lobbyVoteArr)
+                    return cb3(lobbyVoteArr)
+                })
+                socket.on('lobbyResult', (restaurant) => {
+                    return cb4(restaurant)
+                })
+                socket.on('nextRestaurant', (newIndex) => {
+                    return cb5(newIndex)
+                })
+                socket.on('updateLobby', () => {
+                    return cb6()
+                })
             })
-            socket.on('lobbyVote', ({ lobbyVoteArr }) => {
-                console.log(lobbyVoteArr)
-                return cb3(lobbyVoteArr)
-            })
-            socket.on('lobbyResult', (restaurant) => {
-                return cb4(restaurant)
-            })
-            socket.on('nextRestaurant', (newIndex) => {
-                return cb5(newIndex)
-            })
-            socket.on('updateLobby', () => {
-                return cb6()
-            })
-        })
-        .catch(err => console.log(err))
+            .catch(err => console.log(err))
+    }
+
 
 }
 
