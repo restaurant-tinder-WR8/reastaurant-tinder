@@ -19,6 +19,7 @@ const Friends = (props) => {
     const [potentialFriend, setPotentialFriend] = useState(null);
     const [friendView, setFriendView] = useState(false);
     const [inviteView, setInviteView] = useState(false);
+    const [sentInviteTextOn, setSentInviteTextOn] = useState(false)
 
     useEffect(() => {
         if (decidee) {
@@ -33,7 +34,8 @@ const Friends = (props) => {
         setInviteView(false);
     }
 
-    const getPotentialFriend = () => {
+    const getPotentialFriend = (e) => {
+        e.preventDefault()
         if (input !== '') {
             if (input === `${decidee.decidee_id}`) {
                 return alert('You cannot add yourself as a friend.')
@@ -41,6 +43,7 @@ const Friends = (props) => {
                 axios.get(`/api/friend/${input}`)
                     .then(res => {
                         setPotentialFriend(res.data);
+                        setInput('')
                     })
                     .catch(err => console.log(err));
             }
@@ -54,14 +57,31 @@ const Friends = (props) => {
             .then(res => {
                 setPotentialFriend(null);
                 setInput('');
+                setSentInviteTextOn(true)
                 notifyFriendInvite(potentialFriend[0].decidee_id)
             })
             .catch(err => console.log(err));
     }
 
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setSentInviteTextOn(false)
+        }, 3000)
+
+        return () => {
+            clearTimeout(timer)
+        }
+    }, [sentInviteTextOn])
+
     const cancelInvite = () => {
         setPotentialFriend(null);
         setInput('');
+    }
+
+    const handleAcceptJoinInvite = (id) => {
+        handleCloseSliders()
+        handleJoinLobby(id)
     }
 
     const acceptInvite = (friendId, pendingId) => {
@@ -111,6 +131,7 @@ const Friends = (props) => {
             <section id='friends-container' className={`${friendView ? 'show-friend-container' : ''}`}>
                 <div id='notification-container' className={`${inviteView ? 'show-invite-container' : ''}`}>
                     <div className='friends-toggle-button invite-toggle' onClick={() => setInviteView(!inviteView)}>
+                        {receiverPendingList?.length > 0 && <div id='pending-number'>{receiverPendingList.length}</div>}
                         <div className={`button-text ${receiverPendingList?.length > 0 ? 'notify-color' : ''}`}>
                             {/* <div className={`${friendView ? 'friend-arrow-open' : ''}`}><ArrowDropDownIcon /></div> */}
                             <div className={`${inviteView ? 'invite-flip' : ''}`}>
@@ -123,13 +144,14 @@ const Friends = (props) => {
                         <h3>LOBBY INVITES</h3>
                         {receiverPendingList
                             &&
-                            receiverPendingList.map(el => <LobbyInvite key={el.row_id} el={el} lobbyStarted={lobbyStarted} handleJoinLobby={handleJoinLobby} handleDeclineInvite={handleDeclineInvite} />)
+                            receiverPendingList.map(el => <LobbyInvite key={el.row_id} el={el} lobbyStarted={lobbyStarted} handleAcceptJoinInvite={handleAcceptJoinInvite} handleDeclineInvite={handleDeclineInvite} />)
                         }
                     </div>
 
                 </div>
                 <div className='friends-toggle-button' onClick={() => setFriendView(!friendView)}>
-                    <div className='button-text'>
+                    {pending?.length > 0 && <div id='pending-number'>{pending.length}</div>}
+                    <div className={`button-text ${pending.length > 0 ? 'notify-color' : ''}`}>
                         <div className={`${friendView ? 'friend-arrow-open' : ''}`}><ArrowDropDownIcon /></div>
                     FRIENDS
                     <div className={`${friendView ? 'friend-arrow-open' : ''}`}><ArrowDropDownIcon /></div>
@@ -161,6 +183,11 @@ const Friends = (props) => {
                                 )}
 
                         </div>
+                        {sentInviteTextOn && (
+                            <div id='potential-friend-container'>
+                                <h3>INVITE SENT!</h3>
+                            </div>
+                        )}
                         {potentialFriend && potentialFriend[0]
                             ?
                             (
@@ -184,12 +211,12 @@ const Friends = (props) => {
 
                         <div id='find-friend-container'>
                             <h3>Add Friend</h3>
-                            <div id="find-friend-input-container">
+                            <form onSubmit={getPotentialFriend} id="find-friend-input-container">
                                 <input className='find-friend-input' placeholder='Enter Friend Code'
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)} />
-                                <button className='find-friend-input' onClick={getPotentialFriend}><PageviewOutlinedIcon /></button>
-                            </div>
+                                <button className='find-friend-input' type='submit'><PageviewOutlinedIcon /></button>
+                            </form>
 
                         </div>
 

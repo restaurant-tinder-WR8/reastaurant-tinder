@@ -42,7 +42,7 @@ app.use(session({
         httpOnly: true,
         secure: true,
         sameSite: 'none'
-        //ARBITRARY CHANGE
+        // ARBITRARY CHANGE
     }
 }));
 
@@ -60,7 +60,7 @@ io.on('connection', (socket) => {
 
     socket.on('addSocket', (decidee_id) => {
         socketObj[decidee_id] = socket.id
-        axios.put(`${API_BASE_URL}/api/socket/${socket.id}`, { decidee_id })
+        axios.put(`http://localhost:${PORT}/api/socket/${socket.id}`, { decidee_id })
             .then(res => {
                 console.log(res.data)
                 const onlineFriendSocketArr = res.data
@@ -85,28 +85,29 @@ io.on('connection', (socket) => {
 
     socket.on('join', ({ lobbyId, memberList }) => {
         socket.join(lobbyId)
-        socket.to(lobbyId).emit('newLobbyMemberList', memberList)
+        io.in(lobbyId).emit('newLobbyMemberList', memberList)
     })
 
     socket.on('leave', ({ lobbyId, memberList }) => {
+
         socket.leave(lobbyId)
-        socket.to(lobbyId).emit('newLobbyMemberList', memberList)
+        io.in(lobbyId).emit('newLobbyMemberList', memberList)
     })
 
     socket.on('chat', (lobbyId) => {
-        io.to(lobbyId).emit('newMessage')
+        io.in(lobbyId).emit('newMessage', lobbyId)
     })
 
     socket.on('lobbyStart', (obj) => {
         const { lobbyId, restaurantList } = obj
-        io.to(lobbyId).emit('lobbyStart', restaurantList)
+        io.in(lobbyId).emit('lobbyStart', restaurantList)
     })
 
     socket.on('lobbyVote', (obj) => {
         const { lobbyId, vote, memberLength } = obj
         tempArr = lobbyVoteObj[lobbyId] ? lobbyVoteObj[lobbyId] : []
         lobbyVoteObj[lobbyId] = [...tempArr, vote]
-        io.to(lobbyId).emit('lobbyVote', { lobbyVoteArr: lobbyVoteObj[lobbyId] })
+        io.in(lobbyId).emit('lobbyVote', { lobbyVoteArr: lobbyVoteObj[lobbyId] })
         if (lobbyVoteObj[lobbyId].length === memberLength) {
             lobbyVoteObj[lobbyId] = []
         }
@@ -115,7 +116,7 @@ io.on('connection', (socket) => {
     socket.on('lobbyResult', (obj) => {
         const { lobbyId, restaurant } = obj
         if (restaurant) {
-            axios.get(`${API_BASE_URL}/api/getRestaurant/${restaurant.id}`)
+            axios.get(`http://localhost:${PORT}/api/getRestaurant/${restaurant.id}`)
                 .then(res => {
                     io.to(lobbyId).emit('lobbyResult', res.data)
                 })
@@ -133,7 +134,7 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log(`Disconnected: ${socket.id}`)
-        axios.delete(`${API_BASE_URL}/api/socket/${socket.id}`)
+        axios.delete(`http://localhost:${PORT}/api/socket/${socket.id}`)
             .then(res => {
                 const { lobby_id, onlineFriendSockets, decidee_id } = res.data
                 delete socketObj[decidee_id]

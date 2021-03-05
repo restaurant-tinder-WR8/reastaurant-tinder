@@ -1,23 +1,25 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useRef } from 'react';
 import { sendMessage } from '../../../Sockets/ChatSocket';
 import AppContext from "../../../context/app-context";
 import './Chat.scss';
 
 const Chat = props => {
-    const { lobbyId, chatArr } = props;
+    const { lobbyId, chatArr, scrollToEnd } = props;
     const { decidee } = useContext(AppContext)
     const [messageInput, setMessageInput] = useState('');
-    
-    const scrollToEnd = () => {
-        const chatScroll = document.querySelector('#chat-inner-container');
-        chatScroll.scrollTop = chatScroll.scrollHeight;
-    }
+    const messageInputRef = useRef()
+    // const scrollToEnd = () => {
+    //     const chatScroll = document.querySelector('#chat-inner-container');
+    //     chatScroll.scrollTop = chatScroll.scrollHeight;
+    // }
 
-    const handleSendMessage = () => {
+    const handleSendMessage = (e) => {
+        e.preventDefault();
         if (messageInput != '') {
             scrollToEnd();
             sendMessage(lobbyId, messageInput);
             setMessageInput('');
+            messageInputRef.current.focus()
         }
     }
 
@@ -42,16 +44,17 @@ const Chat = props => {
                                 </div>
                             )
                         })}
-                        <div className="chat-input-sticky">
+                        <form className="chat-input-sticky" onSubmit={handleSendMessage}>
                             <input
+                                ref={messageInputRef}
                                 id="chat-input"
                                 type="text"
                                 name="name"
                                 value={messageInput}
                                 onChange={e => setMessageInput(e.target.value)}
                             />
-                            <button className="pointer" onClick={handleSendMessage}>Send</button>
-                        </div>
+                            <button className="pointer" type='submit' onClick={handleSendMessage}>Send</button>
+                        </form>
 
                     </div>
 
