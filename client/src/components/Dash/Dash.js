@@ -133,10 +133,12 @@ const Dash = (props) => {
     }, [decidee])
 
     useEffect(() => {
-        if (!memberList.some(e => hostId === e.decidee_id)) {
-            setHostId(decidee.decidee_id)
+        if (lobbyMemberList) {
+            if (!lobbyMemberList.some(e => hostId === e.decidee_id)) {
+                setHostId(decidee.decidee_id)
+            }
         }
-    }, [memberList])
+    }, [lobbyMemberList])
 
     useEffect(() => {
         //Create socket on component mount as well as socket listeners for notifications and lobby member changes
