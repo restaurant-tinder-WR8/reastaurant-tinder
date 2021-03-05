@@ -7,7 +7,7 @@ import HourglassEmptyRoundedIcon from '@material-ui/icons/HourglassEmptyRounded'
 import "./LobbyActive.scss"
 
 const LobbyActive = props => {
-    const { restaurantList, lobbyId, memberLength, currentRestaurantsIndex, chatArr, logo, lobbyVotes } = props
+    const { restaurantList, lobbyId, memberLength, currentRestaurantsIndex, chatArr, logo, lobbyVotes, scrollToEnd } = props
     const [voted, setVoted] = useState(false)
 
     const [time, setTime] = useState(30000);
@@ -70,7 +70,7 @@ const LobbyActive = props => {
             <div className='title-container lobby-title'>
                 <img src={logo} alt="Logo" className='logo' />
             </div>
-            <Chat lobbyId={lobbyId} chatArr={chatArr} />
+            <Chat lobbyId={lobbyId} chatArr={chatArr} scrollToEnd={scrollToEnd}/>
             <div className="restaurant-master-container active-container">
                 <section className="restaurant-container">
                     {/* <button onClick={searchRestaurants}>Get Restaurants</button> */}

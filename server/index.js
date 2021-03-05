@@ -27,7 +27,7 @@ const express = require('express'),
 let lobbyVoteObj = {}
 let socketObj = {}
 
-app.set('trust proxy', 1)
+// app.set('trust proxy', 1)
 app.use(cors({
     credentials: true,
     origin: APP_BASE_URL
@@ -39,10 +39,10 @@ app.use(session({
     secret: SESSION_SECRET,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365,
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none'
-        //ARBITRARY CHANGE
+        // httpOnly: true,
+        // secure: true,
+        // sameSite: 'none'
+        // ARBITRARY CHANGE
     }
 }));
 
@@ -60,7 +60,7 @@ io.on('connection', (socket) => {
 
     socket.on('addSocket', (decidee_id) => {
         socketObj[decidee_id] = socket.id
-        axios.put(`${API_BASE_URL}/api/socket/${socket.id}`, { decidee_id })
+        axios.put(`http://localhost:${PORT}/api/socket/${socket.id}`, { decidee_id })
             .then(res => {
                 console.log(res.data)
                 const onlineFriendSocketArr = res.data
@@ -89,12 +89,13 @@ io.on('connection', (socket) => {
     })
 
     socket.on('leave', ({ lobbyId, memberList }) => {
+
         socket.leave(lobbyId)
         io.in(lobbyId).emit('newLobbyMemberList', memberList)
     })
 
     socket.on('chat', (lobbyId) => {
-        io.in(lobbyId).emit('newMessage')
+        io.in(lobbyId).emit('newMessage', lobbyId)
     })
 
     socket.on('lobbyStart', (obj) => {
@@ -115,7 +116,7 @@ io.on('connection', (socket) => {
     socket.on('lobbyResult', (obj) => {
         const { lobbyId, restaurant } = obj
         if (restaurant) {
-            axios.get(`${API_BASE_URL}/api/getRestaurant/${restaurant.id}`)
+            axios.get(`http://localhost:${PORT}/api/getRestaurant/${restaurant.id}`)
                 .then(res => {
                     io.to(lobbyId).emit('lobbyResult', res.data)
                 })
@@ -133,7 +134,7 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log(`Disconnected: ${socket.id}`)
-        axios.delete(`${API_BASE_URL}/api/socket/${socket.id}`)
+        axios.delete(`http://localhost:${PORT}/api/socket/${socket.id}`)
             .then(res => {
                 const { lobby_id, onlineFriendSockets, decidee_id } = res.data
                 delete socketObj[decidee_id]

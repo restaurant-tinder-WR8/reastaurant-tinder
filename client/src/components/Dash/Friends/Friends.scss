@@ -396,3 +396,19 @@
 .invite-flip svg{
     transform: rotate(180deg);
 }
+
+#pending-number {
+    position: absolute;
+    left: -45px;
+    top: 0px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border-bottom-right-radius: 5px;
+    border: 2px solid #D6603A;
+    color: #D6603A !important;
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

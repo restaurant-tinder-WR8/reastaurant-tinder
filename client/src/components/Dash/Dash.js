@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useCallback } from "react";
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { initSocket, leaveLobbyRoom, subscribeToChat, sendNotification, lobbyResult, nextRestaurant, lobbyStart } from '../../Sockets/ChatSocket';
+import { initSocket, leaveLobbyRoom, subscribeToChat, sendNotification, lobbyResult, nextRestaurant, joinLobby } from '../../Sockets/ChatSocket';
 import useGeolocation from 'react-hook-geolocation'
 import axios from 'axios';
 import AppContext from "../../context/app-context";
@@ -27,6 +27,7 @@ const Dash = (props) => {
     const [result, setResult] = useState(null)
     const [hostId, setHostId] = useState(null)
     const geoLocation = useGeolocation()
+    const [subbed, setSubbed] = useState(false)
     // const [lobbyVoteIndicatorArr, setLobbyVoteIndicatorArr] = useState([])
 
     const [chatArr, setChatArr] = useState([])
@@ -37,6 +38,7 @@ const Dash = (props) => {
                 const { lobby_id, memberList, host_id } = res.data
                 setHostId(host_id)
                 setLobbyId(lobby_id)
+                joinLobby({ lobbyId: lobby_id, memberList })
                 setLobbyMemberList(memberList)
                 props.history.push(`/dash/lobby/${lobby_id}`)
                 setLobbyStarted(true)
@@ -51,6 +53,7 @@ const Dash = (props) => {
                 setHostId(host_id)
                 setLobbyId(lobby_id)
                 setLobbyMemberList(memberList)
+                joinLobby({ lobbyId: lobby_id, memberList })
                 setReceiverPendingList(newInviteList)
                 props.history.push(`/dash/lobby/${lobby_id}`)
                 setJoinLobbyView(false)
@@ -105,6 +108,11 @@ const Dash = (props) => {
     //         .then(res => setLobbyMemberList(res.data))
     //         .catch(err => console.log(err))
     // })
+    const scrollToEnd = useCallback(() => {
+        const chatScroll = document.querySelector('#chat-inner-container');
+        chatScroll.scrollTop = chatScroll.scrollHeight;
+    })
+
 
     const getLobbyMembers = useCallback(() => {
         axios.get(`/api/lobby-members/${lobbyId}`)
@@ -114,11 +122,12 @@ const Dash = (props) => {
             .catch(err => console.log(err))
     })
 
-    const getLobbyChat = useCallback(() => {
-        axios.get(`/api/lobby-chat/${lobbyId}`)
+    const getLobbyChat = useCallback((tempLobbyId) => {
+        axios.get(`/api/lobby-chat/${tempLobbyId}`)
             .then(res => {
                 setChatArr(res.data)
-
+                scrollToEnd();
+                console.log(res.data)
             })
             .catch(err => console.log(err))
     })
@@ -160,13 +169,12 @@ const Dash = (props) => {
                 () => {
                     getPendingFriends()
                 })
-        } else if (lobbyId && decidee) {
+        } else if (lobbyId && decidee && subbed === false) {
             //This has a cb function that is not ran by this invocation but only on socket event that it is being passed to in ChatSocket.js
-            getLobbyChat();
             subscribeToChat(
                 lobbyId,
-                () => {
-                    getLobbyChat();
+                (lobbyId) => {
+                    getLobbyChat(lobbyId);
                 },
                 (newRestaurantList) => {
                     setRestaurants(newRestaurantList)
@@ -188,10 +196,16 @@ const Dash = (props) => {
                     getLobbyMembers()
                 }
             )
-
+            setSubbed(true)
 
         };
     }, [lobbyId, decidee])
+
+    useEffect(() => {
+        if (lobbyId) {
+            getLobbyChat(lobbyId)
+        }
+    }, [lobbyId])
 
     useEffect(() => {
         if (lobbyVotes.length > 0) {
@@ -251,6 +265,7 @@ const Dash = (props) => {
                     render={props => (
                         //Using render props in order to pass lobby info and functions within routes
                         <Lobby {...props}
+                            scrollToEnd={scrollToEnd}
                             logo={logo}
                             hostId={hostId}
                             lobbyId={lobbyId}
@@ -265,6 +280,7 @@ const Dash = (props) => {
                     path={`/dash/lobbyactive/:id`}
                     render={props => (
                         <LobbyActive {...props}
+                            scrollToEnd={scrollToEnd}
                             logo={logo}
                             decidee_id={decidee?.decidee_id}
                             lobbyId={lobbyId}
@@ -283,6 +299,7 @@ const Dash = (props) => {
                     path={`/dash/lobby-result/:id`}
                     render={props => (
                         <LobbyResult {...props}
+                            scrollToEnd={scrollToEnd}
                             logo={logo}
                             lobbyId={lobbyId}
                             chatArr={chatArr}

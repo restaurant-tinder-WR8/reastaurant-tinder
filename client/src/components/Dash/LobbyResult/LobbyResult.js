@@ -2,7 +2,7 @@ import Chat from '../Chat/Chat';
 import "./LobbyResult.scss"
 
 const LobbyResult = props => {
-    const { result, handleLeaveLobby, chatArr, lobbyId, logo } = props
+    const { result, handleLeaveLobby, chatArr, lobbyId, logo, scrollToEnd} = props
 
 
     return (
@@ -10,7 +10,7 @@ const LobbyResult = props => {
             <div className='title-container lobby-title'>
                 <img src={logo} alt="Logo" className='logo' />
             </div>
-            <Chat lobbyId={lobbyId} chatArr={chatArr} />
+            <Chat lobbyId={lobbyId} chatArr={chatArr} scrollToEnd={scrollToEnd}/>
             <div className="restaurant-master-container active-container">
                 <section className="restaurant-container">
                     <div className="restuarant-result">

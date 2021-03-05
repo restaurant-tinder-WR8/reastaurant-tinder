@@ -41,7 +41,8 @@ const Auth = (props) => {
 
 
 
-    const handleRegister = () => {
+    const handleRegister = (e) => {
+        e.preventDefault()
         axios.post('/auth/register', { username: input.username, email: input.email, password: input.password })
             .then(res => {
                 // console.log('TAS', res.data)
@@ -53,7 +54,8 @@ const Auth = (props) => {
             })
     }
 
-    const handleLogin = () => {
+    const handleLogin = (e) => {
+        e.preventDefault()
         axios.post('/auth/login', { userOrEmail: input.userOrEmail, password: input.password })
             .then(res => {
                 // console.log('TAS', res.data)
@@ -84,9 +86,11 @@ const Auth = (props) => {
                         (
                             <>
                                 <h3>Login</h3>
-                                <input type="text" name="userOrEmail" placeholder="Username/Email" value={input.userOrEmail} onChange={handleChange}></input>
-                                <input type="password" name="password" placeholder="Password" value={input.password} onChange={handleChange}></input>
-                                <button className="auth-buttons" onClick={handleLogin}>Login</button>
+                                <form onSubmit={handleLogin}>
+                                    <input type="text" name="userOrEmail" placeholder="Username/Email" value={input.userOrEmail} onChange={handleChange}></input>
+                                    <input type="password" name="password" placeholder="Password" value={input.password} onChange={handleChange}></input>
+                                    <button className="auth-buttons" type='submit'>Login</button>
+                                </form>
                                 <p>Don't have an account? <span onClick={() => setRegisterView(!registerView)}>Register here.</span></p>
                             </>
                         )
@@ -94,10 +98,12 @@ const Auth = (props) => {
                         (
                             <>
                                 <h3>Register</h3>
-                                <input type="email" name="email" placeholder="Email" value={input.email} onChange={handleChange}></input>
-                                <input type="text" name="username" placeholder="Username" value={input.username} onChange={handleChange}></input>
-                                <input type="password" name="password" placeholder="Password" value={input.password} onChange={handleChange}></input>
-                                <button className="auth-buttons" onClick={handleRegister}>Register</button>
+                                <form onSubmit={handleRegister}>
+                                    <input type="email" name="email" placeholder="Email" value={input.email} onChange={handleChange}></input>
+                                    <input type="text" name="username" placeholder="Username" value={input.username} onChange={handleChange}></input>
+                                    <input type="password" name="password" placeholder="Password" value={input.password} onChange={handleChange}></input>
+                                    <button className="auth-buttons" type='submit'>Register</button>
+                                </form>
                                 <p>Have an account? <span onClick={() => setRegisterView(!registerView)}>Login here.</span></p>
                             </>
                         )}
